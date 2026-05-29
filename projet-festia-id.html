@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --f-orange: #F27853;
+      --f-jaune:  #F0AE3C;
+      --f-bleu:   #658CDC;
+      --f-violet: #BE89E5;
+      --f-noir:   #100E1A;
+      --f-creme:  #FFFBF6;
+      --surface:  #F7F4EF;
+      --text:     #1a1a1a;
+      --muted:    #777777;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-fun:     'Nunito', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+
+    .cursor { width: 10px; height: 10px; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; background: var(--f-orange); }
+    .cursor-follower { width: 32px; height: 32px; border: 1px solid rgba(242,120,83,0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--f-orange); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* ── HERO ─────────────────────────── */
+    .f-hero { position: relative; min-height: 82vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 4rem 5.5rem; overflow: hidden; background: var(--f-noir); }
+    .f-hero-grad { position: absolute; inset: 0; background: radial-gradient(ellipse at 15% 60%, rgba(242,120,83,0.22) 0%, transparent 55%), radial-gradient(ellipse at 80% 30%, rgba(190,137,229,0.18) 0%, transparent 50%), radial-gradient(ellipse at 60% 80%, rgba(101,140,220,0.15) 0%, transparent 45%); pointer-events: none; }
+    .f-hero-line { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--f-orange), var(--f-jaune), var(--f-bleu), var(--f-violet), var(--f-orange)); }
+    .f-hero-back { display: inline-flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2.5rem; transition: color 0.2s; position: relative; z-index: 2; width: fit-content; }
+    .f-hero-back:hover { color: rgba(255,255,255,0.75); }
+    .f-hero-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.4rem; position: relative; z-index: 2; }
+    .f-tag { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.45); }
+    .f-hero-title { font-family: var(--font-display); font-size: clamp(5.5rem,14vw,14rem); line-height: 0.83; color: #fff; position: relative; z-index: 2; }
+    .f-hero-title span { background: linear-gradient(90deg, var(--f-orange), var(--f-jaune)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .f-hero-sub { font-family: var(--font-fun); font-size: 1rem; color: rgba(255,255,255,0.35); position: relative; z-index: 2; margin-top: 0.8rem; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase; }
+    @media(max-width:900px){ .f-hero{padding:7rem 2rem 4rem;} .f-hero-title{font-size:clamp(4rem,18vw,8rem);} }
+
+    /* ── REVEAL ───────────────────────── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── DOT NAV ──────────────────────── */
+    .dos-progress { position: fixed; right: 1.6rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.75rem; z-index: 500; }
+    .dos-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.15); transition: all 0.3s; text-decoration: none; }
+    .dos-dot.active { background: var(--f-orange); transform: scale(1.65); }
+    @media(max-width:1100px){ .dos-progress{display:none;} }
+
+    /* ── SHARED ───────────────────────── */
+    .dos-label { font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--f-orange); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; }
+    .dos-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.07); }
+    .dos-label-light { color: rgba(242,120,83,0.65); }
+    .dos-label-light::after { background: rgba(255,255,255,0.07); }
+    .dos-section { margin-bottom: 6rem; scroll-margin-top: 6rem; }
+    .f-content { padding: 5.5rem 4rem 7rem; max-width: 1180px; margin: 0 auto; position: relative; }
+    @media(max-width:900px){ .f-content{padding:3.5rem 2rem 5rem;} }
+
+    /* ── CONCEPT ─────────────────────── */
+    .concept-title { font-family: var(--font-fun); font-size: clamp(1.4rem,2.8vw,2.1rem); font-weight: 900; color: var(--text); line-height: 1.25; max-width: 720px; margin-bottom: 2.2rem; }
+    .concept-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 2rem; }
+    .ctx-card { background: var(--surface); border-radius: 0.6rem; padding: 1.8rem; border-top: 3px solid var(--f-bleu); }
+    .ctx-card-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .ctx-card-title { font-family: var(--font-fun); font-size: 0.88rem; font-weight: 900; color: var(--text); margin-bottom: 0.4rem; line-height: 1.3; }
+    .ctx-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+    .constat-solution { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .constat-card { background: #FFF5F2; border: 1px solid rgba(242,120,83,0.15); border-radius: 0.7rem; padding: 2rem; }
+    .constat-card h4 { font-family: var(--font-fun); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: var(--f-orange); margin-bottom: 1rem; }
+    .constat-item { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.8rem; }
+    .constat-item:last-child { margin-bottom: 0; }
+    .constat-dot { width: 6px; height: 6px; background: var(--f-orange); border-radius: 50%; flex-shrink: 0; margin-top: 0.45rem; }
+    .constat-item p { font-size: 0.85rem; color: var(--text); line-height: 1.6; }
+    .solution-card { background: var(--f-noir); border-radius: 0.7rem; padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
+    .solution-card h4 { font-size: 0.65rem; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(242,120,83,0.6); margin-bottom: 1.5rem; }
+    .solution-text { font-family: var(--font-fun); font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.5; }
+    .solution-text span { background: linear-gradient(90deg, var(--f-orange), var(--f-jaune)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    @media(max-width:900px){ .concept-layout{grid-template-columns:1fr;} .constat-solution{grid-template-columns:1fr;} }
+
+    /* ── LOGO & IDENTITÉ ─────────────── */
+    /* ── LOGO HERO + INTERRUPTEUR ─────── */
+    .logo-hero-wrap { background: linear-gradient(135deg,#fff8f0,#fff3e0); border-radius: 0.8rem; padding: 3rem 2.5rem; display: flex; align-items: center; justify-content: center; gap: 4rem; margin-bottom: 2rem; transition: background 0.6s ease; position: relative; overflow: hidden; }
+    .logo-hero-wrap.lights-off { background: linear-gradient(135deg, #0c0f1e, #181230); }
+
+    /* Halo ambiant */
+    .logo-hero-wrap::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 0.8rem; background: radial-gradient(ellipse at 60% 50%, rgba(242,120,83,0.12) 0%, transparent 65%); transition: background 0.6s ease; }
+    .logo-hero-wrap.lights-off::after { background: radial-gradient(ellipse at 60% 50%, rgba(101,140,220,0.14) 0%, transparent 65%); }
+
+    /* Interrupteur */
+    .light-switch { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer; user-select: none; flex-shrink: 0; position: relative; z-index: 2; }
+    .switch-plate { width: 46px; height: 72px; background: #ede9e0; border-radius: 7px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 5px 16px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; padding: 7px; transition: background 0.5s, box-shadow 0.5s; }
+    .lights-off .switch-plate { background: #1e1e2e; border-color: rgba(255,255,255,0.07); box-shadow: 0 5px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03); }
+    .switch-rocker { width: 30px; height: 50px; border-radius: 4px; position: relative; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); background: linear-gradient(180deg, #e8e3d8 0%, #ccc8be 100%); box-shadow: 0 -3px 0 0 rgba(255,255,255,0.8) inset, 0 3px 6px rgba(0,0,0,0.25); }
+    .lights-off .switch-rocker { background: linear-gradient(180deg, #2e2e42 0%, #1c1c2c 100%); box-shadow: 0 3px 0 0 rgba(255,255,255,0.04) inset, 0 3px 6px rgba(0,0,0,0.5); }
+    /* petit témoin lumineux sur le rocker */
+    .switch-rocker::after { content: ''; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 6px; height: 6px; border-radius: 50%; background: rgba(242,120,83,0.9); box-shadow: 0 0 6px rgba(242,120,83,0.8); transition: all 0.4s ease; }
+    .lights-off .switch-rocker::after { background: rgba(101,140,220,0.5); box-shadow: 0 0 4px rgba(101,140,220,0.4); }
+    .switch-label { font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(0,0,0,0.3); transition: color 0.5s; }
+    .lights-off .switch-label { color: rgba(255,255,255,0.25); }
+    .switch-callout { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; transition: opacity 0.4s; }
+    .lights-off .switch-callout { opacity: 0.25; }
+    .switch-callout-text { font-family: var(--font-fun); font-size: 0.72rem; font-weight: 900; color: var(--f-orange); white-space: nowrap; transition: color 0.5s; }
+    .switch-callout-arrow { font-size: 1.1rem; color: var(--f-orange); animation: bounce-down 0.85s ease-in-out infinite; line-height: 1; }
+    @keyframes bounce-down { 0%,100%{transform:translateY(0);} 50%{transform:translateY(5px);} }
+
+    /* Logos */
+    .logo-hero-imgs { position: relative; width: 440px; height: 175px; display: flex; align-items: center; justify-content: center; z-index: 2; }
+    .logo-hero-imgs img { position: absolute; width: 100%; height: 100%; object-fit: contain; transition: opacity 0.5s ease; }
+    .logo-hero-night { opacity: 0; transform: scale(1.22); }
+    .lights-off .logo-hero-day { opacity: 0; }
+    .lights-off .logo-hero-night { opacity: 1; }
+    @media(max-width:700px){ .logo-hero-wrap{flex-direction:column;gap:2rem;padding:2rem;} .logo-hero-imgs{width:100%;height:130px;} }
+    .logo-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .logo-version { border-radius: 0.7rem; overflow: hidden; }
+    .logo-version-img { padding: 2rem; display: flex; align-items: center; justify-content: center; min-height: 160px; }
+    .logo-version-img img { max-height: 80px; max-width: 200px; object-fit: contain; }
+    .logo-version-day .logo-version-img { background: linear-gradient(135deg, #fff8f0, #fff3e0); }
+    .logo-version-night .logo-version-img { background: linear-gradient(135deg, #0d1020, #1a1035); }
+    .logo-version-info { padding: 1.2rem 1.6rem; background: var(--surface); }
+    .logo-version-label { font-family: var(--font-fun); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+    .logo-version-day .logo-version-label { color: var(--f-orange); }
+    .logo-version-night .logo-version-label { color: var(--f-bleu); }
+    .logo-palette { display: flex; gap: 0.4rem; margin-bottom: 0.5rem; }
+    .logo-swatch { height: 18px; flex: 1; border-radius: 2rem; }
+    .logo-hex { font-family: monospace; font-size: 0.65rem; color: var(--muted); }
+    .logo-construction { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; align-items: start; }
+    .cube-img { border-radius: 0.6rem; overflow: hidden; background: var(--f-creme); padding: 2rem; display: flex; align-items: center; justify-content: center; }
+    .cube-img img { max-width: 100%; max-height: 280px; object-fit: contain; }
+    .logo-desc { padding: 1rem 0; }
+    .logo-desc p { font-size: 0.9rem; color: #444; line-height: 1.85; margin-bottom: 1rem; }
+    .font-badge { display: inline-block; font-family: var(--font-fun); font-size: 1.2rem; font-weight: 900; padding: 0.6rem 1.4rem; border-radius: 0.4rem; background: linear-gradient(120deg, var(--f-orange), var(--f-jaune)); color: #fff; margin-top: 0.5rem; letter-spacing: 0.05em; }
+    .mockups-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .mockup-frame { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 6px 28px rgba(0,0,0,0.1); }
+    .mockup-frame img { width: 100%; display: block; }
+    @media(max-width:700px){ .logo-duo{grid-template-columns:1fr;} .logo-construction{grid-template-columns:1fr;} .mockups-duo{grid-template-columns:1fr;} }
+
+    /* ── DANS LA BOX ─────────────────── */
+    .inbox-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-bottom: 2rem; }
+    .inbox-item { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.08); background: var(--surface); }
+    .inbox-item img { width: 100%; height: 230px; object-fit: cover; display: block; }
+    .inbox-label { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-align: center; padding: 0.75rem; background: var(--surface); }
+    .notice-scroll { display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 0.8rem; scrollbar-width: thin; scrollbar-color: var(--f-orange) rgba(0,0,0,0.05); }
+    .notice-scroll::-webkit-scrollbar { height: 3px; }
+    .notice-scroll::-webkit-scrollbar-thumb { background: var(--f-orange); border-radius: 2px; }
+    .notice-frame { flex-shrink: 0; width: 240px; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.1); }
+    .notice-frame img { width: 100%; display: block; }
+    @media(max-width:700px){ .inbox-grid{grid-template-columns:1fr 1fr;} }
+
+    /* ── THÈMES FLIP ─────────────────── */
+    .themes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .theme-card { height: 320px; perspective: 1000px; cursor: pointer; }
+    .theme-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.4,0,0.2,1); }
+    .theme-card:hover .theme-card-inner,
+    .theme-card.flipped .theme-card-inner { transform: rotateY(180deg); }
+    .theme-front, .theme-back { position: absolute; inset: 0; border-radius: 0.7rem; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+    /* FRONT : visuel 1 pleine image + overlay gradient bas */
+    .theme-front { background: var(--f-noir); }
+    .theme-front > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; z-index: 0; }
+    .theme-front-overlay { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 1.6rem; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 55%, transparent 100%); transition: opacity 0.25s ease; }
+    .theme-card:hover .theme-front-overlay,
+    .theme-card.flipped .theme-front-overlay { opacity: 0; }
+    .theme-front-emoji { font-size: 2rem; margin-bottom: 0.35rem; }
+    .theme-front-name { font-family: var(--font-fun); font-size: 1.35rem; font-weight: 900; color: #fff; text-align: center; line-height: 1.15; }
+    .theme-front-hint { font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-top: 0.45rem; }
+    /* BACK : visuel 2 pleine image */
+    .theme-back { transform: rotateY(180deg); }
+    .theme-back img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    @media(max-width:700px){ .themes-grid{grid-template-columns:1fr;} }
+
+    /* ── STRAT DIGITALE ──────────────── */
+    .strat-card { background: var(--f-noir); border-radius: 0.8rem; padding: 3.5rem; }
+    .strat-header { margin-bottom: 2.5rem; }
+    .strat-title { font-family: var(--font-display); font-size: 2.8rem; color: #fff; line-height: 1; }
+    .strat-title span { color: var(--f-jaune); }
+    .strat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 2rem; }
+    .strat-item { background: rgba(255,255,255,0.04); border-radius: 0.5rem; padding: 1.4rem; border: 1px solid rgba(255,255,255,0.06); }
+    .strat-item-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+    .strat-item-title { font-family: var(--font-fun); font-size: 0.82rem; font-weight: 900; color: var(--f-jaune); margin-bottom: 0.4rem; letter-spacing: 0.05em; }
+    .strat-item-desc { font-size: 0.78rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    .strat-platforms { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .strat-platform { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); font-size: 0.72rem; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; }
+    .strat-platform span { font-size: 1rem; }
+    .strat-values { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+    .strat-value { background: linear-gradient(120deg, rgba(242,120,83,0.15), rgba(190,137,229,0.15)); border: 1px solid rgba(242,120,83,0.25); color: rgba(255,255,255,0.7); border-radius: 2rem; padding: 0.4rem 1.1rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    @media(max-width:900px){ .strat-card{padding:2rem;} .strat-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:600px){ .strat-grid{grid-template-columns:1fr;} }
+
+    /* ── FEED MARQUEE ────────────────── */
+    .rs-card { background: var(--f-noir); border-radius: 0.8rem; padding: 3.5rem 3.5rem 2.5rem; }
+    .rs-card-title { font-family: var(--font-display); font-size: clamp(1.8rem,3vw,2.6rem); color: #fff; line-height: 1; margin-bottom: 0.5rem; }
+    .rs-card-sub { font-size: 0.85rem; color: rgba(255,255,255,0.35); max-width: 480px; margin-bottom: 2rem; line-height: 1.8; }
+    .feed-marquee { overflow: hidden; margin: 0 -3.5rem; }
+    .feed-row { display: flex; margin-bottom: 0.6rem; }
+    .feed-row:last-child { margin-bottom: 0; }
+    .feed-track { display: flex; gap: 0.55rem; flex-shrink: 0; animation: feed-l 80s linear infinite; }
+    .feed-track.rev { animation: feed-r 65s linear infinite; }
+    .feed-marquee:hover .feed-track { animation-play-state: paused; }
+    .feed-track img { width: 174px; height: 174px; object-fit: cover; border-radius: 0.3rem; flex-shrink: 0; display: block; }
+    @keyframes feed-l { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+    @keyframes feed-r { 0%{transform:translateX(-50%);} 100%{transform:translateX(0);} }
+    @media(max-width:900px){ .rs-card{padding:2.2rem;} .feed-track img{width:130px;height:130px;} .feed-marquee{margin:0 -2.2rem;} }
+
+    /* ── VIDEO ────────────────────────── */
+    .video-section-inner { background: var(--f-noir); border-radius: 0.8rem; padding: 3rem; display: flex; flex-direction: column; align-items: center; }
+    .video-frame { border-radius: 0.6rem; overflow: hidden; width: 260px; }
+    .video-frame video { width: 100%; display: block; }
+    .video-desc { text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.35); margin-top: 1.2rem; letter-spacing: 0.08em; }
+
+    /* ── PRINT & PACKAGING ───────────── */
+    .print-flyer-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 3rem; align-items: start; margin-bottom: 2.5rem; }
+    .flyer-card { height: 420px; perspective: 1000px; cursor: pointer; width: 100%; }
+    .flyer-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .flyer-card:hover .flyer-card-inner,
+    .flyer-card.flipped .flyer-card-inner { transform: rotateY(180deg); }
+    .flyer-front, .flyer-back { position: absolute; inset: 0; border-radius: 0.6rem; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.18); }
+    .flyer-front img, .flyer-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .flyer-back { transform: rotateY(180deg); }
+    .flyer-info h3 { font-family: var(--font-display); font-size: 2rem; color: var(--text); margin-bottom: 0.8rem; }
+    .flyer-info p { font-size: 0.9rem; color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+    .flyer-hint { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--f-orange); }
+    .pack-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; max-width: 680px; }
+    .pack-frame { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.09); background: var(--surface); }
+    .pack-frame img { width: 100%; height: 260px; object-fit: cover; display: block; }
+    .pack-frame-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-align: center; padding: 0.75rem; background: var(--surface); }
+    @media(max-width:900px){ .print-flyer-wrap{grid-template-columns:1fr; gap:2rem;} .flyer-card{height:360px;} .pack-grid{grid-template-columns:1fr 1fr;} }
+
+    footer { background: #fff; border-top: 1px solid #eee; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #999; }
+    @media(max-width:900px){ footer{padding:1.5rem 2rem;} }
+  </style>
+  <title>Festia Party Delivery &mdash; Identit&eacute; &amp; Concept &mdash; On fait des bulles&nbsp;?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════ -->
+  <header class="f-hero">
+    <div class="f-hero-grad"></div>
+    <div class="f-hero-line"></div>
+    <a href="projets.html" class="f-hero-back">&larr; Retour aux projets</a>
+    <div class="f-hero-tags">
+      <span class="f-tag">Concept &amp; Strat&eacute;gie</span>
+      <span class="f-tag">Identit&eacute; Visuelle</span>
+      <span class="f-tag">Direction Artistique</span>
+      <span class="f-tag">R&eacute;seaux Sociaux</span>
+      <span class="f-tag">Print &amp; Packaging</span>
+    </div>
+    <h1 class="f-hero-title"><span>FESTIA</span></h1>
+    <p class="f-hero-sub">Party Delivery &mdash; Projet post-&eacute;tudes de A &agrave; Z</p>
+  </header>
+
+  <main class="f-content">
+
+    <div class="dos-progress">
+      <a href="#s-concept"   class="dos-dot active"></a>
+      <a href="#s-logo"      class="dos-dot"></a>
+      <a href="#s-inbox"     class="dos-dot"></a>
+      <a href="#s-themes"    class="dos-dot"></a>
+      <a href="#s-strat"     class="dos-dot"></a>
+      <a href="#s-rs"        class="dos-dot"></a>
+      <a href="#s-video"     class="dos-dot"></a>
+      <a href="#s-print"     class="dos-dot"></a>
+    </div>
+
+    <!-- ══ 01 CONCEPT ════════════════════ -->
+    <section class="dos-section" id="s-concept">
+      <div class="dos-label reveal">01 &mdash; Le concept</div>
+
+      <h2 class="concept-title reveal">Box &agrave; th&egrave;mes personnalis&eacute;es pour anniversaire, &eacute;v&eacute;nement &mdash; livr&eacute;es &agrave; domicile</h2>
+
+      <div class="concept-layout reveal">
+        <div class="ctx-card">
+          <div class="ctx-card-icon">&#x2728;</div>
+          <p class="ctx-card-title">Recherche d&rsquo;&eacute;motions et d&rsquo;exp&eacute;riences</p>
+          <p class="ctx-card-desc">Les gens veulent vivre des moments m&eacute;morables et personnalis&eacute;s avec leurs proches.</p>
+        </div>
+        <div class="ctx-card" style="border-top-color: var(--f-violet);">
+          <div class="ctx-card-icon">&#x1F91D;</div>
+          <p class="ctx-card-title">Besoin de partage avec les amis et la famille</p>
+          <p class="ctx-card-desc">La convivialit&eacute; et les moments de f&ecirc;te restent au c&oelig;ur des priorit&eacute;s.</p>
+        </div>
+        <div class="ctx-card" style="border-top-color: var(--f-orange);">
+          <div class="ctx-card-icon">&#x23F0;</div>
+          <p class="ctx-card-title">Manque de temps avec vie pro et perso</p>
+          <p class="ctx-card-desc">Plus personne n&rsquo;a le temps de tout organiser soi-m&ecirc;me de A &agrave; Z.</p>
+        </div>
+      </div>
+
+      <div class="constat-solution reveal">
+        <div class="constat-card">
+          <h4>Le constat</h4>
+          <div class="constat-item"><div class="constat-dot"></div><p>Courir partout et encha&icirc;ner 10 magasins pour trouver ce qu&rsquo;il faut</p></div>
+          <div class="constat-item"><div class="constat-dot"></div><p>Surfer sur 200 sites peu fiables et payer chaque frais de livraison</p></div>
+          <div class="constat-item"><div class="constat-dot"></div><p>Se retrouver avec du mat&eacute;riel souvent de mauvaise qualit&eacute;</p></div>
+          <div class="constat-item"><div class="constat-dot"></div><p>Se creuser la t&ecirc;te pour trouver des id&eacute;es sans avoir la t&ecirc;te &agrave; &ccedil;a</p></div>
+        </div>
+        <div class="solution-card">
+          <h4>La solution Festia</h4>
+          <p class="solution-text">Vous permettre de vivre une <span>exp&eacute;rience personnalis&eacute;e</span> directement chez vous.</p>
+          <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);line-height:1.7;margin-top:1.2rem;">Box &agrave; th&egrave;mes livr&eacute;es en moins de 72h &mdash; anniversaires, soir&eacute;es, Saint-Valentin, jungle, sir&egrave;nes, paillettes&hellip; Personnalisables selon le nombre de personnes, tout inclus.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 02 LOGO & IDENTITÉ ═════════════ -->
+    <section class="dos-section" id="s-logo">
+      <div class="dos-label reveal">02 &mdash; Identit&eacute; visuelle</div>
+
+      <!-- Grand logo jour en vedette -->
+      <div class="logo-hero-wrap reveal" id="logoHeroWrap">
+        <div class="light-switch" onclick="toggleLightSwitch()" title="Éteindre / allumer">
+          <div class="switch-callout">
+            <span class="switch-callout-text">Éteignez !</span>
+            <span class="switch-callout-arrow">↓</span>
+          </div>
+          <div class="switch-plate">
+            <div class="switch-rocker"></div>
+          </div>
+          <span class="switch-label">Lumière</span>
+        </div>
+        <div class="logo-hero-imgs">
+          <img src="assets/festialogo1.png" alt="Logo Festia jour" class="logo-hero-day" />
+          <img src="assets/festialogo2.png" alt="Logo Festia nuit" class="logo-hero-night" />
+        </div>
+      </div>
+
+      <!-- Duo jour / nuit -->
+      <div class="logo-duo reveal">
+        <div class="logo-version logo-version-day">
+          <div class="logo-version-img"><img src="assets/festialogo1.png" alt="Logo Festia version Jour" /></div>
+          <div class="logo-version-info">
+            <p class="logo-version-label">&#9728;&#65039; Version Jour</p>
+            <div class="logo-palette">
+              <div class="logo-swatch" style="background:#F27853;"></div>
+              <div class="logo-swatch" style="background:#F0AE3C;"></div>
+            </div>
+            <p class="logo-hex">#F27853 &mdash; #F0AE3C</p>
+            <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;line-height:1.5;">La lumi&egrave;re d&rsquo;un soleil levant, la douceur d&rsquo;une fin de journ&eacute;e.</p>
+          </div>
+        </div>
+        <div class="logo-version logo-version-night">
+          <div class="logo-version-img"><img src="assets/festialogo2.png" alt="Logo Festia version Nuit" /></div>
+          <div class="logo-version-info">
+            <p class="logo-version-label">&#127761; Version Nuit</p>
+            <div class="logo-palette">
+              <div class="logo-swatch" style="background:#658CDC;"></div>
+              <div class="logo-swatch" style="background:#BE89E5;"></div>
+            </div>
+            <p class="logo-hex">#658CDC &mdash; #BE89E5</p>
+            <p style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;line-height:1.5;">Un bleu ciel nocturne contrastant avec un violet bor&eacute;al.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="logo-construction reveal">
+        <div class="cube-img">
+          <img src="assets/cube.png" alt="Construction du logo Festia &mdash; cube" />
+        </div>
+        <div class="logo-desc">
+          <p>Notre logo revient au c&oelig;ur de notre projet&nbsp;: <strong>une bo&icirc;te</strong>. Ces fameuses bo&icirc;tes qui seront le lien permanent entre nous et nos clients, essence m&ecirc;me du fonctionnement de Festia.</p>
+          <p>Il vient s&rsquo;embo&icirc;ter en deux parties comme lors de l&rsquo;assemblage d&rsquo;un carton, pour ensuite se refermer et boucler la commande.</p>
+          <p>La baseline <strong>&laquo;&nbsp;party delivery&nbsp;&raquo;</strong> vient renforcer notre discours&nbsp;: la livraison de fun &agrave; domicile.</p>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:1rem;margin-bottom:0.4rem;letter-spacing:0.12em;text-transform:uppercase;">Typographie</p>
+          <div class="font-badge">Lostabonita</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.8rem;line-height:1.6;">Une police qui ram&egrave;ne au fun et &agrave; la c&eacute;l&eacute;bration. Marquante en capitale, d&eacute;cal&eacute;e en minuscule &mdash; le parfait contraste entre libert&eacute; et qualit&eacute;.</p>
+        </div>
+      </div>
+
+      <div class="mockups-duo reveal">
+        <div class="mockup-frame"><img src="assets/festiam1.png" alt="Mockup Festia 1" loading="lazy" /></div>
+        <div class="mockup-frame"><img src="assets/festiam2.png" alt="Mockup Festia 2" loading="lazy" /></div>
+      </div>
+    </section>
+
+    <!-- ══ 03 DANS LA BOX ════════════════ -->
+    <section class="dos-section" id="s-inbox">
+      <div class="dos-label reveal">03 &mdash; Dans la box</div>
+      <p class="reveal" style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:600px;margin-bottom:2rem;">Chaque box contient, en plus du mat&eacute;riel en rapport avec le th&egrave;me, des fiches recettes, une playlist, un livret de jeux pour les enfants et une notice d&rsquo;assemblage &mdash; le tout dessin&eacute; et con&ccedil;u enti&egrave;rement pour l&rsquo;occasion.</p>
+
+      <div class="inbox-grid reveal">
+        <div class="inbox-item">
+          <img src="assets/recette.png" alt="Fiche recette Festia" loading="lazy" />
+          <div class="inbox-label">Fiche recette</div>
+        </div>
+        <div class="inbox-item">
+          <img src="assets/playlist.png" alt="Fiche playlist Festia" loading="lazy" />
+          <div class="inbox-label">Fiche playlist</div>
+        </div>
+        <div class="inbox-item">
+          <img src="assets/livretjeu.png" alt="Livret de jeux Festia" loading="lazy" />
+          <div class="inbox-label">Livret de jeux &mdash; enfants</div>
+        </div>
+      </div>
+
+      <p class="reveal" style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;">Notice d&rsquo;assemblage &mdash; style Ikea &mdash; faire glisser</p>
+      <div class="notice-scroll reveal">
+        <div class="notice-frame"><img src="assets/notice4.png" alt="Notice 4" loading="lazy" /></div>
+        <div class="notice-frame"><img src="assets/notice1.png" alt="Notice 1" loading="lazy" /></div>
+        <div class="notice-frame"><img src="assets/notice2.png" alt="Notice 2" loading="lazy" /></div>
+        <div class="notice-frame"><img src="assets/notice3.png" alt="Notice 3" loading="lazy" /></div>
+      </div>
+    </section>
+
+    <!-- ══ 04 THÈMES DE BOX ═══════════════ -->
+    <section class="dos-section" id="s-themes">
+      <div class="dos-label reveal">04 &mdash; Th&egrave;mes de box</div>
+      <p class="reveal" style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:560px;margin-bottom:2rem;">Survolez une box pour d&eacute;couvrir son contenu.</p>
+      <div class="themes-grid reveal">
+
+        <div class="theme-card" onclick="this.classList.toggle('flipped')">
+          <div class="theme-card-inner">
+            <div class="theme-front">
+              <img src="assets/boxrose1.png" alt="Rose &amp; Paillettes recto" loading="lazy" />
+              <div class="theme-front-overlay">
+                <div class="theme-front-emoji">&#x1F338;</div>
+                <p class="theme-front-name">Rose &amp; Paillettes</p>
+                <p class="theme-front-hint">survoler pour d&eacute;couvrir</p>
+              </div>
+            </div>
+            <div class="theme-back">
+              <img src="assets/boxrose2.png" alt="Rose &amp; Paillettes verso" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <div class="theme-card" onclick="this.classList.toggle('flipped')">
+          <div class="theme-card-inner">
+            <div class="theme-front">
+              <img src="assets/jura1.png" alt="Jurassic World recto" loading="lazy" />
+              <div class="theme-front-overlay">
+                <div class="theme-front-emoji">&#x1F996;</div>
+                <p class="theme-front-name">Jurassic World</p>
+                <p class="theme-front-hint">survoler pour d&eacute;couvrir</p>
+              </div>
+            </div>
+            <div class="theme-back">
+              <img src="assets/jura2.png" alt="Jurassic World verso" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <div class="theme-card" onclick="this.classList.toggle('flipped')">
+          <div class="theme-card-inner">
+            <div class="theme-front">
+              <img src="assets/hallo1.png" alt="Halloween Party recto" loading="lazy" />
+              <div class="theme-front-overlay">
+                <div class="theme-front-emoji">&#x1F383;</div>
+                <p class="theme-front-name">Halloween Party</p>
+                <p class="theme-front-hint">survoler pour d&eacute;couvrir</p>
+              </div>
+            </div>
+            <div class="theme-back">
+              <img src="assets/hallo2.png" alt="Halloween Party verso" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <div class="theme-card" onclick="this.classList.toggle('flipped')">
+          <div class="theme-card-inner">
+            <div class="theme-front">
+              <img src="assets/jungle1.png" alt="Jungle Party recto" loading="lazy" />
+              <div class="theme-front-overlay">
+                <div class="theme-front-emoji">&#x1F333;</div>
+                <p class="theme-front-name">Jungle Party</p>
+                <p class="theme-front-hint">survoler pour d&eacute;couvrir</p>
+              </div>
+            </div>
+            <div class="theme-back">
+              <img src="assets/jungle2.png" alt="Jungle Party verso" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ 05 STRATÉGIE DIGITALE ══════════ -->
+    <section class="dos-section" id="s-strat">
+      <div class="dos-label reveal">05 &mdash; Strat&eacute;gie digitale</div>
+      <div class="strat-card reveal">
+        <div class="strat-header">
+          <p class="strat-title">Cr&eacute;er une<br><span>communaut&eacute;</span></p>
+        </div>
+        <div class="strat-grid">
+          <div class="strat-item">
+            <div class="strat-item-icon">&#x1F680;</div>
+            <p class="strat-item-title">Notori&eacute;t&eacute;</p>
+            <p class="strat-item-desc">Se faire conna&icirc;tre, gagner en visibilit&eacute; et poser les bases d&rsquo;une communaut&eacute; engag&eacute;e.</p>
+          </div>
+          <div class="strat-item">
+            <div class="strat-item-icon">&#x2728;</div>
+            <p class="strat-item-title">Contenu engageant</p>
+            <p class="strat-item-desc">Photos et vid&eacute;os des boxs, id&eacute;es de th&egrave;mes, t&eacute;moignages clients, hashtag propre &agrave; la marque.</p>
+          </div>
+          <div class="strat-item">
+            <div class="strat-item-icon">&#x1F91D;</div>
+            <p class="strat-item-title">Influenceurs &amp; partenariats</p>
+            <p class="strat-item-desc">Collaborations avec des profils &eacute;v&eacute;nementiel, d&eacute;co et lifestyle pour amplifier la visibilit&eacute;.</p>
+          </div>
+          <div class="strat-item">
+            <div class="strat-item-icon">&#x1F3AF;</div>
+            <p class="strat-item-title">Publicit&eacute; cibl&eacute;e</p>
+            <p class="strat-item-desc">Ciblage sp&eacute;cifique sur les plateformes pour toucher les organisateurs d&rsquo;&eacute;v&eacute;nements.</p>
+          </div>
+          <div class="strat-item">
+            <div class="strat-item-icon">&#x1F4CA;</div>
+            <p class="strat-item-title">Suivi &amp; analyse</p>
+            <p class="strat-item-desc">Mesurer les performances, ajuster la strat&eacute;gie et optimiser le contenu au fil du temps.</p>
+          </div>
+          <div class="strat-item">
+            <div class="strat-item-icon">&#x1F4AC;</div>
+            <p class="strat-item-title">Service client</p>
+            <p class="strat-item-desc">R&eacute;ponses rapides, relation personnalis&eacute;e &mdash; chaque client se sent unique.</p>
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <p style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.8rem;">Plateformes</p>
+          <div class="strat-platforms">
+            <span class="strat-platform"><span>&#x1F4F8;</span> Instagram</span>
+            <span class="strat-platform"><span>&#x1F3B5;</span> TikTok</span>
+            <span class="strat-platform"><span>&#x1F4D6;</span> Pinterest</span>
+            <span class="strat-platform"><span>&#x1F535;</span> Facebook</span>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.8rem;">Valeurs</p>
+          <div class="strat-values">
+            <span class="strat-value">Partage</span>
+            <span class="strat-value">Convivialit&eacute;</span>
+            <span class="strat-value">C&eacute;l&eacute;bration</span>
+            <span class="strat-value">Fun</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 06 FEED INSTAGRAM ══════════════ -->
+    <section class="dos-section" id="s-rs">
+      <div class="dos-label reveal">06 &mdash; R&eacute;seaux sociaux</div>
+      <div class="rs-card reveal">
+        <p class="rs-card-title">Feed Instagram</p>
+        <p class="rs-card-sub">22 posts con&ccedil;us pour nourrir une communaut&eacute; festive &mdash; th&egrave;mes de box, ambiances, produits, moments de vie. Passe la souris pour stopper le d&eacute;filement.</p>
+        <div class="feed-marquee">
+          <div class="feed-row">
+            <div class="feed-track">
+              <img src="assets/rsfestia1.png" alt="" loading="lazy"><img src="assets/rsfestia2.png" alt="" loading="lazy"><img src="assets/rsfestia3.png" alt="" loading="lazy"><img src="assets/rsfestia4.png" alt="" loading="lazy"><img src="assets/rsfestia5.png" alt="" loading="lazy"><img src="assets/rsfestia6.png" alt="" loading="lazy"><img src="assets/rsfestia7.png" alt="" loading="lazy"><img src="assets/rsfestia8.png" alt="" loading="lazy"><img src="assets/rsfestia9.png" alt="" loading="lazy"><img src="assets/rsfestia10.png" alt="" loading="lazy"><img src="assets/rsfestia11.png" alt="" loading="lazy">
+              <img src="assets/rsfestia1.png" alt="" loading="lazy"><img src="assets/rsfestia2.png" alt="" loading="lazy"><img src="assets/rsfestia3.png" alt="" loading="lazy"><img src="assets/rsfestia4.png" alt="" loading="lazy"><img src="assets/rsfestia5.png" alt="" loading="lazy"><img src="assets/rsfestia6.png" alt="" loading="lazy"><img src="assets/rsfestia7.png" alt="" loading="lazy"><img src="assets/rsfestia8.png" alt="" loading="lazy"><img src="assets/rsfestia9.png" alt="" loading="lazy"><img src="assets/rsfestia10.png" alt="" loading="lazy"><img src="assets/rsfestia11.png" alt="" loading="lazy">
+            </div>
+          </div>
+          <div class="feed-row">
+            <div class="feed-track rev">
+              <img src="assets/rsfestia12.png" alt="" loading="lazy"><img src="assets/rsfestia13.png" alt="" loading="lazy"><img src="assets/rsfestia14.png" alt="" loading="lazy"><img src="assets/rsfestia15.png" alt="" loading="lazy"><img src="assets/rsfestia16.png" alt="" loading="lazy"><img src="assets/rsfestia17.png" alt="" loading="lazy"><img src="assets/rsfestia18.png" alt="" loading="lazy"><img src="assets/rsfestia19.png" alt="" loading="lazy"><img src="assets/rsfestia20.png" alt="" loading="lazy"><img src="assets/rsfestia21.png" alt="" loading="lazy"><img src="assets/rsfestia22.png" alt="" loading="lazy">
+              <img src="assets/rsfestia12.png" alt="" loading="lazy"><img src="assets/rsfestia13.png" alt="" loading="lazy"><img src="assets/rsfestia14.png" alt="" loading="lazy"><img src="assets/rsfestia15.png" alt="" loading="lazy"><img src="assets/rsfestia16.png" alt="" loading="lazy"><img src="assets/rsfestia17.png" alt="" loading="lazy"><img src="assets/rsfestia18.png" alt="" loading="lazy"><img src="assets/rsfestia19.png" alt="" loading="lazy"><img src="assets/rsfestia20.png" alt="" loading="lazy"><img src="assets/rsfestia21.png" alt="" loading="lazy"><img src="assets/rsfestia22.png" alt="" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 07 VIDÉO PROMO ════════════════ -->
+    <section class="dos-section" id="s-video">
+      <div class="dos-label reveal">07 &mdash; Vid&eacute;o promo</div>
+      <div class="video-section-inner reveal">
+        <div class="dos-label dos-label-light" style="margin-bottom:1.5rem;width:100%;max-width:260px;">Spot Saint-Valentin</div>
+        <div class="video-frame">
+          <video autoplay muted loop playsinline preload="auto">
+            <source src="assets/videoval.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <p class="video-desc">Box Saint-Valentin &mdash; Spot publicitaire vid&eacute;o</p>
+      </div>
+    </section>
+
+    <!-- ══ 08 PRINT & PACKAGING ══════════ -->
+    <section class="dos-section" id="s-print">
+      <div class="dos-label reveal">08 &mdash; Print &amp; Packaging</div>
+
+      <div class="print-flyer-wrap reveal">
+        <div>
+          <p style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;">Flyer &mdash; cliquer pour retourner</p>
+          <div class="flyer-card" onclick="this.classList.toggle('flipped')">
+            <div class="flyer-card-inner">
+              <div class="flyer-front"><img src="assets/flyerfestia1.png" alt="Flyer Festia recto" loading="lazy" /></div>
+              <div class="flyer-back"><img src="assets/flyerfestia2.png" alt="Flyer Festia verso" loading="lazy" /></div>
+            </div>
+          </div>
+        </div>
+        <div class="flyer-info" style="padding-top:1.5rem;">
+          <h3>Flyer recto&thinsp;/&thinsp;verso</h3>
+          <p>Un flyer double face con&ccedil;u pour &ecirc;tre distribu&eacute; en &eacute;v&eacute;nement et en bo&icirc;te aux lettres. Le recto accroche l&rsquo;&oelig;il, le verso convainc &mdash; toutes les infos essentielles en format pocket.</p>
+          <p class="flyer-hint">Cliquer pour retourner</p>
+        </div>
+      </div>
+
+      <div class="pack-grid reveal">
+        <div class="pack-frame">
+          <img src="assets/boite.png" alt="Bo&icirc;te Festia" loading="lazy" />
+          <div class="pack-frame-label">La bo&icirc;te de livraison</div>
+        </div>
+        <div class="pack-frame">
+          <img src="assets/autocollant.png" alt="Autocollant Festia" loading="lazy" />
+          <div class="pack-frame-label">Autocollant festif</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    (function(){
+      var c=document.getElementById('cursor'),f=document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){c.style.display='none';f.style.display='none';return;}
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx-5+'px';c.style.top=my-5+'px';});
+      (function tick(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;f.style.left=fx-16+'px';f.style.top=fy-16+'px';requestAnimationFrame(tick);})();
+    })();
+
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){
+        if(e[0].isIntersecting) setTimeout(function(){r.classList.add('visible');},i*40);
+      },{threshold:0.05}).observe(r);
+    });
+
+    function toggleLightSwitch(){
+      document.getElementById('logoHeroWrap').classList.toggle('lights-off');
+    }
+
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    (function(){
+      var ids=['s-concept','s-logo','s-inbox','s-themes','s-strat','s-rs','s-video','s-print'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting)return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0)dots.forEach(function(d,i){d.classList.toggle('active',i===idx);});
+        });
+      },{threshold:0.25,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+    })();
+  </script>
+</body>
+</html>

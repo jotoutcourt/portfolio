@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --as-noir:  #080604;
+      --as-or:    #C9A96E;
+      --as-creme: #F2EDE4;
+      --as-brun:  #1E1610;
+      --as-muted: #8A7D6E;
+      --text:     #1a1a1a;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-serif:   'Playfair Display', serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+
+    .cursor { width: 10px; height: 10px; background: var(--as-or); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+    .cursor-follower { width: 32px; height: 32px; border: 1px solid rgba(201,169,110,0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--as-or); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* ── HERO ─────────────────────────── */
+    .as-hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 8rem 4rem 7rem; overflow: hidden; background: var(--as-noir); }
+    .as-hero-bg { position: absolute; inset: 0; background: url('assets/arnaud.png') center 20%/cover no-repeat; opacity: 0.18; }
+    .as-hero-grad { position: absolute; inset: 0; background: linear-gradient(to top, var(--as-noir) 40%, rgba(8,6,4,0.55) 75%, var(--as-noir) 100%); }
+    .as-hero-grain { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"); opacity: 0.5; pointer-events: none; }
+    .as-hero-back { position: absolute; top: 7rem; left: 4rem; display: inline-flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; z-index: 2; }
+    .as-hero-back:hover { color: rgba(255,255,255,0.7); }
+    .as-hero-content { position: relative; z-index: 2; text-align: center; }
+    .as-hero-badge { display: inline-block; font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--as-or); border: 1px solid rgba(201,169,110,0.35); padding: 0.3rem 1rem; border-radius: 2rem; margin-bottom: 1.8rem; background: rgba(201,169,110,0.06); }
+    .as-hero-title { font-family: var(--font-serif); font-style: italic; font-size: clamp(3.5rem,9vw,9rem); color: #fff; line-height: 0.9; letter-spacing: -0.01em; }
+    .as-hero-title em { color: var(--as-or); font-style: normal; }
+    .as-hero-line { width: 60px; height: 1px; background: rgba(201,169,110,0.4); margin: 2rem auto; }
+    .as-hero-sub { font-size: 0.82rem; color: rgba(255,255,255,0.35); letter-spacing: 0.2em; text-transform: uppercase; }
+    @media(max-width:900px){ .as-hero{padding:7rem 2rem 5rem;} .as-hero-back{left:2rem;} }
+
+    /* ── REVEAL ───────────────────────── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── DOT NAV ──────────────────────── */
+    .dos-progress { position: fixed; right: 1.6rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.75rem; z-index: 500; }
+    .dos-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.15); transition: all 0.3s; text-decoration: none; }
+    .dos-dot.active { background: var(--as-or); transform: scale(1.65); }
+    @media(max-width:1100px){ .dos-progress{display:none;} }
+
+    /* ── SHARED ───────────────────────── */
+    .dos-label { font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--as-or); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; }
+    .dos-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.07); }
+    .dos-label-light { color: rgba(201,169,110,0.7); }
+    .dos-label-light::after { background: rgba(255,255,255,0.08); }
+    .dos-section { margin-bottom: 6rem; scroll-margin-top: 6rem; }
+    .as-content { padding: 5.5rem 4rem 7rem; max-width: 1120px; margin: 0 auto; }
+    @media(max-width:900px){ .as-content{padding:3.5rem 2rem 5rem;} }
+
+    /* ── BRIEF DA ─────────────────────── */
+    .brief-paper { background: var(--as-creme); border: 1px solid rgba(201,169,110,0.15); border-radius: 0.6rem; padding: 2.8rem; position: relative; overflow: hidden; box-shadow: 0 3px 24px rgba(0,0,0,0.05); }
+    .brief-paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.023) 27px,rgba(0,0,0,0.023) 28px); }
+    .brief-paper-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.07); }
+    .bph-badge { display: inline-block; font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.12em; color: var(--as-or); border: 1.5px solid rgba(201,169,110,0.5); padding: 0.3rem 0.9rem; border-radius: 3px; margin-bottom: 0.4rem; }
+    .bph-sub { font-size: 0.75rem; color: var(--as-muted); }
+    .bph-ref { font-family: monospace; font-size: 0.72rem; color: var(--as-muted); text-align: right; line-height: 1.6; }
+    .brief-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem; }
+    .bf { padding-bottom: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.1); }
+    .bf-full { grid-column: 1/-1; }
+    .bf-label { display: block; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--as-muted); margin-bottom: 0.3rem; }
+    .bf-val { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .brief-process { display: flex; gap: 0; margin-top: 2rem; border-radius: 0.5rem; overflow: hidden; }
+    .brief-step { flex: 1; padding: 1.2rem 1.4rem; background: #ede8e0; border-right: 1px solid rgba(0,0,0,0.06); position: relative; }
+    .brief-step:last-child { border-right: none; }
+    .brief-step::after { content: '&#x2192;'; position: absolute; right: -0.6rem; top: 50%; transform: translateY(-50%); font-size: 0.7rem; color: var(--as-muted); z-index: 1; }
+    .brief-step:last-child::after { display: none; }
+    .brief-step-num { font-family: var(--font-display); font-size: 1.4rem; color: var(--as-or); line-height: 1; margin-bottom: 0.3rem; }
+    .brief-step-label { font-size: 0.72rem; color: var(--text); line-height: 1.5; }
+    @media(max-width:700px){ .brief-fields{grid-template-columns:1fr;} .brief-process{flex-direction:column;} .brief-step::after{display:none;} }
+
+    /* ── PORTRAIT ─────────────────────── */
+    .portrait-wrap { display: grid; grid-template-columns: 320px 1fr; gap: 4rem; align-items: start; }
+    .portrait-img-wrap { position: sticky; top: 7rem; }
+    .portrait-img { border-radius: 0.5rem; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.16); }
+    .portrait-img img { width: 100%; display: block; }
+    .portrait-img-caption { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--as-muted); margin-top: 0.8rem; text-align: center; }
+    .portrait-text h3 { font-family: var(--font-serif); font-size: 2.2rem; color: var(--text); line-height: 1.1; margin-bottom: 0.4rem; }
+    .portrait-age { font-size: 0.75rem; color: var(--as-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.8rem; }
+    .portrait-text p { font-size: 0.95rem; color: #333; line-height: 1.9; margin-bottom: 1.2rem; }
+    .portrait-quote { border-left: 3px solid var(--as-or); padding-left: 1.5rem; margin: 2rem 0; }
+    .portrait-quote p { font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; color: var(--text); line-height: 1.7; }
+    .portrait-quote cite { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--as-muted); margin-top: 0.5rem; font-style: normal; }
+    @media(max-width:900px){ .portrait-wrap{grid-template-columns:1fr; gap:2rem;} .portrait-img-wrap{position:static;} }
+
+    /* ── SYNOPSIS ─────────────────────── */
+    .synopsis-wrap { display: grid; grid-template-columns: 1fr 300px; gap: 4rem; align-items: start; }
+    .synopsis-text { font-family: var(--font-serif); font-size: 1.1rem; line-height: 2; color: #2a2a2a; font-style: italic; }
+    .fiche-grid { border-radius: 0.5rem; overflow: hidden; border: 1px solid rgba(0,0,0,0.07); }
+    .fiche-row { padding: 0.9rem 1.2rem; background: var(--as-creme); border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .fiche-row:last-child { border-bottom: none; }
+    .fiche-row dt { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--as-muted); margin-bottom: 0.2rem; }
+    .fiche-row dd { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+    @media(max-width:900px){ .synopsis-wrap{grid-template-columns:1fr;} }
+
+    /* ── FESTIVALS ────────────────────── */
+    .festivals-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+    .festival-card { background: var(--as-brun); border-radius: 0.6rem; padding: 1.8rem 1.5rem; border: 1px solid rgba(201,169,110,0.1); transition: border-color 0.25s, transform 0.25s; }
+    .festival-card:hover { border-color: rgba(201,169,110,0.4); transform: translateY(-3px); }
+    .festival-icon { font-size: 1.4rem; margin-bottom: 0.8rem; }
+    .festival-name { font-family: var(--font-display); font-size: 1rem; color: var(--as-or); letter-spacing: 0.04em; line-height: 1.25; margin-bottom: 0.4rem; }
+    .festival-detail { font-size: 0.72rem; color: rgba(255,255,255,0.35); line-height: 1.5; }
+    .festival-year { display: inline-block; font-family: monospace; font-size: 0.62rem; color: var(--as-or); border: 1px solid rgba(201,169,110,0.3); padding: 0.15rem 0.5rem; border-radius: 2rem; margin-top: 0.7rem; }
+    @media(max-width:900px){ .festivals-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:500px){ .festivals-grid{grid-template-columns:1fr;} }
+
+    /* ── AFFICHE ──────────────────────── */
+    .affiche-wrap { background: var(--as-brun); border-radius: 0.8rem; padding: 4rem; display: flex; gap: 4rem; align-items: center; }
+    .affiche-img { flex-shrink: 0; width: 320px; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 24px 72px rgba(0,0,0,0.65); }
+    .affiche-img img { width: 100%; display: block; }
+    .affiche-info-title { font-family: var(--font-serif); font-style: italic; font-size: 2.8rem; color: #fff; line-height: 0.95; margin-bottom: 1.5rem; }
+    .affiche-info-title span { color: var(--as-or); }
+    .affiche-desc p { font-size: 0.9rem; color: rgba(255,255,255,0.48); line-height: 1.9; margin-bottom: 0.9rem; }
+    .affiche-details { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); }
+    .affiche-detail-item dt { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(201,169,110,0.5); margin-bottom: 0.2rem; }
+    .affiche-detail-item dd { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+    @media(max-width:900px){ .affiche-wrap{flex-direction:column;padding:2.5rem;} .affiche-img{width:100%;max-width:320px;margin:0 auto;} }
+
+    /* ── STILLS ───────────────────────── */
+    .stills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .still-frame { border-radius: 0.4rem; overflow: hidden; }
+    .still-frame img { width: 100%; display: block; transition: transform 0.4s ease; }
+    .still-frame:hover img { transform: scale(1.03); }
+    @media(max-width:700px){ .stills-grid{grid-template-columns:1fr;} }
+
+    /* ── TOURNAGE ─────────────────────── */
+    .tournage-section { background: var(--as-noir); border-radius: 0.8rem; padding: 3.5rem; }
+    .tournage-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.7rem; }
+    .t-frame { border-radius: 0.35rem; overflow: hidden; }
+    .t-frame img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.3s; }
+    .t-frame:hover img { opacity: 0.8; }
+    .t-big { grid-column: 1; grid-row: 1 / 3; }
+    .t-big img { height: 420px; }
+    .t-sm img { height: 200px; }
+    @media(max-width:900px){ .tournage-grid{grid-template-columns:1fr 1fr; grid-template-rows:auto;} .t-big{grid-column:auto; grid-row:auto;} .t-big img,.t-sm img{height:200px;} .tournage-section{padding:2rem;} }
+    @media(max-width:500px){ .tournage-grid{grid-template-columns:1fr;} }
+
+    footer { background: #fff; border-top: 1px solid #eee; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #999; }
+    @media(max-width:900px){ footer{padding:1.5rem 2rem;} }
+  </style>
+  <title>&Acirc;mes S&oelig;urs &mdash; Direction Artistique &amp; Affiche cin&eacute;ma &mdash; On fait des bulles&nbsp;?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════ -->
+  <header class="as-hero">
+    <div class="as-hero-bg"></div>
+    <div class="as-hero-grad"></div>
+    <div class="as-hero-grain"></div>
+    <a href="projets.html" class="as-hero-back">&larr; Retour aux projets</a>
+    <div class="as-hero-content">
+      <p class="as-hero-badge">Direction Artistique &middot; Affiche Cin&eacute;ma &middot; Production ind&eacute;pendante</p>
+      <h1 class="as-hero-title">&Acirc;mes<br><em>S&oelig;urs</em></h1>
+      <div class="as-hero-line"></div>
+      <p class="as-hero-sub">Premier long-m&eacute;trage &middot; Arnaud Ballans &middot; 2024</p>
+    </div>
+  </header>
+
+  <main class="as-content">
+
+    <div class="dos-progress">
+      <a href="#s-brief"     class="dos-dot active" title="Brief"></a>
+      <a href="#s-portrait"  class="dos-dot" title="Portrait"></a>
+      <a href="#s-synopsis"  class="dos-dot" title="Synopsis"></a>
+      <a href="#s-festivals" class="dos-dot" title="Festivals"></a>
+      <a href="#s-affiche"   class="dos-dot" title="Affiche"></a>
+      <a href="#s-stills"    class="dos-dot" title="Stills"></a>
+      <a href="#s-tournage"  class="dos-dot" title="Tournage"></a>
+    </div>
+
+    <!-- ══ 01 BRIEF DA ═══════════════════ -->
+    <section class="dos-section" id="s-brief">
+      <div class="dos-label reveal">01 &mdash; La mission</div>
+      <div class="brief-paper reveal">
+        <div class="brief-paper-header">
+          <div>
+            <div class="bph-badge">Direction Artistique</div>
+            <div class="bph-sub">&Acirc;mes S&oelig;urs &middot; Premier long-m&eacute;trage &middot; Cin&eacute;ma ind&eacute;pendant</div>
+          </div>
+          <div class="bph-ref">R&eacute;f.&nbsp;AS&#8209;2024&#8209;001<br>Casino de Fouras</div>
+        </div>
+        <div class="brief-fields">
+          <div class="bf"><span class="bf-label">Client</span><span class="bf-val">Arnaud Ballans &mdash; r&eacute;alisateur</span></div>
+          <div class="bf"><span class="bf-label">Format</span><span class="bf-val">Long-m&eacute;trage ind&eacute;pendant &mdash; autoproduction</span></div>
+          <div class="bf"><span class="bf-label">Projection</span><span class="bf-val">Casino de Fouras, Charente-Maritime</span></div>
+          <div class="bf"><span class="bf-label">Genre</span><span class="bf-val">Romance &middot; Drame familial</span></div>
+          <div class="bf bf-full"><span class="bf-label">Mission</span><span class="bf-val">Concevoir l&rsquo;affiche et l&rsquo;identit&eacute; visuelle du premier long-m&eacute;trage d&rsquo;Arnaud Ballans. Apr&egrave;s lecture du sc&eacute;nario, d&eacute;finition des pistes photographiques pour orienter la s&eacute;ance photo, puis r&eacute;alisation de l&rsquo;affiche &agrave; r&eacute;ception des visuels. D&eacute;clinaison pour les r&eacute;seaux sociaux et l&rsquo;affichage grand format.</span></div>
+        </div>
+        <div class="brief-process">
+          <div class="brief-step"><p class="brief-step-num">01</p><p class="brief-step-label">Lecture<br>du sc&eacute;nario</p></div>
+          <div class="brief-step"><p class="brief-step-num">02</p><p class="brief-step-label">Direction<br>photographique</p></div>
+          <div class="brief-step"><p class="brief-step-num">03</p><p class="brief-step-label">S&eacute;ance<br>photo</p></div>
+          <div class="brief-step"><p class="brief-step-num">04</p><p class="brief-step-label">Cr&eacute;ation<br>de l&rsquo;affiche</p></div>
+          <div class="brief-step"><p class="brief-step-num">05</p><p class="brief-step-label">D&eacute;clinaisons<br>RS &amp; print</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 02 PORTRAIT ════════════════════ -->
+    <section class="dos-section" id="s-portrait">
+      <div class="dos-label reveal">02 &mdash; Le r&eacute;alisateur</div>
+      <div class="portrait-wrap reveal">
+        <div class="portrait-img-wrap">
+          <div class="portrait-img">
+            <img src="assets/arnaudballans.jpeg" alt="Arnaud Ballans, r&eacute;alisateur" loading="lazy" />
+          </div>
+          <p class="portrait-img-caption">Arnaud Ballans &mdash; R&eacute;alisateur</p>
+        </div>
+        <div class="portrait-text">
+          <h3>Arnaud Ballans</h3>
+          <p class="portrait-age">22 ans &middot; Rochefort, Charente-Maritime</p>
+          <p>Enfant du Pays rochefortais, le jeune homme porte avec fiert&eacute; et conviction ce qui est sa premi&egrave;re &oelig;uvre cin&eacute;matographique &mdash; et probablement pas la derni&egrave;re.</p>
+          <p>Ancien &eacute;l&egrave;ve du lyc&eacute;e Marcel-Dassault de Rochefort, il a d&eacute;couvert le th&eacute;&acirc;tre via le cursus scolaire alors qu&rsquo;il voulait simplement retrouver ses amis. Il a finalement mordu &agrave; l&rsquo;hame&ccedil;on &mdash; et sans regret. Aujourd&rsquo;hui, il ne peut pas envisager une autre carri&egrave;re que celle li&eacute;e &agrave; la cr&eacute;ation artistique, et plus s&ucirc;rement encore &agrave; l&rsquo;image.</p>
+          <blockquote class="portrait-quote">
+            <p>&laquo;&nbsp;Tout s&rsquo;est fait gr&acirc;ce &agrave; celle qui dirigeait les ateliers th&eacute;&acirc;tre du lyc&eacute;e, Catherine Sarrezza. Elle est fantastique et, d&rsquo;ailleurs, elle joue dans mon film.&nbsp;&raquo;</p>
+            <cite>&mdash; Arnaud Ballans</cite>
+          </blockquote>
+          <p>Il sait ce qu&rsquo;il doit aux circonstances &mdash; et c&rsquo;est cette gratitude qui nourrit son regard sur les &ecirc;tres et les histoires qu&rsquo;il choisit de raconter.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 03 SYNOPSIS ════════════════════ -->
+    <section class="dos-section" id="s-synopsis">
+      <div class="dos-label reveal">03 &mdash; Le film</div>
+      <div class="synopsis-wrap reveal">
+        <p class="synopsis-text">&laquo;&nbsp;Paul et Ester, 20&nbsp;ans, partagent une histoire d&rsquo;amour pleine de passion et de complicit&eacute; depuis pr&egrave;s d&rsquo;un an. Pour l&rsquo;anniversaire de sa m&egrave;re, Ester d&eacute;cide d&rsquo;organiser la rencontre tant attendue entre son petit ami et sa m&egrave;re, Suzann. Malheureusement, cet &eacute;v&egrave;nement va entra&icirc;ner une r&eacute;action inattendue et causer de grandes perturbations entre ces &acirc;mes-s&oelig;urs, ce qui les plongera tous les trois dans une spirale de souffrances et de d&eacute;chirements.&nbsp;&raquo;</p>
+        <dl class="fiche-grid">
+          <div class="fiche-row"><dt>Production</dt><dd>Autoproduction</dd></div>
+          <div class="fiche-row"><dt>Langue</dt><dd>Fran&ccedil;ais</dd></div>
+          <div class="fiche-row"><dt>Sous-genre</dt><dd>Romance</dd></div>
+          <div class="fiche-row"><dt>Th&egrave;mes</dt><dd>Amour &middot; Famille &middot; S&eacute;paration &middot; Adoption &middot; Secret &middot; Ruralit&eacute; &middot; &Eacute;quitation</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ══ 04 FESTIVALS ════════════════════ -->
+    <section class="dos-section" id="s-festivals">
+      <div class="dos-label reveal">04 &mdash; Vie du film</div>
+      <div class="festivals-grid reveal">
+        <div class="festival-card">
+          <div class="festival-icon">&#127910;</div>
+          <p class="festival-name">Lift-Off First-Time Filmmaker</p>
+          <p class="festival-detail">Cat&eacute;gorie &laquo;&nbsp;New Voices&nbsp;&raquo;</p>
+          <span class="festival-year">2024</span>
+        </div>
+        <div class="festival-card">
+          <div class="festival-icon">&#127470;&#127475;</div>
+          <p class="festival-name">Indian World Film Festival</p>
+          <p class="festival-detail">IMDb qualifier &middot; Inde</p>
+          <span class="festival-year">2024</span>
+        </div>
+        <div class="festival-card">
+          <div class="festival-icon">&#127470;&#127481;</div>
+          <p class="festival-name">Ischia Global Film Festival</p>
+          <p class="festival-detail">Ischia, Italie</p>
+          <span class="festival-year">2024</span>
+        </div>
+        <div class="festival-card">
+          <div class="festival-icon">&#127470;&#127475;</div>
+          <p class="festival-name">Ahmedabad International Film Festival</p>
+          <p class="festival-detail">Inde</p>
+          <span class="festival-year">2025</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 05 L'AFFICHE ════════════════════ -->
+    <section class="dos-section" id="s-affiche">
+      <div class="dos-label reveal">05 &mdash; L&rsquo;affiche</div>
+      <div class="affiche-wrap reveal">
+        <div class="affiche-img">
+          <img src="assets/arnaud.png" alt="Affiche &Acirc;mes S&oelig;urs" loading="lazy" />
+        </div>
+        <div class="affiche-info">
+          <h2 class="affiche-info-title">&Acirc;mes<br><span>S&oelig;urs</span></h2>
+          <div class="affiche-desc">
+            <p>Cr&eacute;ation d&rsquo;un logo avec un traitement typographique &agrave; la fois &eacute;l&eacute;gant et cin&eacute;matographique, jouant sur l&rsquo;entrelacement des lettres pour &eacute;voquer le lien entre les deux personnages.</p>
+            <p>La composition place les deux acteurs allong&eacute;s dans la paille, regards crois&eacute;s, dans une tension douce et intimiste. Le traitement des couleurs chaudes et la typographie dor&eacute;e du titre installent une atmosph&egrave;re romanesque et contemplative.</p>
+            <p>L&rsquo;affiche a &eacute;t&eacute; d&eacute;clin&eacute;e pour les r&eacute;seaux sociaux et l&rsquo;affichage grand format pour la promotion du film.</p>
+          </div>
+          <dl class="affiche-details">
+            <div class="affiche-detail-item"><dt>Format</dt><dd>120&times;160 &middot; RS &middot; Grand format</dd></div>
+            <div class="affiche-detail-item"><dt>Typographie</dt><dd>Serif &middot; lettres entrelac&eacute;es</dd></div>
+            <div class="affiche-detail-item"><dt>Ambiance</dt><dd>Couleurs chaudes &middot; Rurale &middot; Intimiste</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 06 STILLS DU FILM ═══════════════ -->
+    <section class="dos-section" id="s-stills">
+      <div class="dos-label reveal">06 &mdash; Images du film</div>
+      <div class="stills-grid reveal">
+        <div class="still-frame"><img src="assets/as1.png" alt="Still 1" loading="lazy" /></div>
+        <div class="still-frame"><img src="assets/as2.png" alt="Still 2" loading="lazy" /></div>
+        <div class="still-frame"><img src="assets/as3.png" alt="Still 3" loading="lazy" /></div>
+        <div class="still-frame"><img src="assets/as4.png" alt="Still 4" loading="lazy" /></div>
+      </div>
+    </section>
+
+    <!-- ══ 07 COULISSES ════════════════════ -->
+    <section class="dos-section" id="s-tournage">
+      <div class="dos-label reveal">07 &mdash; Coulisses</div>
+      <div class="tournage-section reveal">
+        <div class="dos-label dos-label-light" style="margin-bottom:1.5rem;">Dans les coulisses du tournage</div>
+        <div class="tournage-grid">
+          <div class="t-frame t-big"><img src="assets/tournage1.jpg" alt="Tournage 1" loading="lazy" /></div>
+          <div class="t-frame t-sm"><img src="assets/tournage2.jpg" alt="Tournage 2" loading="lazy" /></div>
+          <div class="t-frame t-sm"><img src="assets/tournage3.webp" alt="Tournage 3" loading="lazy" /></div>
+          <div class="t-frame t-sm" style="grid-column:2;"><img src="assets/tournage4.jpg" alt="Tournage 4" loading="lazy" /></div>
+          <div class="t-frame t-sm"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    (function(){
+      var c=document.getElementById('cursor'),f=document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){c.style.display='none';f.style.display='none';return;}
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx-5+'px';c.style.top=my-5+'px';});
+      (function tick(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;f.style.left=fx-16+'px';f.style.top=fy-16+'px';requestAnimationFrame(tick);})();
+    })();
+
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){
+        if(e[0].isIntersecting) setTimeout(function(){r.classList.add('visible');},i*40);
+      },{threshold:0.05}).observe(r);
+    });
+
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    (function(){
+      var ids=['s-brief','s-portrait','s-synopsis','s-festivals','s-affiche','s-stills','s-tournage'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting)return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0)dots.forEach(function(d,i){d.classList.toggle('active',i===idx);});
+        });
+      },{threshold:0.25,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+    })();
+  </script>
+</body>
+</html>

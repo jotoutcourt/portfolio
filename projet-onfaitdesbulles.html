@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <title>On fait des bulles — Notre site</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --surface: #f8f8f8;
+      --accent1: #D66A77;
+      --accent2: #97BAED;
+      --accent3: #D66A77;
+      --text: #1a1a2e;
+      --muted: #666676;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+      min-height: 100vh;
+    }
+
+    /* CURSOR */
+    .cursor { width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s; }
+    .cursor.pop { transform: scale(2.5); background: var(--accent3); }
+    .cursor-follower { width: 36px; height: 36px; border: 1px solid rgba(214,106,119,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media (max-width: 900px) { .cursor, .cursor-follower { display: none !important; } body { cursor: auto !important; } }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg, #D66A77, #97BAED, #D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent2); }
+    @media (max-width: 900px) { nav { padding: 1.2rem 2rem; } .nav-links { display: none; } }
+
+    /* CANVAS BULLES */
+    #bubble-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 4rem 4rem;
+      gap: 1.5rem;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 8rem);
+      line-height: 0.9;
+      background: linear-gradient(135deg, #fff 30%, var(--accent2) 70%, var(--accent1) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+    .hero-sub {
+      font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 400; }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      padding: 0.8rem 2rem;
+      border: 1px solid rgba(151,186,237,0.35);
+      border-radius: 2rem;
+      color: var(--accent2);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+    .hero-cta:hover { background: rgba(151,186,237,0.08); border-color: var(--accent2); }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s 1.2s forwards;
+    }
+    .hero-scroll-line { width: 1px; height: 36px; background: linear-gradient(to bottom, rgba(122,116,143,0.6), transparent); animation: scrollPulse 1.8s ease-in-out infinite; }
+    @keyframes scrollPulse { 0% { transform: scaleY(0); transform-origin: top; opacity: 0; } 50% { transform: scaleY(1); transform-origin: top; opacity: 1; } 100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; } }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* SECTION COMMUNE */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1;
+      margin-bottom: 2rem;
+    }
+
+    /* SECTION "CE SITE" */
+    .site-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .site-text p {
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+    }
+    .site-text p strong { color: var(--text); font-weight: 400; }
+    .site-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    .site-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 2rem;
+      color: var(--muted);
+    }
+    .site-visual {
+      position: relative;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .site-visual-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(214,106,119,0.15);
+      animation: spin linear infinite;
+    }
+    .site-visual-ring:nth-child(1) { width: 90%; height: 90%; animation-duration: 30s; }
+    .site-visual-ring:nth-child(2) { width: 70%; height: 70%; animation-duration: 20s; animation-direction: reverse; border-color: rgba(151,186,237,0.15); }
+    .site-visual-ring:nth-child(3) { width: 50%; height: 50%; animation-duration: 15s; border-color: rgba(214,106,119,0.15); }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .site-visual-center {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(214,106,119,0.4), rgba(151,186,237,0.1) 60%, transparent);
+      border: 1px solid rgba(214,106,119,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    /* DIVIDER */
+    .divider {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+      margin: 0 auto;
+    }
+
+    /* SECTION BULLES — FLAPPY GAME */
+    .bubbles-section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .game-wrapper {
+      position: relative;
+      width: 100%;
+      margin: 2.5rem 0 1.5rem;
+    }
+    #flappy-canvas {
+      width: 100%;
+      height: 340px;
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      display: block;
+      cursor: pointer;
+    }
+    .game-ui {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .game-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 2rem;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .game-score span { color: var(--accent2); font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 0; }
+    .game-hint {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+          100% { transform: scale(3); opacity: 0; }
+    }
+
+    /* FLYING BUBBLE (formulaire) */
+    .flying-bubble {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9996;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.6), rgba(151,186,237,0.2) 50%, rgba(214,106,119,0.1));
+      border: 1px solid rgba(151,186,237,0.5);
+      box-shadow: 0 0 20px rgba(151,186,237,0.2), inset 0 0 20px rgba(255,255,255,0.05);
+      animation: flyAway 2.5s ease-out forwards;
+    }
+    @keyframes flyAway {
+      0% { transform: scale(0) translateY(0); opacity: 0; }
+      15% { transform: scale(1) translateY(0); opacity: 1; }
+      100% { transform: scale(0.6) translateY(-80vh) translateX(20vw); opacity: 0; }
+    }
+
+    @media (max-width: 900px) {
+      .section, .bubbles-section, .form-section { padding: 4rem 2rem; }
+      .site-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .site-visual { height: 240px; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bubble-canvas"></canvas>
+
+<nav>
+  <a href="index.html" class="nav-logo">Jordan Join</a>
+      <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">On fait des bulles — Notre site</p>
+  <h1 class="hero-title">Vous y êtes.</h1>
+  <p class="hero-sub">Ce site, c'est notre terrain de jeu. Conçu et développé <strong>entièrement par nous</strong> — Jordan & Juliette — il est à la fois notre vitrine, notre laboratoire et notre meilleure carte de visite.</p>
+  <a href="#bulles" class="hero-cta">
+    <span>Éclater des bulles</span>
+    <span>↓</span>
+  </a>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Défiler</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION CE SITE -->
+<section class="section">
+  <div class="site-grid">
+    <div class="site-text reveal">
+      <p class="section-label">01 — Le projet</p>
+      <h2 class="section-title">Fait maison,<br>avec soin.</h2>
+      <p>Quand on conçoit des sites pour nos clients, on s'impose les mêmes exigences que pour eux. Ce site a été pensé, designé et développé <strong>de A à Z par l'équipe d'On fait des bulles</strong> — sans template, sans raccourci.</p>
+      <p>Chaque détail compte : le curseur personnalisé, les animations au scroll, les bulles en fond qui dérivent doucement… Autant de <strong>petites attentions</strong> qui font la différence entre un site et une expérience.</p>
+      <p>Il évolue en continu, comme notre agence.</p>
+      <div class="site-tags">
+        <span class="site-tag">HTML / CSS / JS</span>
+        <span class="site-tag">Vercel</span>
+        <span class="site-tag">Motion design</span>
+        <span class="site-tag">UX thinking</span>
+        <span class="site-tag">Design system</span>
+      </div>
+    </div>
+    <div class="site-visual reveal">
+      <div class="site-visual-ring"></div>
+      <div class="site-visual-ring"></div>
+      <div class="site-visual-ring"></div>
+      <div class="site-visual-center">OFDB</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION FLAPPY BUBBLE -->
+<section class="bubbles-section" id="bulles">
+  <p class="section-label reveal">02 — Mini-jeu</p>
+  <h2 class="section-title reveal">Flappy<br>Bubble.</h2>
+  <div class="game-wrapper reveal">
+    <canvas id="flappy-canvas"></canvas>
+  </div>
+  <div class="game-ui reveal">
+    <div class="game-score">Score&nbsp;&nbsp;<span id="score-val">0</span></div>
+    <div class="game-score">Meilleur&nbsp;&nbsp;<span id="best-val">0</span></div>
+    <div class="game-hint">Clic ou espace pour voler</div>
+  </div>
+</section>
+
+<footer>
+  <span>&copy; 2026 Jordan Join</span>
+  <span>Lyon, France — faisonsdesbulles.com</span>
+</footer>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="follower"></div>
+
+<script>
+// =====================
+// CURSOR
+// =====================
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('follower');
+const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+let mx = 0, my = 0, fx = 0, fy = 0;
+if (!hasHover) {
+  cursor.style.display = 'none';
+  follower.style.display = 'none';
+} else {
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+  function animF() {
+    fx += (mx - fx) * 0.18; fy += (my - fy) * 0.18;
+    follower.style.left = fx - 18 + 'px'; follower.style.top = fy - 18 + 'px';
+    requestAnimationFrame(animF);
+  }
+  animF();
+}
+
+// =====================
+// CANVAS BULLES BG
+// =====================
+const canvas = document.getElementById('bubble-canvas');
+const ctx = canvas.getContext('2d');
+let bgBubbles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+
+function createBgBubble() {
+  return {
+    x: Math.random() * canvas.width,
+    y: canvas.height + Math.random() * 200,
+    r: 8 + Math.random() * 40,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: -(0.15 + Math.random() * 0.4),
+    opacity: 0.04 + Math.random() * 0.1,
+    hue: Math.random() > 0.5 ? 270 : 170,
+  };
+}
+
+for (let i = 0; i < 28; i++) {
+  bgBubbles.push({ ...createBgBubble(), y: Math.random() * (canvas.height || window.innerHeight) });
+}
+
+function drawBgBubbles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bgBubbles.forEach(b => {
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.strokeStyle = `hsla(${b.hue}, 80%, 70%, ${b.opacity})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // reflet
+    ctx.beginPath();
+    ctx.arc(b.x - b.r * 0.3, b.y - b.r * 0.3, b.r * 0.18, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${b.hue}, 80%, 90%, ${b.opacity * 1.5})`;
+    ctx.fill();
+    b.x += b.vx; b.y += b.vy;
+    if (b.y + b.r < 0) Object.assign(b, createBgBubble());
+  });
+  requestAnimationFrame(drawBgBubbles);
+}
+
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); });
+drawBgBubbles();
+
+// =====================
+// ARENA BULLES INTERACTIVES
+// =====================
+const popCountEl = document.getElementById('pop-count');
+let popCount = 0;
+
+
+
+// =====================
+// FLAPPY BUBBLE GAME
+// =====================
+(function() {
+  const fc = document.getElementById('flappy-canvas');
+  if (!fc) return;
+  const fctx = fc.getContext('2d');
+  const scoreEl = document.getElementById('score-val');
+  const bestEl  = document.getElementById('best-val');
+
+  let W, H;
+  function resize() {
+    W = fc.offsetWidth;
+    H = fc.offsetHeight;
+    fc.width  = W;
+    fc.height = H;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); if (!running) drawIdle(); });
+
+  const GRAVITY      = 0.32;
+  const FLAP         = -6.5;
+  const PIPE_W       = 52;
+  const GAP          = 130;
+  const PIPE_SPEED   = 2.2;
+  const PIPE_INTERVAL = 1600;
+  const COLORS = ['#97BAED','#D66A77','#D66A77','#ffd166'];
+
+  let bubble, pipes, score, best = 0;
+  let running = false, dead = false, started = false;
+  let lastPipe = 0, lastTime = 0, animId;
+  let popParticles = [];
+
+  function initGame() {
+    bubble = { x: W * 0.22, y: H / 2, vy: 0, r: 22 };
+    pipes  = [];
+    score  = 0;
+    popParticles = [];
+    dead    = false;
+    started = false;
+    running = true;
+    lastPipe = performance.now();
+    if (scoreEl) scoreEl.textContent = 0;
+  }
+
+  function drawBackground() {
+    fctx.clearRect(0, 0, W, H);
+    fctx.strokeStyle = 'rgba(255,255,255,0.02)';
+    fctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 40) { fctx.beginPath(); fctx.moveTo(x,0); fctx.lineTo(x,H); fctx.stroke(); }
+    for (let y = 0; y < H; y += 40) { fctx.beginPath(); fctx.moveTo(0,y); fctx.lineTo(W,y); fctx.stroke(); }
+  }
+
+  function drawBubble(b) {
+    // Corps
+    const g = fctx.createRadialGradient(b.x - b.r*0.3, b.y - b.r*0.35, b.r*0.05, b.x, b.y, b.r);
+    g.addColorStop(0, 'rgba(255,255,255,0.18)');
+    g.addColorStop(0.6, 'rgba(151,186,237,0.06)');
+    g.addColorStop(1, 'rgba(151,186,237,0.0)');
+    fctx.beginPath();
+    fctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    fctx.fillStyle = g;
+    fctx.fill();
+    // Contour irisé
+    const sg = fctx.createLinearGradient(b.x-b.r, b.y-b.r, b.x+b.r, b.y+b.r);
+    sg.addColorStop(0, 'rgba(151,186,237,0.9)');
+    sg.addColorStop(0.5, 'rgba(214,106,119,0.7)');
+    sg.addColorStop(1, 'rgba(214,106,119,0.5)');
+    fctx.beginPath();
+    fctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    fctx.strokeStyle = sg;
+    fctx.lineWidth = 1.5;
+    fctx.stroke();
+    // Reflet principal
+    fctx.beginPath();
+    fctx.ellipse(b.x - b.r*0.28, b.y - b.r*0.32, b.r*0.22, b.r*0.12, -0.4, 0, Math.PI*2);
+    fctx.fillStyle = 'rgba(255,255,255,0.55)';
+    fctx.fill();
+    // Petit reflet
+    fctx.beginPath();
+    fctx.ellipse(b.x + b.r*0.15, b.y + b.r*0.3, b.r*0.09, b.r*0.05, 0.6, 0, Math.PI*2);
+    fctx.fillStyle = 'rgba(255,255,255,0.2)';
+    fctx.fill();
+  }
+
+  function drawPipe(p) {
+    const g = fctx.createLinearGradient(p.x, 0, p.x+PIPE_W, 0);
+    g.addColorStop(0, 'rgba(214,106,119,0.35)');
+    g.addColorStop(0.5, 'rgba(214,106,119,0.18)');
+    g.addColorStop(1, 'rgba(214,106,119,0.08)');
+    // Haut
+    fctx.beginPath(); fctx.roundRect(p.x, 0, PIPE_W, p.top, [0,0,10,10]);
+    fctx.fillStyle = g; fctx.fill();
+    fctx.strokeStyle = 'rgba(214,106,119,0.55)'; fctx.lineWidth = 1; fctx.stroke();
+    // Bas
+    fctx.beginPath(); fctx.roundRect(p.x, p.top+GAP, PIPE_W, H-p.top-GAP, [10,10,0,0]);
+    fctx.fillStyle = g; fctx.fill();
+    fctx.strokeStyle = 'rgba(214,106,119,0.55)'; fctx.stroke();
+    // Bord lumineux
+    fctx.strokeStyle = 'rgba(151,186,237,0.3)'; fctx.lineWidth = 2;
+    fctx.beginPath();
+    fctx.moveTo(p.x+PIPE_W, 0); fctx.lineTo(p.x+PIPE_W, p.top);
+    fctx.moveTo(p.x+PIPE_W, p.top+GAP); fctx.lineTo(p.x+PIPE_W, H);
+    fctx.stroke();
+  }
+
+  function spawnPop(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI*2/12)*i + Math.random()*0.3;
+      const speed = 1.5 + Math.random()*3.5;
+      popParticles.push({ x, y,
+        vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed - 1,
+        r: 2 + Math.random()*5, alpha: 1,
+        color: COLORS[Math.floor(Math.random()*COLORS.length)]
+      });
+    }
+  }
+
+  function updatePops() {
+    popParticles = popParticles.filter(p => p.alpha > 0.02);
+    popParticles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.14; p.alpha *= 0.88;
+      fctx.beginPath(); fctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      fctx.globalAlpha = p.alpha;
+      fctx.fillStyle = p.color; fctx.fill();
+      fctx.globalAlpha = 1;
+    });
+  }
+
+  function gameLoop(ts) {
+    if (!running) return;
+    lastTime = ts;
+
+    drawBackground();
+
+    if (started && !dead) {
+      bubble.vy += GRAVITY;
+      bubble.y  += bubble.vy;
+
+      // Spawn tuyaux
+      if (ts - lastPipe > PIPE_INTERVAL) {
+        const top = 50 + Math.random() * (H - GAP - 100);
+        pipes.push({ x: W + PIPE_W, top, scored: false });
+        lastPipe = ts;
+      }
+
+      pipes.forEach(p => {
+        p.x -= PIPE_SPEED;
+        drawPipe(p);
+        // Score
+        if (!p.scored && p.x + PIPE_W < bubble.x) {
+          score++;
+          if (scoreEl) scoreEl.textContent = score;
+          if (score > best) { best = score; if (bestEl) bestEl.textContent = best; }
+          p.scored = true;
+        }
+        // Collision
+        const inX   = bubble.x + bubble.r > p.x && bubble.x - bubble.r < p.x + PIPE_W;
+        const hitTop = bubble.y - bubble.r < p.top;
+        const hitBot = bubble.y + bubble.r > p.top + GAP;
+        if (inX && (hitTop || hitBot)) { dead = true; spawnPop(bubble.x, bubble.y); }
+      });
+      pipes = pipes.filter(p => p.x + PIPE_W > 0);
+
+      // Sol / plafond
+      if (bubble.y + bubble.r > H || bubble.y - bubble.r < 0) {
+        dead = true; spawnPop(bubble.x, bubble.y);
+      }
+    }
+
+    // Bulle (avec légère inclinaison)
+    if (!dead) {
+      fctx.save();
+      const tilt = started ? Math.max(-0.4, Math.min(0.4, bubble.vy * 0.04)) : 0;
+      fctx.translate(bubble.x, bubble.y);
+      fctx.rotate(tilt);
+      fctx.translate(-bubble.x, -bubble.y);
+      drawBubble(bubble);
+      fctx.restore();
+    }
+
+    updatePops();
+
+    // Score fantôme
+    if (started) {
+      fctx.save();
+      fctx.font = `bold ${Math.min(H*0.18, 52)}px 'Bebas Neue', sans-serif`;
+      fctx.fillStyle = 'rgba(255,255,255,0.06)';
+      fctx.textAlign = 'center';
+      fctx.fillText(score, W/2, H*0.25);
+      fctx.restore();
+    }
+
+    // Écran game over
+    if (dead && popParticles.length === 0) {
+      fctx.fillStyle = 'rgba(255,255,255,0.65)';
+      fctx.fillRect(0, 0, W, H);
+      fctx.save();
+      fctx.textAlign = 'center';
+      fctx.fillStyle = 'rgba(255,255,255,0.9)';
+      fctx.font = `bold ${Math.min(W*0.08, 40)}px 'Bebas Neue', sans-serif`;
+      fctx.fillText('ÉCLATÉE !', W/2, H/2 - 22);
+      fctx.font = `${Math.min(W*0.032, 14)}px 'DM Sans', sans-serif`;
+      fctx.fillStyle = 'rgba(151,186,237,0.85)';
+      fctx.letterSpacing = '0.12em';
+      fctx.fillText('CLIC POUR REJOUER', W/2, H/2 + 18);
+      fctx.restore();
+      running = false;
+      return;
+    }
+
+    animId = requestAnimationFrame(gameLoop);
+  }
+
+  function drawIdle() {
+    drawBackground();
+    drawBubble({ x: W*0.22, y: H/2, r: 22 });
+    fctx.save();
+    fctx.textAlign = 'center';
+    fctx.fillStyle = 'rgba(255,255,255,0.5)';
+    fctx.font = `600 ${Math.min(W*0.028, 13)}px 'DM Sans', sans-serif`;
+    fctx.fillText('CLIC OU ESPACE POUR JOUER', W/2, H/2 + 2);
+    fctx.restore();
+  }
+
+  function flap() {
+    if (!running) {
+      cancelAnimationFrame(animId);
+      initGame();
+      lastTime = performance.now();
+      animId = requestAnimationFrame(gameLoop);
+    }
+    if (!started) started = true;
+    if (!dead) bubble.vy = FLAP;
+  }
+
+  fc.addEventListener('click', flap);
+  document.addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); flap(); } });
+
+  // Attendre que le canvas soit visible avant de dessiner
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) { resize(); drawIdle(); observer.disconnect(); }
+  }, { threshold: 0.1 });
+  observer.observe(fc);
+})();
+
+// =====================
+// REVEAL AU SCROLL
+// =====================
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) setTimeout(() => el.classList.add('visible'), i % 3 * 80);
+  }, { threshold: 0.1 }).observe(el);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --l-teno-orange: #e07830;
+      --l-teno-vert:   #2e6b4a;
+      --l-cuivra-bleu: #1a3f7a;
+      --l-cuivra-cuiv: #c87038;
+      --l-creme:  #f4f0e8;
+      --surface:  #f7f5f0;
+      --text:     #1a1a1a;
+      --muted:    #666666;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-serif:   'Playfair Display', serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:#fff; color:var(--text); font-family:var(--font-body); font-weight:300; overflow-x:hidden; cursor:none; }
+
+    .cursor { width:10px; height:10px; background:var(--l-cuivra-cuiv); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:multiply; }
+    .cursor-follower { width:32px; height:32px; border:1px solid rgba(200,112,56,0.4); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:1000; display:flex; justify-content:space-between; align-items:center; padding:1.5rem 4rem; background:rgba(255,255,255,0.94); backdrop-filter:blur(14px); border-bottom:1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family:var(--font-display); font-size:1.1rem; letter-spacing:0.08em; text-decoration:none; background:linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { color:#888; text-decoration:none; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s; }
+    .nav-links a:hover,.nav-links a.active { color:var(--l-cuivra-bleu); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* HERO */
+    .lb-hero { position:relative; min-height:58vh; display:flex; flex-direction:column; justify-content:flex-end; padding:8rem 4rem 4rem; overflow:hidden; background:#0d1a2e; }
+    .lb-hero-tache { position:absolute; top:-10%; right:-8%; width:55%; opacity:0.18; pointer-events:none; mix-blend-mode:screen; }
+    .lb-hero-back { display:inline-flex; align-items:center; gap:0.6rem; color:rgba(255,255,255,0.4); text-decoration:none; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem; transition:color 0.2s; width:fit-content; }
+    .lb-hero-back:hover{color:rgba(255,255,255,0.8);}
+    .lb-hero-badge { display:inline-block; font-size:0.65rem; letter-spacing:0.26em; text-transform:uppercase; color:var(--l-cuivra-cuiv); border:1px solid rgba(200,112,56,0.35); padding:0.28rem 0.85rem; border-radius:2rem; margin-bottom:1.2rem; }
+    .lb-hero-title { font-family:var(--font-display); font-size:clamp(3rem,7vw,7rem); line-height:0.93; color:#fff; margin-bottom:1.2rem; }
+    .lb-hero-sub { font-family:var(--font-serif); font-style:italic; font-size:1rem; color:rgba(255,255,255,0.5); }
+    @media(max-width:900px){ .lb-hero{padding:7rem 2rem 3rem;} .lb-hero-tache{width:90%;right:-20%;} }
+
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.65s ease,transform 0.65s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    .dos-progress{position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:0.75rem;z-index:500;}
+    .dos-dot{display:block;width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,0.15);transition:all 0.3s;text-decoration:none;}
+    .dos-dot.active{background:var(--l-cuivra-bleu);transform:scale(1.65);}
+    @media(max-width:1100px){.dos-progress{display:none;}}
+
+    .dos-label{font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--l-cuivra-bleu);margin-bottom:1.8rem;display:flex;align-items:center;gap:1rem;}
+    .dos-label::after{content:'';flex:1;height:1px;background:rgba(0,0,0,0.07);}
+    .dos-section{margin-bottom:6rem;scroll-margin-top:6rem;}
+
+    .lb-content{padding:5.5rem 4rem 7rem;max-width:1100px;margin:0 auto;position:relative;}
+    @media(max-width:900px){.lb-content{padding:3.5rem 2rem 5rem;}}
+
+    /* BRIEF */
+    .brief-wrap{display:flex;gap:2rem;align-items:flex-start;}
+    .brief-paper{flex:1;background:#fdf9f4;border:1px solid rgba(0,0,0,0.07);border-radius:0.6rem;padding:2.8rem;position:relative;overflow:hidden;box-shadow:0 3px 24px rgba(0,0,0,0.06);}
+    .brief-paper::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.026) 27px,rgba(0,0,0,0.026) 28px);}
+    .brief-paper-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:2px solid rgba(0,0,0,0.05);}
+    .bph-badge{display:inline-block;font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.12em;color:var(--l-cuivra-bleu);border:2px solid var(--l-cuivra-bleu);padding:0.3rem 0.9rem;border-radius:3px;opacity:0.8;margin-bottom:0.4rem;}
+    .bph-sub{font-size:0.75rem;color:var(--muted);letter-spacing:0.06em;}
+    .bph-ref{font-family:monospace;font-size:0.72rem;color:var(--muted);text-align:right;line-height:1.6;}
+    .brief-fields{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 2rem;margin-bottom:1rem;}
+    .bf{padding-bottom:0.6rem;border-bottom:1px dotted rgba(0,0,0,0.13);}
+    .bf-full{grid-column:1/-1;}
+    .bf-label{display:block;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+    .bf-val{font-size:0.92rem;color:var(--text);line-height:1.55;}
+    .brief-validated{position:absolute;bottom:2rem;right:2rem;width:78px;height:78px;opacity:0.5;transform:rotate(-8deg);}
+    .postit{background:#fef9c3;padding:1.4rem 1.6rem;border-radius:2px;box-shadow:2px 5px 18px rgba(0,0,0,0.13);font-family:'Caveat',cursive;font-size:1.1rem;line-height:1.6;color:#5c4400;max-width:210px;flex-shrink:0;position:relative;margin-top:1.5rem;transform:rotate(-2.5deg);}
+    .postit::before{content:'';position:absolute;top:0;left:0;right:0;height:26px;background:rgba(0,0,0,0.05);border-radius:2px 2px 0 0;}
+    .postit-arrow{display:block;font-size:0.9rem;margin-bottom:0.3rem;opacity:0.4;}
+    @media(max-width:900px){.brief-wrap{flex-direction:column;}.brief-fields{grid-template-columns:1fr;}}
+
+    /* INSIGHT */
+    .lb-insight{background:#0d1a2e;color:#e8edf4;border-radius:0.8rem;padding:3.5rem;position:relative;overflow:hidden;margin-bottom:3rem;}
+    .lb-insight-tache{position:absolute;bottom:-20%;right:-10%;width:45%;opacity:0.07;pointer-events:none;}
+    .lb-insight-lead{font-size:0.98rem;color:rgba(232,237,244,0.55);line-height:1.9;margin-bottom:2rem;max-width:520px;}
+    .lb-insight-reveal{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;}
+    .lb-ir-line{flex:1;height:1px;background:rgba(200,112,56,0.3);}
+    .lb-insight-big{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,3rem);color:var(--l-cuivra-cuiv);line-height:1.05;}
+    .lb-insight-sub{font-size:0.88rem;color:rgba(232,237,244,0.4);line-height:1.9;max-width:500px;}
+
+    .sportive-wrap{display:flex;justify-content:flex-end;margin-bottom:3rem;margin-top:-1rem;}
+    .sportive-img{height:240px;object-fit:contain;filter:drop-shadow(0 12px 32px rgba(0,0,0,0.12));}
+    @media(max-width:900px){.sportive-wrap{justify-content:center;}.sportive-img{height:180px;}}
+
+    /* ACTIFS */
+    .actifs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:4rem;}
+    .actif-card{text-align:center;padding:1.8rem 1rem 1.4rem;border:1px solid rgba(0,0,0,0.06);border-radius:0.7rem;background:var(--surface);transition:transform 0.25s,box-shadow 0.25s;}
+    .actif-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.08);}
+    .actif-img{width:72px;height:72px;object-fit:contain;margin:0 auto 1rem;display:block;}
+    .actif-name{font-family:var(--font-display);font-size:1.15rem;letter-spacing:0.06em;color:var(--text);margin-bottom:0.25rem;}
+    .actif-latin{font-family:var(--font-serif);font-style:italic;font-size:0.68rem;color:var(--muted);}
+    @media(max-width:900px){.actifs-grid{grid-template-columns:repeat(2,1fr);}}
+
+    /* PRODUIT */
+    .produit-block{margin-bottom:5.5rem;position:relative;}
+    .produit-tache{position:absolute;top:-3rem;right:-4rem;width:280px;opacity:0.055;pointer-events:none;z-index:0;}
+    .produit-block>*:not(.produit-tache){position:relative;z-index:1;}
+    .produit-head{display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;}
+    .produit-pill{font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.32rem 0.95rem;border-radius:2rem;flex-shrink:0;}
+    .pill-teno{background:var(--l-teno-vert);color:#fff;}
+    .pill-cuivra{background:var(--l-cuivra-bleu);color:#fff;}
+    .produit-name{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.2rem);line-height:1;}
+
+    .produit-layout{display:grid;grid-template-columns:1fr 3fr;gap:2rem;align-items:start;margin-bottom:1.5rem;}
+    .produit-boite{display:flex;flex-direction:column;align-items:center;gap:1rem;padding-top:0.5rem;}
+    .produit-boite img{width:100%;max-width:150px;object-fit:contain;filter:drop-shadow(0 12px 32px rgba(0,0,0,0.15));}
+    .produit-boite-label{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-align:center;}
+
+    .flyer-duo{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .flyer-frame{border-radius:0.6rem;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.1);position:relative;}
+    .flyer-frame img{width:100%;display:block;}
+    .flyer-tag{position:absolute;bottom:0.7rem;left:0.8rem;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;background:rgba(0,0,0,0.5);color:#fff;padding:0.2rem 0.6rem;border-radius:2rem;backdrop-filter:blur(4px);}
+
+    .mockup-wide{border-radius:0.8rem;overflow:hidden;box-shadow:0 8px 36px rgba(0,0,0,0.1);}
+    .mockup-wide img{width:100%;display:block;}
+
+    @media(max-width:900px){.produit-layout{grid-template-columns:1fr;}.flyer-duo{grid-template-columns:1fr;}}
+
+    footer{background:#fff;border-top:1px solid #eee;padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:#999;}
+    @media(max-width:900px){footer{padding:1.5rem 2rem;}}
+  </style>
+  <title>Labrha — Compléments alimentaires — On fait des bulles ?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <header class="lb-hero">
+    <a href="projets.html" class="lb-hero-back">&larr; Retour aux projets</a>
+    <img class="lb-hero-tache" src="assets/tache.png" alt="" aria-hidden="true" />
+    <span class="lb-hero-badge">Direction Artistique &middot; Print &middot; Communication m&eacute;dicale</span>
+    <h1 class="lb-hero-title">Labrha<br>Livrets produit</h1>
+    <p class="lb-hero-sub">Compl&eacute;ments alimentaires &mdash; Tenofort &amp; Cuivramine</p>
+  </header>
+
+  <main class="lb-content">
+
+    <div class="dos-progress">
+      <a href="#s-brief"   class="dos-dot active" title="Brief"></a>
+      <a href="#s-insight" class="dos-dot" title="Insight"></a>
+      <a href="#s-actifs"  class="dos-dot" title="Actifs"></a>
+      <a href="#s-teno"    class="dos-dot" title="Tenofort"></a>
+      <a href="#s-cuivra"  class="dos-dot" title="Cuivramine"></a>
+    </div>
+
+    <!-- 01 BRIEF -->
+    <section class="dos-section" id="s-brief">
+      <div class="dos-label reveal">01 &mdash; Le brief</div>
+      <div class="brief-wrap">
+        <div class="brief-paper reveal">
+          <div class="brief-paper-header">
+            <div>
+              <div class="bph-badge">Brief Cr&eacute;atif</div>
+              <div class="bph-sub">Labrha &middot; Livrets compl&eacute;ments alimentaires</div>
+            </div>
+            <div class="bph-ref">R&eacute;f.&nbsp;LABR&#8209;2024&#8209;001</div>
+          </div>
+          <div class="brief-fields">
+            <div class="bf"><span class="bf-label">Client</span><span class="bf-val">Labrha &mdash; Laboratoire</span></div>
+            <div class="bf"><span class="bf-label">Cat&eacute;gorie</span><span class="bf-val">Compl&eacute;ments alimentaires articulaires</span></div>
+            <div class="bf"><span class="bf-label">Produits</span><span class="bf-val">Tenofort &middot; Cuivramine</span></div>
+            <div class="bf"><span class="bf-label">Format</span><span class="bf-val">Livrets recto&thinsp;/&thinsp;verso</span></div>
+            <div class="bf bf-full"><span class="bf-label">Cibles</span><span class="bf-val">Professionnels de sant&eacute; (prescripteurs) &amp; patients &mdash; double lectorat sur le m&ecirc;me support.</span></div>
+            <div class="bf bf-full"><span class="bf-label">Objectif</span><span class="bf-val">Concevoir des livrets qui vulgarisent les informations scientifiques, valorisent les ingr&eacute;dients actifs et convainquent aussi bien le m&eacute;decin que le patient, tout en respectant les r&egrave;gles de communication sur les compl&eacute;ments alimentaires.</span></div>
+          </div>
+          <div class="brief-validated">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="36" stroke="#1a3f7a" stroke-width="3" opacity="0.8"/>
+              <circle cx="40" cy="40" r="31" stroke="#1a3f7a" stroke-width="1" opacity="0.5"/>
+              <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#1a3f7a" opacity="0.9">VALID&Eacute;</text>
+              <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#1a3f7a" opacity="0.7">LABR. 2024</text>
+            </svg>
+          </div>
+        </div>
+        <div class="postit reveal" style="transform:rotate(2.1deg);">
+          <span class="postit-arrow">&#x2191;</span>
+          2 cibles,<br>1 livret&nbsp;:<br>trouver l&rsquo;&eacute;quilibre
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 INSIGHT -->
+    <section class="dos-section" id="s-insight">
+      <div class="dos-label reveal">02 &mdash; L&rsquo;insight</div>
+      <div class="lb-insight reveal">
+        <img class="lb-insight-tache" src="assets/tache.png" alt="" aria-hidden="true" />
+        <p class="lb-insight-lead">Un professionnel de sant&eacute; lit des donn&eacute;es cliniques. Un patient cherche &agrave; comprendre. Le m&ecirc;me livret doit parler aux deux &mdash; sans sacrifier la rigueur pour l&rsquo;un, ni la clart&eacute; pour l&rsquo;autre.</p>
+        <div class="lb-insight-reveal">
+          <div class="lb-ir-line"></div>
+          <p class="lb-insight-big">Science lisible,<br>b&eacute;n&eacute;fice visible.</p>
+          <div class="lb-ir-line"></div>
+        </div>
+        <p class="lb-insight-sub">Chaque livret est structur&eacute; en deux registres compl&eacute;mentaires&nbsp;: la preuve scientifique pour le prescripteur, le b&eacute;n&eacute;fice concret pour le patient. Une hi&eacute;rarchie visuelle claire, des pictogrammes et des call-to-action rendent chaque face du support autonome et imm&eacute;diatement lisible.</p>
+      </div>
+    </section>
+
+    <!-- 03 ACTIFS -->
+    <section class="dos-section" id="s-actifs">
+      <div class="dos-label reveal">03 &mdash; Les actifs</div>
+      <p class="reveal" style="font-size:0.92rem;color:var(--muted);line-height:1.85;max-width:580px;margin-bottom:2.5rem;">La composition naturelle, c&rsquo;est le c&oelig;ur du produit &mdash; et la mettre en valeur n&rsquo;est pas optionnel. Les cibles ne sont pas seulement des patients en recherche d&rsquo;efficacit&eacute;&nbsp;: ce sont aussi des personnes qui ont fait le choix du naturel, qui lisent les &eacute;tiquettes et qui veulent comprendre ce qu&rsquo;elles prennent. Chaque ingr&eacute;dient est donc pr&eacute;sent&eacute; avec son nom, son origine et son r&ocirc;le &mdash; pour que la formule devienne un argument, pas juste une liste.</p>
+      <div class="actifs-grid reveal">
+        <div class="actif-card">
+          <img class="actif-img" src="assets/gingembre.png" alt="Gingembre" loading="lazy" />
+          <div class="actif-name">Gingembre</div>
+          <div class="actif-latin">Zingiber officinale</div>
+        </div>
+        <div class="actif-card">
+          <img class="actif-img" src="assets/prele.png" alt="Pr&ecirc;le" loading="lazy" />
+          <div class="actif-name">Pr&ecirc;le</div>
+          <div class="actif-latin">Equisetum arvense</div>
+        </div>
+        <div class="actif-card">
+          <img class="actif-img" src="assets/spiru.png" alt="Spiruline" loading="lazy" />
+          <div class="actif-name">Spiruline</div>
+          <div class="actif-latin">Arthrospira platensis</div>
+        </div>
+        <div class="actif-card">
+          <img class="actif-img" src="assets/ginseng.png" alt="Ginseng" loading="lazy" />
+          <div class="actif-name">Ginseng</div>
+          <div class="actif-latin">Panax ginseng</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 TENOFORT -->
+    <section class="dos-section" id="s-teno">
+      <div class="dos-label reveal">04 &mdash; Tenofort</div>
+      <div class="produit-block">
+        <img class="produit-tache" src="assets/tache.png" alt="" aria-hidden="true" />
+        <div class="produit-head reveal">
+          <span class="produit-pill pill-teno">Compl&eacute;ment articulaire</span>
+          <h3 class="produit-name" style="color:var(--l-teno-vert);">Tenofort</h3>
+        </div>
+        <div class="produit-layout reveal">
+          <div class="produit-boite">
+            <img src="assets/teno.png" alt="Produit Tenofort" loading="lazy" />
+            <span class="produit-boite-label">Le produit</span>
+          </div>
+          <div class="flyer-duo">
+            <div class="flyer-frame">
+              <img src="assets/flyertenorecto.png" alt="Flyer Tenofort &mdash; Recto" loading="lazy" />
+              <span class="flyer-tag">Recto</span>
+            </div>
+            <div class="flyer-frame">
+              <img src="assets/flyertenoverso.png" alt="Flyer Tenofort &mdash; Verso" loading="lazy" />
+              <span class="flyer-tag">Verso</span>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-wide reveal">
+          <img src="assets/mockteno.png" alt="Mockup Tenofort" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 CUIVRAMINE -->
+    <section class="dos-section" id="s-cuivra">
+      <div class="dos-label reveal">05 &mdash; Cuivramine</div>
+      <div class="produit-block">
+        <img class="produit-tache" src="assets/tache.png" alt="" aria-hidden="true" style="filter:hue-rotate(200deg);" />
+        <div class="produit-head reveal">
+          <span class="produit-pill pill-cuivra">Compl&eacute;ment articulaire</span>
+          <h3 class="produit-name" style="color:var(--l-cuivra-bleu);">Cuivramine</h3>
+        </div>
+        <div class="produit-layout reveal">
+          <div class="produit-boite">
+            <img src="assets/cuivra.png.png" alt="Produit Cuivramine" loading="lazy" />
+            <span class="produit-boite-label">Le produit</span>
+          </div>
+          <div class="flyer-duo">
+            <div class="flyer-frame">
+              <img src="assets/cuivrarecto.png" alt="Flyer Cuivramine &mdash; Recto" loading="lazy" />
+              <span class="flyer-tag">Recto</span>
+            </div>
+            <div class="flyer-frame">
+              <img src="assets/cuivraverso.png" alt="Flyer Cuivramine &mdash; Verso" loading="lazy" />
+              <span class="flyer-tag">Verso</span>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-wide reveal">
+          <img src="assets/cuivramock.png" alt="Mockup Cuivramine" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    (function(){
+      var c=document.getElementById('cursor'),f=document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){c.style.display='none';f.style.display='none';return;}
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx-5+'px';c.style.top=my-5+'px';});
+      (function tick(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;f.style.left=fx-16+'px';f.style.top=fy-16+'px';requestAnimationFrame(tick);})();
+    })();
+
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){if(e[0].isIntersecting)setTimeout(function(){r.classList.add('visible');},i*55);},{threshold:0.06}).observe(r);
+    });
+
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    (function(){
+      var ids=['s-brief','s-insight','s-actifs','s-teno','s-cuivra'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting)return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0)dots.forEach(function(d,i){d.classList.toggle('active',i===idx);});
+        });
+      },{threshold:0.3,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+    })();
+  </script>
+</body>
+</html>

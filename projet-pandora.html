@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --surface: #f8f8f8;
+      --accent1: #D66A77; --accent2: #97BAED; --accent3: #D66A77;
+      --text: #1a1a2e; --muted: #666676;
+      --p-bleu:   #2a5db0;
+      --p-violet: #7a4ea0;
+      --p-rose:   #c84b8a;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:#fff; color:#1a1a1a; font-family:var(--font-body); font-weight:300; overflow-x:hidden; cursor:none; }
+    .cursor { width:12px; height:12px; background:var(--accent2); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:difference; }
+    .cursor-follower { width:36px; height:36px; border:1px solid rgba(214,106,119,0.5); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:1000; display:flex; justify-content:space-between; align-items:center; padding:1.5rem 4rem; background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); }
+    .nav-logo { font-family:var(--font-display); font-size:1.1rem; letter-spacing:0.08em; text-decoration:none; background:linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { color:#888; text-decoration:none; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s; }
+    .nav-links a:hover,.nav-links a.active { color:var(--accent2); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    /* BURGER */
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);transition:transform 0.3s,opacity 0.3s;}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s ease,visibility 0.25s ease;overflow:hidden;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    body.menu-open .burger{display:none;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;line-height:1;padding:0.5rem;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);transition:background 0.15s,color 0.15s;}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* HERO */
+    .proj-hero{position:relative;min-height:58vh;display:flex;flex-direction:column;justify-content:flex-end;padding:8rem 4rem 4rem;overflow:hidden;background:#111827;}
+    .proj-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,#111827 45%,rgba(17,24,39,0.3));pointer-events:none;}
+    .proj-back{display:inline-flex;align-items:center;gap:0.6rem;color:rgba(255,255,255,0.4);text-decoration:none;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem;transition:color 0.2s;position:relative;z-index:2;width:fit-content;}
+    .proj-back:hover{color:rgba(255,255,255,0.8);}
+    .proj-badge{display:inline-block;font-size:0.65rem;letter-spacing:0.26em;text-transform:uppercase;color:#5c8cd5;border:1px solid rgba(92,140,213,0.35);padding:0.28rem 0.85rem;border-radius:2rem;margin-bottom:1.2rem;position:relative;z-index:2;}
+    .proj-title{font-family:var(--font-display);font-size:clamp(3rem,7vw,7rem);line-height:0.93;color:#fff;margin-bottom:1.2rem;position:relative;z-index:2;}
+    .proj-sub{font-style:italic;font-size:1rem;color:rgba(255,255,255,0.5);position:relative;z-index:2;}
+
+    /* CONTENT */
+    .proj-content{position:relative;z-index:1;background:#fff;color:#1a1a1a;padding:5rem 4rem 6rem;}
+    .proj-layout{display:flex;flex-direction:column;gap:3rem;}
+    .proj-text{order:1;}
+
+    /* FOOTER */
+    footer{background:#fff;border-top:1px solid #eee;padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:#999;position:relative;z-index:1;}
+    footer a{color:#999;text-decoration:none;}
+    footer a:hover{color:var(--accent1);}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    /* ============================================
+       DOSSIER — Pandora Viscosupplément
+    ============================================ */
+    .dos-progress{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:0.75rem;z-index:500;}
+    .dos-dot{display:block;width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,0.18);transition:all 0.3s ease;text-decoration:none;}
+    .dos-dot.active{background:var(--accent1);transform:scale(1.65);}
+    @media(max-width:1100px){.dos-progress{display:none;}}
+    .dos-label{font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent1);margin-bottom:1.6rem;display:flex;align-items:center;gap:1rem;}
+    .dos-label::after{content:'';flex:1;height:1px;background:rgba(0,0,0,0.08);}
+    .dos-section{margin-bottom:5.5rem;scroll-margin-top:6rem;}
+
+    /* BRIEF */
+    .brief-wrap{display:flex;gap:2rem;align-items:flex-start;}
+    .brief-paper{flex:1;background:#fdf9f4;border:1px solid rgba(0,0,0,0.07);border-radius:0.6rem;padding:2.8rem;position:relative;overflow:hidden;box-shadow:0 3px 24px rgba(0,0,0,0.06);}
+    .brief-paper::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.028) 27px,rgba(0,0,0,0.028) 28px);}
+    .brief-paper-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:2px solid rgba(0,0,0,0.05);}
+    .bph-badge{display:inline-block;font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.12em;color:var(--accent1);border:2px solid var(--accent1);padding:0.3rem 0.9rem;border-radius:3px;opacity:0.8;margin-bottom:0.4rem;}
+    .bph-sub{font-size:0.75rem;color:var(--muted);letter-spacing:0.06em;}
+    .bph-ref{font-family:monospace;font-size:0.72rem;color:var(--muted);text-align:right;line-height:1.6;}
+    .brief-fields{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 2rem;margin-bottom:1rem;}
+    .bf{padding-bottom:0.6rem;border-bottom:1px dotted rgba(0,0,0,0.15);}
+    .bf-full{grid-column:1 / -1;}
+    .bf-label{display:block;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+    .bf-val{font-size:0.92rem;color:var(--text);line-height:1.5;}
+    .brief-validated{position:absolute;bottom:2rem;right:2rem;width:78px;height:78px;opacity:0.55;transform:rotate(-8deg);}
+    .brief-validated svg{width:100%;height:100%;}
+    .postit{background:#fef9c3;padding:1.4rem 1.6rem;border-radius:2px;box-shadow:2px 5px 18px rgba(0,0,0,0.13),0 1px 4px rgba(0,0,0,0.08);transform:rotate(-2.5deg);font-family:'Caveat',cursive;font-size:1.15rem;line-height:1.55;color:#5c4400;max-width:220px;flex-shrink:0;position:relative;margin-top:1.5rem;}
+    .postit::before{content:'';position:absolute;top:0;left:0;right:0;height:26px;background:rgba(0,0,0,0.055);border-radius:2px 2px 0 0;}
+    .postit-arrow{display:block;font-size:0.9rem;margin-bottom:0.25rem;opacity:0.45;}
+    .postit-blue{background:rgba(42,93,176,0.08);color:#1a3a6e;border:1px solid rgba(42,93,176,0.2);}
+
+    /* INSIGHT */
+    .insight-block{background:#12123a;color:#f0eef8;border-radius:0.8rem;padding:3.5rem 3.5rem 3rem;position:relative;overflow:hidden;}
+    .insight-block::before{content:'\2745';position:absolute;top:-1rem;right:2rem;font-size:16rem;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none;}
+    .insight-lead{font-size:1rem;color:rgba(240,238,248,0.6);line-height:1.85;margin-bottom:2rem;max-width:560px;}
+    .insight-reveal{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;}
+    .ir-line{flex:1;height:1px;background:rgba(122,78,160,0.5);}
+    .insight-big{font-family:var(--font-display);font-size:clamp(2.2rem,4.5vw,3.8rem);color:#d48ce8;margin:0;line-height:1.1;}
+    .insight-sub{font-size:0.9rem;color:rgba(240,238,248,0.48);line-height:1.85;max-width:520px;}
+
+    /* PHOTO STRIP / DUO */
+    .photo-strip{position:relative;border-radius:0.8rem;overflow:hidden;aspect-ratio:21/9;margin-bottom:5.5rem;}
+    .photo-strip img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block;}
+    .photo-strip-caption{position:absolute;bottom:1rem;right:1.4rem;font-size:0.68rem;color:rgba(255,255,255,0.75);font-style:italic;letter-spacing:0.04em;background:rgba(0,0,0,0.3);padding:0.25rem 0.7rem;border-radius:2rem;}
+    .photo-duo{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;border-radius:0.8rem;overflow:hidden;margin-bottom:5.5rem;}
+    .photo-duo img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;}
+    .photo-quad{display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;border-radius:0.8rem;overflow:hidden;margin-bottom:4rem;}
+    .photo-quad img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+
+    /* PARTI PRIS */
+    .partipris-concept{margin-bottom:2.5rem;}
+    .pc-phrase{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,4rem);line-height:1;color:var(--text);margin-bottom:1rem;}
+    .pc-desc{font-size:0.93rem;color:var(--muted);line-height:1.8;max-width:580px;}
+    .pp-card-label{font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;display:block;}
+    .partipris-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    .pp-card{background:var(--surface);border:1px solid rgba(0,0,0,0.06);border-radius:0.6rem;padding:1.8rem;}
+
+    /* Palette 3 produits */
+    .pandora-palette{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;border-radius:0.8rem;overflow:hidden;margin-bottom:4rem;}
+    .ppal-item{padding:2rem 1.5rem;display:flex;flex-direction:column;gap:0.6rem;}
+    .ppal-item--bleu{background:var(--p-bleu);}
+    .ppal-item--violet{background:var(--p-violet);}
+    .ppal-item--rose{background:var(--p-rose);}
+    .ppal-name{font-family:var(--font-display);font-size:1.3rem;color:#fff;letter-spacing:0.06em;}
+    .ppal-sub{font-size:0.7rem;color:rgba(255,255,255,0.6);letter-spacing:0.08em;}
+    .ppal-hex{font-family:monospace;font-size:0.68rem;color:rgba(255,255,255,0.45);margin-top:auto;}
+
+    /* ── BOITE CAROUSEL 3D ── */
+    .boite-section{margin-bottom:4rem;}
+    .boite-scene{
+      position:relative;
+      height:640px;
+      perspective:1400px;
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:2rem;
+      overflow:hidden;
+    }
+    .boite-carousel{
+      position:relative;width:100%;height:100%;
+      transform-style:preserve-3d;
+    }
+    .boite-card{
+      position:absolute;
+      width:400px;
+      left:50%;
+      top:50%;
+      transform-origin:center center;
+      transition:all 0.65s cubic-bezier(0.4,0,0.2,1);
+      display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+    }
+    .boite-card img{
+      width:100%;
+      filter:drop-shadow(0 24px 48px rgba(0,0,0,0.25));
+      display:block;
+    }
+    .boite-card-placeholder{
+      width:100%;aspect-ratio:2/3;
+      border-radius:0.6rem;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.1em;
+      color:rgba(255,255,255,0.5);
+      position:relative;overflow:hidden;
+    }
+    .boite-card-placeholder::before{
+      content:'';position:absolute;inset:0;
+      background:repeating-linear-gradient(45deg,rgba(255,255,255,0.04) 0,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 8px);
+    }
+    .boite-card--bleu .boite-card-placeholder{background:var(--p-bleu);}
+    .boite-card--violet .boite-card-placeholder{background:var(--p-violet);}
+    .boite-card--rose .boite-card-placeholder{background:var(--p-rose);}
+    .boite-info{display:flex;align-items:center;gap:0.7rem;}
+    .boite-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .boite-name{font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+    /* Positions coverflow */
+    .bc-center{
+      transform:translate(-50%,-50%) translateZ(0) scale(1);
+      z-index:3;opacity:1;
+    }
+    .bc-right{
+      transform:translate(18%,-50%) translateZ(-220px) rotateY(-28deg) scale(0.6);
+      z-index:2;opacity:0.5;
+    }
+    .bc-left{
+      transform:translate(-118%,-50%) translateZ(-220px) rotateY(28deg) scale(0.6);
+      z-index:2;opacity:0.5;
+    }
+    /* Arrow buttons */
+    .boite-arrow{
+      position:absolute;top:50%;transform:translateY(-50%);
+      z-index:10;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.08);
+      border-radius:50%;width:44px;height:44px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.2rem;cursor:pointer;
+      transition:all 0.2s;box-shadow:0 4px 16px rgba(0,0,0,0.1);
+    }
+    .boite-arrow:hover{background:#fff;box-shadow:0 6px 24px rgba(0,0,0,0.15);}
+    .boite-arrow--prev{left:1.5rem;}
+    .boite-arrow--next{right:1.5rem;}
+    /* Active indicator below carousel */
+    .boite-indicators{display:flex;justify-content:center;gap:1rem;margin-bottom:1rem;}
+    .boite-indicator{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);opacity:0.4;transition:opacity 0.3s;}
+    .boite-indicator.active{opacity:1;}
+    .boite-indicator-dot{width:8px;height:8px;border-radius:50%;}
+
+    /* BAT section */
+    .bat-section{margin-bottom:4rem;}
+    .bat-label{font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;display:block;}
+    .bat-frame{
+      background:#f0f0f0;border-radius:0.8rem;overflow:hidden;
+      box-shadow:0 8px 32px rgba(0,0,0,0.1);
+      position:relative;
+    }
+    .bat-frame img{width:100%;display:block;}
+    .bat-badge{
+      position:absolute;top:1.2rem;left:1.2rem;
+      background:rgba(0,0,0,0.65);color:#fff;
+      font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;
+      padding:0.3rem 0.8rem;border-radius:2rem;backdrop-filter:blur(4px);
+    }
+
+    /* Notices section */
+    .notices-section{margin-bottom:4rem;}
+    .notices-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    .notice-card{border-radius:0.6rem;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+    .notice-card img{width:100%;display:block;}
+    .notice-placeholder{
+      aspect-ratio:2/3;background:#f4f0fb;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;
+      color:#9a7abf;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;
+      border:2px dashed rgba(122,78,160,0.2);border-radius:0.6rem;
+    }
+    .notice-placeholder svg{opacity:0.35;}
+
+    /* Blister section */
+    .blister-section{margin-bottom:4rem;}
+    .blister-frame{border-radius:0.8rem;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+    .blister-frame img{width:100%;display:block;}
+    .blister-placeholder{
+      aspect-ratio:3/1;background:#fff0f6;
+      display:flex;align-items:center;justify-content:center;gap:1rem;
+      color:#c84b8a;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;
+      border:2px dashed rgba(200,75,138,0.25);border-radius:0.8rem;
+    }
+
+    /* BAT + Notices même ligne */
+    .bat-notices-row{display:grid;grid-template-columns:1fr 2fr;gap:2rem;margin-bottom:4rem;align-items:start;}
+    .bat-notices-row .bat-section,.bat-notices-row .notices-section{margin-bottom:0;}
+    .bat-notices-row .bat-label{font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;display:block;}
+
+    /* Livraison grid */
+    .livraison-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;}
+    .lv-item{background:var(--surface);border:1px solid rgba(0,0,0,0.06);border-radius:0.6rem;padding:1.4rem 1.6rem;}
+    .lv-label{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;display:block;}
+    .lv-val{font-size:0.92rem;color:var(--text);}
+
+    @media(max-width:900px){
+      .bat-notices-row{grid-template-columns:1fr;}
+      .proj-hero{padding:7rem 2rem 3rem;}
+      .proj-content{padding:3rem 2rem 4rem;}
+      .brief-wrap{flex-direction:column;}
+      .partipris-grid{grid-template-columns:1fr;}
+      .pandora-palette{grid-template-columns:1fr;}
+      .boite-scene{height:460px;}
+      .boite-card{width:260px;}
+      .notices-grid{grid-template-columns:1fr;}
+      .photo-duo{grid-template-columns:1fr;}
+      .photo-quad{grid-template-columns:1fr 1fr;}
+      .boite-arrow--prev{left:0.5rem;}
+      .boite-arrow--next{right:0.5rem;}
+      .livraison-grid{grid-template-columns:1fr;}
+    }
+    @media(max-width:900px){.proj-layout{gap:2rem;}}
+  </style>
+  <title>Pandora Viscosupplément — On fait des bulles ?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <header class="proj-hero">
+    <div class="proj-hero-grad"></div>
+    <a href="projets.html" class="proj-back">&larr; Retour aux projets</a>
+    <span class="proj-badge">Direction Artistique &middot; Print &middot; M&eacute;dical</span>
+    <h1 class="proj-title">Pandora</h1>
+    <p class="proj-sub">Viscosuppl&eacute;ment &mdash; Labrha &middot; Rhumatologie</p>
+  </header>
+
+  <div class="proj-content">
+    <div class="proj-layout">
+      <div class="proj-text">
+
+        <div class="dos-progress">
+          <a href="#s-brief"    class="dos-dot active" title="Brief"></a>
+          <a href="#s-insight"  class="dos-dot" title="Insight"></a>
+          <a href="#s-univers"  class="dos-dot" title="Univers"></a>
+          <a href="#s-real"     class="dos-dot" title="R&eacute;alisations"></a>
+        </div>
+
+        <!-- ── 01 BRIEF ───────────────────── -->
+        <section class="dos-section" id="s-brief">
+          <div class="dos-label reveal">01 &mdash; Le brief</div>
+          <div class="brief-wrap">
+            <div class="brief-paper reveal">
+              <div class="brief-paper-header">
+                <div>
+                  <div class="bph-badge">Brief Cr&eacute;atif</div>
+                  <div class="bph-sub">Pandora &middot; Gamme viscosuppl&eacute;ment</div>
+                </div>
+                <div class="bph-ref">R&eacute;f. PAND-2024-001</div>
+              </div>
+              <div class="brief-fields">
+                <div class="bf"><span class="bf-label">Client</span><span class="bf-val">Labrha</span></div>
+                <div class="bf"><span class="bf-label">Produit</span><span class="bf-val">Pandora &mdash; Dispositif m&eacute;dical viscosuppl&eacute;mentation</span></div>
+                <div class="bf"><span class="bf-label">Indication</span><span class="bf-val">Traitement de l&rsquo;arthrose</span></div>
+                <div class="bf"><span class="bf-label">Gamme</span><span class="bf-val">Pandora 3 &middot; Pandora One &middot; PandoraCross</span></div>
+                <div class="bf bf-full"><span class="bf-label">P&eacute;rim&egrave;tre</span><span class="bf-val">Packagings bo&icirc;tes &middot; Notices r&eacute;glementaires &middot; Blisters &middot; Cartes d&rsquo;implants &mdash; conformit&eacute; MDR&nbsp;2017/745</span></div>
+                <div class="bf bf-full"><span class="bf-label">Objectif</span><span class="bf-val">Cr&eacute;er une identit&eacute; visuelle forte et coh&eacute;rente sur l&rsquo;ensemble de la gamme, respectant les contraintes r&eacute;glementaires strictes des dispositifs m&eacute;dicaux, tout en se d&eacute;marquant sur le march&eacute; de la rhumatologie.</span></div>
+              </div>
+              <div class="brief-validated">
+                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="40" cy="40" r="36" stroke="#D66A77" stroke-width="3" opacity="0.8"/>
+                  <circle cx="40" cy="40" r="31" stroke="#D66A77" stroke-width="1" opacity="0.5"/>
+                  <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#D66A77" opacity="0.9">VALID&Eacute;</text>
+                  <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#D66A77" opacity="0.7">PAND. 2024</text>
+                </svg>
+              </div>
+            </div>
+            <div class="postit postit-blue reveal" style="transform:rotate(2deg);">
+              <span class="postit-arrow">&#x2191;</span>
+              CE Mark&eacute;<br>MDR 2017/745<br>+ 3 SKU distincts.
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 02 INSIGHT ─────────────────── -->
+        <section class="dos-section" id="s-insight">
+          <div class="dos-label reveal">02 &mdash; L&rsquo;insight</div>
+          <div class="insight-block reveal">
+            <p class="insight-lead">Un dispositif m&eacute;dical inject&eacute; dans l&rsquo;articulation &mdash; en cabinet, chez son m&eacute;decin, son rhumatologue ou son m&eacute;decin du sport. Le patient, le prescripteur, le pharmacien : trois regards diff&eacute;rents sur la m&ecirc;me bo&icirc;te. Le design doit parler &agrave; chacun.</p>
+            <div class="insight-reveal">
+              <div class="ir-line"></div>
+              <p class="insight-big">Une empreinte, trois identit&eacute;s.</p>
+              <div class="ir-line"></div>
+            </div>
+            <p class="insight-sub">Le motif reprend la forme caract&eacute;ristique laiss&eacute;e lors du processus de r&eacute;ticulation du gel d&rsquo;acide hyaluronique &mdash; signature propre &agrave; Labrha. Trois couleurs distinctes ancrent chaque r&eacute;f&eacute;rence dans son territoire visuel, pour une identification imm&eacute;diate en cabinet comme en officine.</p>
+          </div>
+          <div class="postit reveal" style="margin-left:auto;transform:rotate(1.5deg);">
+            <span class="postit-arrow">&#x2192;</span>
+            Motif = empreinte<br>de r&eacute;ticulation HA
+          </div>
+        </section>
+
+        <!-- Photo illustrations -->
+        <div class="photo-duo reveal">
+          <img src="assets/pandophoto1.png" alt="Pandora photo 1" />
+          <img src="assets/pandophoto2.png" alt="Pandora photo 2" />
+        </div>
+
+        <!-- ── 03 UNIVERS ─────────────────── -->
+        <section class="dos-section" id="s-univers">
+          <div class="dos-label reveal">03 &mdash; L&rsquo;univers graphique</div>
+
+          <div class="partipris-concept reveal">
+            <p class="pc-phrase">L&rsquo;empreinte de la r&eacute;ticulation</p>
+            <p class="pc-desc">Le motif reprend la forme laiss&eacute;e lors du processus de r&eacute;ticulation du gel d&rsquo;acide hyaluronique &mdash; une signature propre &agrave; Labrha. D&eacute;clin&eacute; en trois coloris, il devient l&rsquo;empreinte visuelle de toute la gamme et diff&eacute;rencie imm&eacute;diatement chaque r&eacute;f&eacute;rence.</p>
+          </div>
+
+          <!-- Palette 3 produits -->
+          <div class="pp-card-label reveal" style="margin-bottom:1rem;">Palette produit &mdash; trois r&eacute;f&eacute;rences</div>
+          <div class="pandora-palette reveal">
+            <div class="ppal-item ppal-item--bleu">
+              <div class="ppal-name">Pandora 3</div>
+              <div class="ppal-sub">Solution 3&thinsp;ml &middot; Arthrose du genou</div>
+              <div class="ppal-hex">#2A5DB0</div>
+            </div>
+            <div class="ppal-item ppal-item--violet">
+              <div class="ppal-name">Pandora One</div>
+              <div class="ppal-sub">Solution 1&thinsp;ml &middot; Petites articulations</div>
+              <div class="ppal-hex">#7A4EA0</div>
+            </div>
+            <div class="ppal-item ppal-item--rose">
+              <div class="ppal-name">PandoraCross</div>
+              <div class="ppal-sub">Formulation cross-link&eacute;e</div>
+              <div class="ppal-hex">#C84B8A</div>
+            </div>
+          </div>
+
+          <!-- Concept cards -->
+          <div class="partipris-grid reveal">
+            <div class="pp-card">
+              <div class="pp-card-label">Motif signature</div>
+              <p style="font-size:0.88rem;color:var(--muted);line-height:1.75;">Le motif reprend la forme caract&eacute;ristique laiss&eacute;e lors de la r&eacute;ticulation &mdash; ce processus qui rend le gel unique. R&eacute;p&eacute;t&eacute; en texture sur les bo&icirc;tes, il &eacute;voque densit&eacute;, science et identit&eacute; de marque.</p>
+            </div>
+            <div class="pp-card">
+              <div class="pp-card-label">Code couleur diff&eacute;renciant</div>
+              <p style="font-size:0.88rem;color:var(--muted);line-height:1.75;">L&agrave; o&ugrave; tous nos concurrents misent sur le blanc et le beige, nous avons choisi la couleur. Voir la bo&icirc;te, c&rsquo;est savoir que c&rsquo;est Pandora. Une identit&eacute; visuelle forte, imm&eacute;diatement reconnaissable, qui revendique une image premium et &eacute;limine toute confusion entre r&eacute;f&eacute;rences.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Photo quad -->
+        <div class="photo-quad reveal">
+          <img src="assets/pandophoto3.png" alt="Pandora photo 3" />
+          <img src="assets/pandophoto4.png" alt="Pandora photo 4" />
+          <img src="assets/pandophoto1.png" alt="Pandora photo 1b" />
+          <img src="assets/pandophoto2.png" alt="Pandora photo 2b" />
+        </div>
+
+        <!-- ── 04 RÉALISATIONS ─────────────── -->
+        <section class="dos-section" id="s-real">
+          <div class="dos-label reveal">04 &mdash; Les r&eacute;alisations</div>
+
+          <!-- Boites carousel -->
+          <div class="boite-section reveal">
+            <div class="pp-card-label" style="margin-bottom:1.4rem;">Les bo&icirc;tes &mdash; tournez le carrousel</div>
+            <div class="boite-scene">
+              <div class="boite-carousel" id="boiteCarousel">
+                <!-- Card 0: Bleu -->
+                <div class="boite-card boite-card--bleu bc-center" data-idx="0">
+                  <img src="assets/pandobleu.png" alt="Pandora 3 &mdash; Bleu" />
+                  <div class="boite-info">
+                    <span class="boite-dot" style="background:var(--p-bleu)"></span>
+                    <span class="boite-name">Pandora 3</span>
+                  </div>
+                </div>
+                <!-- Card 1: Violet -->
+                <div class="boite-card boite-card--violet bc-right" data-idx="1">
+                  <img src="assets/pandoviolet.png" alt="Pandora One &mdash; Violet" />
+                  <div class="boite-info">
+                    <span class="boite-dot" style="background:var(--p-violet)"></span>
+                    <span class="boite-name">Pandora One</span>
+                  </div>
+                </div>
+                <!-- Card 2: Rose (placeholder si absent) -->
+                <div class="boite-card boite-card--rose bc-left" data-idx="2" id="boiteRose">
+                  <div class="boite-card-placeholder" id="roseImg">
+                    <span>PandoraCross</span>
+                  </div>
+                  <div class="boite-info">
+                    <span class="boite-dot" style="background:var(--p-rose)"></span>
+                    <span class="boite-name">PandoraCross</span>
+                  </div>
+                </div>
+              </div>
+              <button class="boite-arrow boite-arrow--prev" onclick="rotateBoite(-1)" aria-label="Pr&eacute;c&eacute;dent">&#8592;</button>
+              <button class="boite-arrow boite-arrow--next" onclick="rotateBoite(1)" aria-label="Suivant">&#8594;</button>
+            </div>
+            <div class="boite-indicators">
+              <div class="boite-indicator active" data-for="0">
+                <span class="boite-indicator-dot" style="background:var(--p-bleu)"></span>
+                Pandora&thinsp;3
+              </div>
+              <div class="boite-indicator" data-for="1">
+                <span class="boite-indicator-dot" style="background:var(--p-violet)"></span>
+                Pandora&thinsp;One
+              </div>
+              <div class="boite-indicator" data-for="2">
+                <span class="boite-indicator-dot" style="background:var(--p-rose)"></span>
+                PandoraCross
+              </div>
+            </div>
+          </div>
+
+          <!-- BAT + Notices sur la même ligne -->
+          <div class="bat-notices-row reveal">
+
+            <!-- BAT vue à plat (réduit) -->
+            <div class="bat-section">
+              <span class="bat-label">BAT vue &agrave; plat</span>
+              <div class="bat-frame">
+                <img src="assets/pandobat.png" alt="BAT Pandora vue &agrave; plat" />
+                <span class="bat-badge">BAT &mdash; Bon &agrave; Tirer</span>
+              </div>
+            </div>
+
+            <!-- Notices -->
+            <div class="notices-section">
+              <span class="pp-card-label" style="margin-bottom:1rem;">Notices r&eacute;glementaires &mdash; multilingues MDR</span>
+              <div class="notices-grid">
+              <div class="notice-card" id="notice1Card">
+                <div class="notice-placeholder" id="notice1Placeholder">
+                  <svg width="32" height="40" viewBox="0 0 32 40" fill="none"><rect x="2" y="2" width="28" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="10" x2="25" y2="10" stroke="currentColor" stroke-width="1.2"/><line x1="7" y1="15" x2="25" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="7" y1="20" x2="20" y2="20" stroke="currentColor" stroke-width="1.2"/><line x1="7" y1="25" x2="22" y2="25" stroke="currentColor" stroke-width="1.2"/></svg>
+                  Notice 1
+                </div>
+              </div>
+              <div class="notice-card" id="notice2Card">
+                <div class="notice-placeholder" id="notice2Placeholder">
+                  <svg width="32" height="40" viewBox="0 0 32 40" fill="none"><rect x="2" y="2" width="28" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="10" x2="25" y2="10" stroke="currentColor" stroke-width="1.2"/><line x1="7" y1="15" x2="25" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="7" y1="20" x2="20" y2="20" stroke="currentColor" stroke-width="1.2"/><line x1="7" y1="25" x2="22" y2="25" stroke="currentColor" stroke-width="1.2"/></svg>
+                  Notice 2
+                </div>
+              </div>
+            </div><!-- /notices-section -->
+
+          </div><!-- /bat-notices-row -->
+
+          <!-- Blister -->
+          <div class="blister-section reveal">
+            <span class="pp-card-label" style="margin-bottom:1rem;">Blister &mdash; conditionnement primaire</span>
+            <div class="blister-frame" id="blisterFrame">
+              <div class="blister-placeholder" id="blisterPlaceholder">
+                <svg width="36" height="24" viewBox="0 0 36 24" fill="none"><rect x="1" y="1" width="34" height="22" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="24" cy="12" r="5" stroke="currentColor" stroke-width="1.2"/></svg>
+                Blister &mdash; &agrave; venir
+              </div>
+            </div>
+          </div>
+
+          <!-- Livrables résumé -->
+          <div class="reveal">
+            <span class="pp-card-label" style="margin-bottom:1rem;">R&eacute;capitulatif des livrables</span>
+            <div class="livraison-grid">
+              <div class="lv-item"><span class="lv-label">Packagings</span><span class="lv-val">3 bo&icirc;tes &times; 2 formats (r&eacute;f. + langue)</span></div>
+              <div class="lv-item"><span class="lv-label">Notices</span><span class="lv-val">Multilingues &mdash; MDR 2017/745 conforme</span></div>
+              <div class="lv-item"><span class="lv-label">Blisters</span><span class="lv-val">Conditionnement primaire &times; 3 r&eacute;f&eacute;rences</span></div>
+              <div class="lv-item"><span class="lv-label">Cartes d&rsquo;implants</span><span class="lv-val">Tra&ccedil;abilit&eacute; patient &mdash; obligatoire DM implantable</span></div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('follower');
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!hasHover) {
+      cursor.style.display = 'none'; follower.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    } else {
+      let mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx-6+'px'; cursor.style.top=my-6+'px'; });
+      function animateFollower(){ fx+=(mx-fx)*0.18; fy+=(my-fy)*0.18; follower.style.left=fx-18+'px'; follower.style.top=fy-18+'px'; requestAnimationFrame(animateFollower); }
+      animateFollower();
+    }
+
+    // Reveal
+    document.querySelectorAll('.reveal').forEach((r,i) => {
+      new IntersectionObserver(([e]) => {
+        if(e.isIntersecting) setTimeout(()=>r.classList.add('visible'), i*60);
+      },{threshold:.08}).observe(r);
+    });
+
+    // Mobile menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // ── Boite carousel ─────────────────────────────
+    (function() {
+      var cards = Array.from(document.querySelectorAll('.boite-card'));
+      var indicators = Array.from(document.querySelectorAll('.boite-indicator'));
+      var positions = ['bc-center', 'bc-right', 'bc-left'];
+      var current = 0;
+
+      // Try to load pandorose.png; if it loads, replace placeholder
+      var roseImg = new Image();
+      roseImg.onload = function() {
+        var ph = document.getElementById('roseImg');
+        if(ph) {
+          var img = document.createElement('img');
+          img.src = 'assets/pandorose.png';
+          img.alt = 'PandoraCross — Rose';
+          img.style.width = '100%';
+          img.style.filter = 'drop-shadow(0 24px 48px rgba(0,0,0,0.25))';
+          ph.parentNode.insertBefore(img, ph);
+          ph.style.display = 'none';
+        }
+      };
+      roseImg.src = 'assets/pandorose.png';
+
+      // Same for notices and blister
+      ['pandonotice1.png','notice1Placeholder','notice1Card',false,true],
+      [['pandonotice1.png','notice1Placeholder','notice1Card'],
+       ['pandonotice2.png','notice2Placeholder','notice2Card'],
+       ['pandoblister.png','blisterPlaceholder','blisterFrame']
+      ].forEach(function(arr) {
+        var img = new Image();
+        img.onload = (function(src, phId, frameId) {
+          return function() {
+            var ph = document.getElementById(phId);
+            var frame = document.getElementById(frameId);
+            if(ph && frame) {
+              var el = document.createElement('img');
+              el.src = 'assets/' + src;
+              el.style.width = '100%';
+              el.style.display = 'block';
+              frame.insertBefore(el, ph);
+              ph.style.display = 'none';
+            }
+          };
+        })(arr[0], arr[1], arr[2]);
+        img.src = 'assets/' + arr[0];
+      });
+
+      function setPositions() {
+        cards.forEach(function(card, i) {
+          card.classList.remove('bc-center','bc-right','bc-left');
+          var offset = (i - current + 3) % 3;
+          card.classList.add(positions[offset]);
+        });
+        indicators.forEach(function(ind) {
+          ind.classList.toggle('active', parseInt(ind.dataset.for) === current);
+        });
+      }
+
+      window.rotateBoite = function(dir) {
+        current = (current + dir + 3) % 3;
+        setPositions();
+      };
+
+      // Also allow clicking side cards to bring them to center
+      cards.forEach(function(card, i) {
+        card.addEventListener('click', function() {
+          if(!card.classList.contains('bc-center')) {
+            current = i;
+            setPositions();
+          }
+        });
+      });
+    })();
+
+    // ── Scroll spy ──────────────────────────────────
+    (function() {
+      var ids = ['s-brief','s-insight','s-univers','s-real'];
+      var dots = document.querySelectorAll('.dos-dot');
+      if(!dots.length) return;
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if(e.isIntersecting) {
+            var idx = ids.indexOf(e.target.id);
+            if(idx >= 0) dots.forEach(function(d,i){ d.classList.toggle('active',i===idx); });
+          }
+        });
+      },{threshold:0.35,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){ var el=document.getElementById(id); if(el) obs.observe(el); });
+    })();
+  </script>
+</body>
+</html>

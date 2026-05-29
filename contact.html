@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --surface: #f8f8f8;
+      --accent1: #D66A77; --accent2: #97BAED; --accent3: #D66A77;
+      --text: #1a1a2e; --muted: #666676;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-syne: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+    .cursor { width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+    .cursor-follower { width: 36px; height: 36px; border: 1px solid rgba(214,106,119,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: linear-gradient(to bottom, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.0) 100%); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg, #D66A77, #97BAED, #D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent2); }
+    .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.12; pointer-events: none; z-index: 0; }
+    .page-content { padding: 10rem 4rem 6rem; position: relative; z-index: 1; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.08); font-size: 0.8rem; color: var(--muted); position: relative; z-index: 1; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent2); }
+    @media (max-width: 900px) { nav { padding: 1.2rem 2rem; } .nav-links { display: none; } .burger { display: flex; } .page-content { padding: 8rem 2rem 4rem; } footer { padding: 2rem; } }
+    .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 99999; position: fixed; top: 1.3rem; right: 1.5rem; }
+    .burger span { display: block; width: 24px; height: 1.5px; background: var(--text); transition: transform 0.3s, opacity 0.3s; }
+    .mobile-menu { visibility: hidden; opacity: 0; position: fixed; inset: 0; background: #ffffff; z-index: 99998; display: flex; flex-direction: column; transition: opacity 0.25s ease, visibility 0.25s ease; overflow: hidden; }
+    .mobile-menu.open { visibility: visible; opacity: 1; }
+    body.menu-open .burger { display: none; }
+    .mobile-menu-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 2rem; color: #000; cursor: pointer; line-height: 1; padding: 0.5rem; }
+    .mobile-menu a { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.1em; color: #000; text-decoration: none; text-transform: uppercase; border-bottom: 1px solid rgba(0,0,0,0.08); transition: background 0.15s, color 0.15s; }
+    .mobile-menu a:first-of-type { border-top: 1px solid rgba(0,0,0,0.08); }
+    .mobile-menu a:hover { background: #f5f5f5; }
+    @media (max-width: 900px) { .burger { display: flex; } }
+
+    /* AVAILABILITY */
+    .availability { display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; color: var(--muted); margin-bottom: 3rem; }
+    .dot { width: 8px; height: 8px; background: #4caf82; border-radius: 50%; animation: pulse 2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+
+    /* STAMPS */
+    .stamps-section { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(0,0,0,0.08); }
+    .stamps-label { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent1); display: block; margin-bottom: 2.5rem; }
+    .stamps-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 600px) { .stamps-row { grid-template-columns: 1fr; } }
+
+    .stamp-area {
+      position: relative;
+      padding-top: 90px; /* height reserved for tool above paper */
+      cursor: pointer;
+      user-select: none;
+    }
+    .stamp-area.stamped { cursor: default; }
+
+    .stamp-tool {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none; z-index: 2;
+      filter: drop-shadow(0 5px 12px rgba(0,0,0,0.14));
+      transition: top 0.1s ease-in, filter 0.15s;
+    }
+    .stamp-area.pressing .stamp-tool {
+      top: 42px; /* descends to touch paper */
+      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.1));
+      transition: top 0.08s ease-in;
+    }
+    .stamp-area.stamped .stamp-tool {
+      top: 10px;
+      opacity: 0.4;
+      transition: top 0.18s ease-out, opacity 0.4s ease;
+    }
+
+    .stamp-paper {
+      position: relative;
+      border: 1px solid rgba(0,0,0,0.09);
+      border-radius: 0.7rem;
+      min-height: 118px;
+      background: #fefefe;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.045);
+      transition: transform 0.08s ease, box-shadow 0.1s;
+    }
+    .stamp-area.pressing .stamp-paper {
+      transform: scaleY(0.97);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    }
+
+    .stamp-hint {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      padding: 2rem; text-align: center;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    .stamp-area.stamped .stamp-hint { opacity: 0; }
+
+    .stamp-type-hint { font-size: 0.82rem; color: var(--text); letter-spacing: 0.03em; }
+    .stamp-action-hint {
+      font-size: 0.63rem; color: var(--muted);
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+
+    /* ink impression */
+    .stamp-imp {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.3rem; padding: 1.5rem;
+      clip-path: circle(0% at 50% 50%);
+    }
+    .stamp-area.stamped .stamp-imp {
+      clip-path: circle(130% at 50% 50%);
+      transition: clip-path 0.52s ease 0.06s;
+    }
+    #sa-email .stamp-imp { background: rgba(214,106,119,0.05); }
+    #sa-tel   .stamp-imp { background: rgba(151,186,237,0.07); }
+
+    .si-label {
+      font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); display: block;
+    }
+    .si-value {
+      font-family: var(--font-syne); font-weight: 700; font-size: 0.92rem;
+      color: var(--text); word-break: break-all; text-align: center; line-height: 1.4;
+    }
+    #sa-email .si-value { color: #b85462; }
+    #sa-tel   .si-value { color: #4d7dbf; }
+    .si-copy {
+      font-size: 0.65rem; background: none; border: none; cursor: pointer;
+      letter-spacing: 0.1em; margin-top: 0.25rem; padding: 0;
+      font-family: var(--font-body); transition: opacity 0.2s;
+    }
+    #sa-email .si-copy { color: var(--accent1); }
+    #sa-tel   .si-copy { color: var(--accent2); }
+    .si-copy:hover { opacity: 0.65; }
+  </style>
+  <title>Contact — Jordan Join</title>
+  <style>
+    .contact-wrap { max-width: 680px; }
+    .contact-title { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 6.5rem); line-height: 0.95; margin-bottom: 1.5rem; }
+    .contact-sub { color: var(--muted); font-size: 1rem; line-height: 1.8; margin-bottom: 2rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+        <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html" class="active">Me contacter</a></li>
+    </ul>
+  </nav>
+
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <div class="page-content">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <h1 class="contact-title">ON SE<br>RENCONTRE&nbsp;?</h1>
+        <p class="contact-sub">
+          Un poste, une collaboration, une opportunit&eacute; &agrave; partager. Je suis disponible pour en discuter &mdash; sans engagement, quand vous voulez.
+        </p>
+      </div>
+
+      <div class="availability reveal">
+        <div class="dot"></div>
+        <span>Disponible pour de nouvelles opportunit&eacute;s &mdash; Lyon &amp; remote</span>
+      </div>
+
+      <!-- STAMPS SECTION -->
+      <div class="stamps-section reveal">
+        <span class="stamps-label">Prenons contact</span>
+        <div class="stamps-row">
+
+          <!-- EMAIL -->
+          <div class="stamp-area" id="sa-email" onclick="pressStamp('email')">
+            <div class="stamp-tool" id="st-email">
+              <svg width="46" height="70" viewBox="0 0 46 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="sgE1" x1="23" y1="0" x2="23" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#e8a0aa"/>
+                    <stop offset="100%" stop-color="#D66A77"/>
+                  </linearGradient>
+                </defs>
+                <!-- handle -->
+                <rect x="18" y="1" width="10" height="22" rx="5" fill="url(#sgE1)"/>
+                <!-- collar -->
+                <rect x="11" y="20" width="24" height="8" rx="4" fill="#D66A77"/>
+                <!-- body -->
+                <rect x="5" y="26" width="36" height="16" rx="3" fill="#D66A77" opacity="0.9"/>
+                <!-- rubber pad -->
+                <rect x="7" y="40" width="32" height="6" rx="2" fill="#c45060"/>
+                <!-- shine on handle -->
+                <rect x="21" y="4" width="3" height="10" rx="1.5" fill="rgba(255,255,255,0.35)"/>
+              </svg>
+            </div>
+            <div class="stamp-paper">
+              <div class="stamp-hint">
+                <span class="stamp-type-hint">✉&nbsp;&nbsp;Adresse e-mail</span>
+                <span class="stamp-action-hint">Cliquez pour tamponner</span>
+              </div>
+              <div class="stamp-imp">
+                <span class="si-label">Adresse e-mail</span>
+                <span class="si-value">jordan.join@icloud.com</span>
+                <button class="si-copy" onclick="event.stopPropagation();copyStamp('jordan.join@icloud.com',this)">Copier &uarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TÉLÉPHONE -->
+          <div class="stamp-area" id="sa-tel" onclick="pressStamp('tel')">
+            <div class="stamp-tool" id="st-tel">
+              <svg width="46" height="70" viewBox="0 0 46 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="sgT1" x1="23" y1="0" x2="23" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#c2d8f5"/>
+                    <stop offset="100%" stop-color="#97BAED"/>
+                  </linearGradient>
+                </defs>
+                <rect x="18" y="1" width="10" height="22" rx="5" fill="url(#sgT1)"/>
+                <rect x="11" y="20" width="24" height="8" rx="4" fill="#97BAED"/>
+                <rect x="5" y="26" width="36" height="16" rx="3" fill="#97BAED" opacity="0.9"/>
+                <rect x="7" y="40" width="32" height="6" rx="2" fill="#6e9ad8"/>
+                <rect x="21" y="4" width="3" height="10" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+              </svg>
+            </div>
+            <div class="stamp-paper">
+              <div class="stamp-hint">
+                <span class="stamp-type-hint">&#x260e;&nbsp;&nbsp;Num&eacute;ro de t&eacute;l&eacute;phone</span>
+                <span class="stamp-action-hint">Cliquez pour tamponner</span>
+              </div>
+              <div class="stamp-imp">
+                <span class="si-label">T&eacute;l&eacute;phone</span>
+                <span class="si-value">06 19 84 27 99</span><!-- ← remplacer -->
+                <button class="si-copy" onclick="event.stopPropagation();copyStamp('06 19 84 27 99',this)">Copier &uarr;</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+  <div class="grain"></div>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('follower');
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!hasHover) {
+      cursor.style.display = 'none';
+      follower.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    } else {
+      let mx = 0, my = 0, fx = 0, fy = 0;
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx - 6 + 'px';
+        cursor.style.top = my - 6 + 'px';
+      });
+      function animateFollower() {
+        fx += (mx - fx) * 0.18;
+        fy += (my - fy) * 0.18;
+        follower.style.left = fx - 18 + 'px';
+        follower.style.top = fy - 18 + 'px';
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+    }
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
+  <script>
+    function pressStamp(type) {
+      var area = document.getElementById('sa-' + type);
+      if (!area || area.classList.contains('stamped')) return;
+
+      area.classList.add('pressing');
+
+      /* après que le tampon a touché le papier → encrer */
+      setTimeout(function() {
+        area.classList.remove('pressing');
+        area.classList.add('stamped');
+      }, 190);
+    }
+
+    function copyStamp(value, btn) {
+      navigator.clipboard.writeText(value).then(function() {
+        var orig = btn.innerHTML;
+        btn.textContent = 'Copié ✓';
+        setTimeout(function() { btn.innerHTML = orig; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

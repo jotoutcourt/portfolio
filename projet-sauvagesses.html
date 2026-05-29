@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --s-foret:   #1a2d18;
+      --s-mousse:  #3d5e38;
+      --s-fougere: #7aab6a;
+      --s-creme:   #f0e8d2;
+      --s-azur:    #3b6899;
+      --s-miel:    #c4800e;
+      --s-sable:   #c8baa0;
+      --surface:   #f7f5f0;
+      --text:      #1a1a1a;
+      --muted:     #666666;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-serif:   'Playfair Display', serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:#fff; color:var(--text); font-family:var(--font-body); font-weight:300; overflow-x:hidden; cursor:none; }
+
+    /* ── CURSOR ── */
+    .cursor { width:10px; height:10px; background:var(--s-fougere); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:multiply; }
+    .cursor-follower { width:32px; height:32px; border:1px solid rgba(122,171,106,0.45); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    /* ── NAV ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:1000; display:flex; justify-content:space-between; align-items:center; padding:1.5rem 4rem; background:rgba(255,255,255,0.94); backdrop-filter:blur(14px); border-bottom:1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family:var(--font-display); font-size:1.1rem; letter-spacing:0.08em; text-decoration:none; background:linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { color:#888; text-decoration:none; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s; }
+    .nav-links a:hover,.nav-links a.active { color:var(--s-mousse); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    /* ── BURGER ── */
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);transition:transform 0.3s,opacity 0.3s;}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;overflow:hidden;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* ── HERO ── */
+    .sv-hero { position:relative; height:80vh; min-height:520px; display:flex; align-items:flex-end; overflow:hidden; }
+    .sv-hero-bg { position:absolute; inset:0; background-image:url('assets/grandsom.webp'); background-size:cover; background-position:center 35%; }
+    .sv-hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,16,6,0.12) 0%, rgba(8,16,6,0.5) 55%, rgba(8,16,6,0.82) 100%); }
+    .sv-hero-content { position:relative; z-index:1; padding:0 4rem 4.5rem; width:100%; }
+    .sv-hero-back { display:inline-flex; align-items:center; gap:0.6rem; color:rgba(255,255,255,0.45); text-decoration:none; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; position:absolute; top:-52vh; left:4rem; z-index:2; transition:color 0.2s; }
+    .sv-hero-back:hover{color:var(--s-fougere);}
+    .sv-hero-badge { display:inline-block; font-size:0.66rem; letter-spacing:0.26em; text-transform:uppercase; color:var(--s-fougere); border:1px solid rgba(122,171,106,0.35); padding:0.28rem 0.85rem; border-radius:2rem; margin-bottom:1.2rem; }
+    .sv-hero-title { font-family:var(--font-display); font-size:clamp(3.8rem,10vw,9rem); line-height:0.93; color:#fff; margin-bottom:1.2rem; }
+    .sv-hero-sub { font-family:var(--font-serif); font-style:italic; font-size:1.05rem; color:rgba(255,255,255,0.55); }
+    @media(max-width:900px){ .sv-hero-content{padding:0 2rem 3rem;} .sv-hero-back{left:2rem; top:-48vh;} }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+
+    /* ── SCROLL DOTS ── */
+    .dos-progress{position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:0.75rem;z-index:500;}
+    .dos-dot{display:block;width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,0.15);transition:all 0.3s;text-decoration:none;}
+    .dos-dot.active{background:var(--s-mousse);transform:scale(1.65);}
+    @media(max-width:1100px){.dos-progress{display:none;}}
+
+    /* ── SECTION LABELS ── */
+    .dos-label { font-size:0.68rem; letter-spacing:0.28em; text-transform:uppercase; color:var(--s-mousse); margin-bottom:1.8rem; display:flex; align-items:center; gap:1rem; }
+    .dos-label::after{content:'';flex:1;height:1px;background:rgba(0,0,0,0.07);}
+    .dos-section{margin-bottom:6rem;scroll-margin-top:6rem;}
+
+    /* ── CONTENT ── */
+    .sv-content { padding:5.5rem 4rem 7rem; max-width:1100px; margin:0 auto; position:relative; }
+    @media(max-width:900px){ .sv-content{padding:3.5rem 2rem 5rem;} }
+
+    /* ── BRIEF ── */
+    .brief-wrap{display:flex;gap:2rem;align-items:flex-start;}
+    .brief-paper{flex:1;background:#fdf9f4;border:1px solid rgba(0,0,0,0.07);border-radius:0.6rem;padding:2.8rem;position:relative;overflow:hidden;box-shadow:0 3px 24px rgba(0,0,0,0.06);}
+    .brief-paper::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.026) 27px,rgba(0,0,0,0.026) 28px);}
+    .brief-paper-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:2px solid rgba(0,0,0,0.05);}
+    .bph-badge{display:inline-block;font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.12em;color:var(--s-mousse);border:2px solid var(--s-mousse);padding:0.3rem 0.9rem;border-radius:3px;opacity:0.8;margin-bottom:0.4rem;}
+    .bph-sub{font-size:0.75rem;color:var(--muted);letter-spacing:0.06em;}
+    .bph-ref{font-family:monospace;font-size:0.72rem;color:var(--muted);text-align:right;line-height:1.6;}
+    .brief-fields{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 2rem;margin-bottom:1rem;}
+    .bf{padding-bottom:0.6rem;border-bottom:1px dotted rgba(0,0,0,0.13);}
+    .bf-full{grid-column:1/-1;}
+    .bf-label{display:block;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+    .bf-val{font-size:0.92rem;color:var(--text);line-height:1.55;}
+    .brief-validated{position:absolute;bottom:2rem;right:2rem;width:78px;height:78px;opacity:0.5;transform:rotate(-8deg);}
+    .postit{background:#fef9c3;padding:1.4rem 1.6rem;border-radius:2px;box-shadow:2px 5px 18px rgba(0,0,0,0.13);transform:rotate(-2.5deg);font-family:'Caveat',cursive;font-size:1.15rem;line-height:1.6;color:#5c4400;max-width:210px;flex-shrink:0;position:relative;margin-top:1.5rem;}
+    .postit::before{content:'';position:absolute;top:0;left:0;right:0;height:26px;background:rgba(0,0,0,0.05);border-radius:2px 2px 0 0;}
+    .postit-arrow{display:block;font-size:0.9rem;margin-bottom:0.3rem;opacity:0.4;}
+    .postit-green{background:rgba(61,94,56,0.09);color:#1c3018;border:1px solid rgba(61,94,56,0.18);}
+    @media(max-width:900px){.brief-wrap{flex-direction:column;} .brief-fields{grid-template-columns:1fr;}}
+
+    /* ── TERRITOIRE ── */
+    .grandsom-frame { position:relative; border-radius:1rem; overflow:hidden; aspect-ratio:21/8; margin-bottom:2rem; box-shadow:0 12px 48px rgba(0,0,0,0.12); }
+    .grandsom-frame img{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;}
+    .grandsom-caption{ position:absolute; bottom:1rem; right:1.4rem; font-family:var(--font-serif); font-style:italic; font-size:0.7rem; color:rgba(255,255,255,0.75); background:rgba(0,0,0,0.32); padding:0.2rem 0.7rem; border-radius:2rem; }
+
+    .sv-insight { background:var(--s-foret); color:#eef3e8; border-radius:0.8rem; padding:3.5rem; position:relative; overflow:hidden; margin-bottom:3rem; }
+    .sv-insight::before { content:''; position:absolute; right:-3rem; top:-3rem; width:300px; height:300px; background-image:url('assets/grandsom.webp'); background-size:cover; background-position:center; opacity:0.08; border-radius:50%; pointer-events:none; }
+    .sv-insight-lead { font-size:0.98rem; color:rgba(238,243,232,0.58); line-height:1.9; margin-bottom:2rem; max-width:520px; }
+    .sv-insight-reveal { display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; }
+    .sv-ir-line{flex:1;height:1px;background:rgba(122,171,106,0.3);}
+    .sv-insight-big { font-family:var(--font-display); font-size:clamp(2rem,4vw,3.2rem); color:var(--s-fougere); line-height:1.05; }
+    .sv-insight-sub{font-size:0.88rem;color:rgba(238,243,232,0.42);line-height:1.9;max-width:500px;}
+
+    /* Ridge animée */
+    .ridge-wrap { background:var(--surface); border-radius:0.8rem; padding:2.5rem 2rem 1.5rem; overflow:hidden; }
+    .ridge-meta { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1.2rem; }
+    .ridge-meta-name { font-family:var(--font-display); font-size:1.3rem; letter-spacing:0.06em; color:var(--s-foret); }
+    .ridge-meta-alt { font-family:var(--font-serif); font-style:italic; font-size:0.78rem; color:var(--muted); }
+    .sv-ridge { display:block; width:100%; height:70px; overflow:visible; }
+    .sv-ridge-path { fill:none; stroke:var(--s-mousse); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ── PISTE SAISONNIÈRE ── */
+    .piste-head { display:flex; align-items:baseline; gap:1.4rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+    .piste-title { font-family:var(--font-display); font-size:clamp(2rem,3.8vw,3rem); color:var(--text); line-height:1; }
+    .piste-tag { font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; padding:0.28rem 0.85rem; border-radius:2rem; background:rgba(160,45,45,0.08); color:#943030; border:1px solid rgba(160,45,45,0.2); white-space:nowrap; }
+    .piste-desc { font-size:0.92rem; color:var(--muted); line-height:1.82; max-width:600px; margin-bottom:2.5rem; }
+    .saisons-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-bottom:1.5rem; }
+    .saison-card { position:relative; border-radius:0.6rem; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1); transition:transform 0.3s, box-shadow 0.3s; }
+    .saison-card:hover{transform:translateY(-4px);box-shadow:0 14px 38px rgba(0,0,0,0.16);}
+    .saison-card img{width:100%;display:block;}
+    .saison-label { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(0deg,rgba(0,0,0,0.65),transparent); padding:1.2rem 1rem 0.9rem; font-family:var(--font-display); font-size:1.15rem; letter-spacing:0.06em; color:#fff; }
+    .saison-label-sub { display:block; font-family:var(--font-body); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-top:0.15rem; }
+    .piste-note { background:rgba(155,40,40,0.04); border-left:3px solid rgba(155,40,40,0.22); border-radius:0 0.5rem 0.5rem 0; padding:1.1rem 1.5rem; font-size:0.84rem; color:#7a3030; line-height:1.75; font-style:italic; }
+    .piste-note strong{font-weight:500;font-style:normal;}
+    @media(max-width:900px){.saisons-grid{grid-template-columns:1fr;}}
+
+    /* ── BOTANIQUES ── */
+    .botaniques-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem; margin-bottom:4rem; }
+    .botanique-card { text-align:center; padding:1.8rem 1rem 1.4rem; border:1px solid rgba(0,0,0,0.06); border-radius:0.7rem; background:var(--surface); transition:transform 0.25s, box-shadow 0.25s; }
+    .botanique-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+    .botanique-img{ width:72px; height:72px; object-fit:contain; margin:0 auto 1rem; display:block; }
+    .botanique-name{ font-family:var(--font-display); font-size:1.15rem; letter-spacing:0.06em; color:var(--s-foret); margin-bottom:0.25rem; }
+    .botanique-latin{ font-family:var(--font-serif); font-style:italic; font-size:0.68rem; color:var(--muted); }
+    @media(max-width:900px){.botaniques-grid{grid-template-columns:repeat(2,1fr);}}
+
+    /* ── RÉALISATIONS ── */
+    .spiritueux-block{margin-bottom:5rem;}
+    .spiritueux-head { display:flex; align-items:center; gap:1.2rem; margin-bottom:2rem; }
+    .spiritueux-pill { font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; padding:0.32rem 0.95rem; border-radius:2rem; flex-shrink:0; }
+    .pill-gin   { background:var(--s-foret); color:var(--s-fougere); }
+    .pill-pastis{ background:var(--s-azur);  color:#fff; }
+    .spiritueux-name { font-family:var(--font-display); font-size:clamp(1.6rem,3vw,2.4rem); color:var(--text); line-height:1; }
+    .etiquettes-duo { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.2rem; }
+    .etiquette-frame{ border-radius:0.6rem; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.09); }
+    .etiquette-frame img{width:100%;display:block;}
+    .etiquette-placeholder{ aspect-ratio:3/4; background:var(--s-creme); display:flex;align-items:center;justify-content:center; font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase; border:2px dashed rgba(0,0,0,0.1);border-radius:0.6rem; }
+    .mockups-duo { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem; }
+    .mockup-frame { border-radius:0.8rem; overflow:hidden; aspect-ratio:4/3; }
+    .mockup-frame img{width:100%;height:100%;object-fit:cover;display:block;}
+    .mockup-gin   { background:var(--s-foret); }
+    .mockup-pastis{ background:var(--s-creme); }
+    @media(max-width:900px){ .etiquettes-duo,.mockups-duo{grid-template-columns:1fr;} }
+
+    /* ── FOOTER ── */
+    footer{background:#fff;border-top:1px solid #eee;padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:#999;}
+    footer a{color:#999;text-decoration:none;}
+    footer a:hover{color:var(--s-mousse);}
+    @media(max-width:900px){footer{padding:1.5rem 2rem;}}
+  </style>
+  <title>Les Sauvagesses — On fait des bulles ?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <header class="sv-hero">
+    <a href="projets.html" class="sv-hero-back">&larr; Retour aux projets</a>
+    <div class="sv-hero-bg"></div>
+    <div class="sv-hero-content">
+      <span class="sv-hero-badge">Direction Artistique &middot; Packaging &middot; Identit&eacute; de marque</span>
+      <h1 class="sv-hero-title">Les<br>Sauvagesses</h1>
+      <p class="sv-hero-sub">Distillerie du Grand Som &mdash; Gin &amp; Pastis artisanaux</p>
+    </div>
+  </header>
+
+  <!-- ═══ DOSSIER ═══ -->
+  <main class="sv-content">
+
+    <div class="dos-progress">
+      <a href="#s-brief"      class="dos-dot active" title="Brief"></a>
+      <a href="#s-territoire" class="dos-dot" title="Territoire"></a>
+      <a href="#s-saisons"    class="dos-dot" title="Piste saisonni&egrave;re"></a>
+      <a href="#s-botaniques" class="dos-dot" title="Botaniques"></a>
+      <a href="#s-real"       class="dos-dot" title="R&eacute;alisations"></a>
+    </div>
+
+    <!-- ════ 01 — BRIEF ════════════════════════════ -->
+    <section class="dos-section" id="s-brief">
+      <div class="dos-label reveal">01 &mdash; Le brief</div>
+      <div class="brief-wrap">
+        <div class="brief-paper reveal">
+          <div class="brief-paper-header">
+            <div>
+              <div class="bph-badge">Brief Cr&eacute;atif</div>
+              <div class="bph-sub">Les Sauvagesses &middot; Identit&eacute; de marque</div>
+            </div>
+            <div class="bph-ref">R&eacute;f.&nbsp;SAUV&#8209;2024&#8209;001</div>
+          </div>
+          <div class="brief-fields">
+            <div class="bf"><span class="bf-label">Client</span><span class="bf-val">Distillerie du Grand Som</span></div>
+            <div class="bf"><span class="bf-label">Marque</span><span class="bf-val">Les Sauvagesses</span></div>
+            <div class="bf"><span class="bf-label">Produits</span><span class="bf-val">Gin artisanal &middot; Pastis artisanal</span></div>
+            <div class="bf"><span class="bf-label">Territoire</span><span class="bf-val">Massif de la Chartreuse &mdash; Grand Som, Is&egrave;re</span></div>
+            <div class="bf bf-full"><span class="bf-label">P&eacute;rim&egrave;tre</span><span class="bf-val">&Eacute;tiquettes de bouteilles pour les deux spiritueux. La montagne du Grand Som, lieu de cueillette des botaniques, devait &ecirc;tre au c&oelig;ur de chaque &eacute;tiquette.</span></div>
+            <div class="bf bf-full"><span class="bf-label">Objectif</span><span class="bf-val">Deux styles graphiques oppos&eacute;s pour refléter la personnalit&eacute; distincte de chaque spiritueux, tout en formant une famille de marque coh&eacute;rente et reconnaissable en rayon.</span></div>
+          </div>
+          <div class="brief-validated">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="36" stroke="#3d5e38" stroke-width="3" opacity="0.8"/>
+              <circle cx="40" cy="40" r="31" stroke="#3d5e38" stroke-width="1" opacity="0.5"/>
+              <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#3d5e38" opacity="0.9">VALID&Eacute;</text>
+              <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#3d5e38" opacity="0.7">SAUV. 2024</text>
+            </svg>
+          </div>
+        </div>
+        <div class="postit postit-green reveal" style="transform:rotate(2.3deg);">
+          <span class="postit-arrow">&#x2191;</span>
+          Plantes sauvages<br>du massif &rarr;<br>identit&eacute; de marque
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ 02 — TERRITOIRE ═════════════════════ -->
+    <section class="dos-section" id="s-territoire">
+      <div class="dos-label reveal">02 &mdash; Le territoire</div>
+
+      <div class="grandsom-frame reveal">
+        <img src="assets/grandsom.webp" alt="Le Grand Som &mdash; Massif de la Chartreuse" />
+        <span class="grandsom-caption">Le Grand Som &mdash; Chartreuse, Is&egrave;re</span>
+      </div>
+
+      <div class="sv-insight reveal">
+        <p class="sv-insight-lead">Un gin et un pastis n&eacute;s d&rsquo;une montagne. Les plantes sauvages du Grand Som &mdash; sapin, gen&egrave;vre, sureau, coriandre &mdash; sont &agrave; la fois les ingr&eacute;dients et l&rsquo;&acirc;me de chaque bouteille.</p>
+        <div class="sv-insight-reveal">
+          <div class="sv-ir-line"></div>
+          <p class="sv-insight-big">Deux spiritueux,<br>un seul territoire.</p>
+          <div class="sv-ir-line"></div>
+        </div>
+        <p class="sv-insight-sub">L&rsquo;identit&eacute; visuelle ancre chaque produit dans son univers propre &mdash; la for&ecirc;t nocturne du gin, la lumi&egrave;re estivale du pastis &mdash; tout en gardant la montagne comme fil conducteur.</p>
+      </div>
+
+      <!-- Cr&ecirc;te anim&eacute;e -->
+      <div class="ridge-wrap reveal" id="ridgeSection">
+        <div class="ridge-meta">
+          <span class="ridge-meta-name">Grand Som</span>
+          <span class="ridge-meta-alt">Massif de la Chartreuse &mdash; 1&thinsp;925 m</span>
+        </div>
+        <svg class="sv-ridge" viewBox="0 0 1038 70" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="sv-ridge-path" id="ridgePath"
+            d="M 0 68
+            C 30 66, 55 62, 80 57
+            L 110 50
+            C 130 45, 148 40, 163 35
+            L 182 29
+            C 196 24, 210 20, 224 16
+            L 240 12 L 255 9 L 268 6 L 280 4 L 292 7 L 305 12
+            C 316 17, 326 14, 338 10
+            L 352 5 L 364 2 L 376 1 L 388 4 L 399 9
+            C 410 14, 421 12, 434 8
+            L 448 3 L 461 1 L 474 3 L 486 8 L 498 14
+            C 510 19, 524 22, 540 27
+            L 558 33
+            C 575 38, 595 42, 620 47
+            L 654 53
+            C 685 57, 722 60, 768 63
+            L 830 65
+            C 890 66, 960 67, 1038 68" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- ════ 03 — PISTE SAISONNIÈRE ═════════════ -->
+    <section class="dos-section" id="s-saisons">
+      <div class="dos-label reveal">03 &mdash; La piste explor&eacute;e</div>
+
+      <div class="reveal">
+        <div class="piste-head">
+          <h2 class="piste-title">Une bouteille pour chaque saison</h2>
+          <span class="piste-tag">Piste abandonn&eacute;e</span>
+        </div>
+        <p class="piste-desc">Avant d&rsquo;arr&ecirc;ter la direction finale, une piste a &eacute;t&eacute; explor&eacute;e&nbsp;: d&eacute;cliner l&rsquo;&eacute;tiquette du gin selon les saisons &mdash; chaque &eacute;poque ses plantes, ses couleurs, son caract&egrave;re. L&rsquo;id&eacute;e faisait sens avec l&rsquo;ancrage dans le territoire vivant du Grand Som, o&ugrave; la cueillette suit le rythme de la montagne.</p>
+      </div>
+
+      <div class="saisons-grid reveal">
+        <div class="saison-card">
+          <img src="assets/ginautomne.png" alt="Gin Automne" loading="lazy" />
+          <div class="saison-label">Automne<span class="saison-label-sub">Baies &middot; Champignons &middot; Bois humide</span></div>
+        </div>
+        <div class="saison-card">
+          <img src="assets/ginhiver.png" alt="Gin Hiver" loading="lazy" />
+          <div class="saison-label">Hiver<span class="saison-label-sub">Cristal &middot; Sapin &middot; Neige</span></div>
+        </div>
+        <div class="saison-card">
+          <img src="assets/ginete.png" alt="Gin &Eacute;t&eacute;" loading="lazy" />
+          <div class="saison-label">&Eacute;t&eacute;<span class="saison-label-sub">Fleurs sauvages &middot; Herbes &middot; Soleil</span></div>
+        </div>
+      </div>
+
+      <div class="piste-note reveal">
+        <strong>Pourquoi cette piste a &eacute;t&eacute; abandonn&eacute;e&nbsp;?</strong> Le client adorait l&rsquo;id&eacute;e, mais ne savait pas encore s&rsquo;il allait r&eacute;ussir &agrave; vendre suffisamment pour justifier plusieurs &eacute;tiquettes diff&eacute;rentes. Cr&eacute;er quatre versions avant d&rsquo;&ecirc;tre certain de la commercialisation &eacute;tait une contrainte trop importante. La piste reste en r&eacute;serve comme &eacute;volution naturelle possible de la marque.
+      </div>
+    </section>
+
+    <!-- ════ 04 — BOTANIQUES ═════════════════════ -->
+    <section class="dos-section" id="s-botaniques">
+      <div class="dos-label reveal">04 &mdash; Les botaniques</div>
+      <p class="reveal" style="font-size:0.92rem;color:var(--muted);line-height:1.85;max-width:580px;margin-bottom:2.5rem;">Les plantes du Grand Som ne sont pas seulement des ingr&eacute;dients &mdash; elles sont l&rsquo;identit&eacute;. Chaque esp&egrave;ce cueillie sur le massif raconte une r&eacute;gion, une saison, un caract&egrave;re.</p>
+      <div class="botaniques-grid reveal">
+        <div class="botanique-card">
+          <img class="botanique-img" src="assets/sapin.png" alt="Sapin" loading="lazy" />
+          <div class="botanique-name">Sapin</div>
+          <div class="botanique-latin">Abies alba</div>
+        </div>
+        <div class="botanique-card">
+          <img class="botanique-img" src="assets/genievre.png" alt="Gen&egrave;vre" loading="lazy" />
+          <div class="botanique-name">Gen&egrave;vre</div>
+          <div class="botanique-latin">Juniperus communis</div>
+        </div>
+        <div class="botanique-card">
+          <img class="botanique-img" src="assets/sureau.png" alt="Sureau" loading="lazy" />
+          <div class="botanique-name">Sureau</div>
+          <div class="botanique-latin">Sambucus nigra</div>
+        </div>
+        <div class="botanique-card">
+          <img class="botanique-img" src="assets/coriandre.png" alt="Coriandre" loading="lazy" />
+          <div class="botanique-name">Coriandre</div>
+          <div class="botanique-latin">Coriandrum sativum</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ 05 — RÉALISATIONS ═══════════════════ -->
+    <section class="dos-section" id="s-real">
+      <div class="dos-label reveal">05 &mdash; Les r&eacute;alisations</div>
+
+      <!-- GIN -->
+      <div class="spiritueux-block reveal">
+        <div class="spiritueux-head">
+          <span class="spiritueux-pill pill-gin">Gin artisanal</span>
+          <h3 class="spiritueux-name">Le Gin des Sauvagesses</h3>
+        </div>
+        <div class="etiquettes-duo">
+          <div class="etiquette-frame">
+            <img src="assets/ginfinal1.png" alt="&Eacute;tiquette Gin &mdash; recto" loading="lazy" />
+          </div>
+          <div class="etiquette-frame">
+            <img src="assets/ginfinal2.png" alt="&Eacute;tiquette Gin &mdash; verso" loading="lazy" />
+          </div>
+        </div>
+        <div class="mockups-duo">
+          <div class="mockup-frame mockup-gin">
+            <img src="assets/ginm1.png" alt="Mockup Gin 1" loading="lazy" />
+          </div>
+          <div class="mockup-frame mockup-gin">
+            <img src="assets/ginm2.png" alt="Mockup Gin 2" loading="lazy" />
+          </div>
+        </div>
+      </div>
+
+      <!-- PASTIS -->
+      <div class="spiritueux-block reveal">
+        <div class="spiritueux-head">
+          <span class="spiritueux-pill pill-pastis">Pastis artisanal</span>
+          <h3 class="spiritueux-name">Le Pastis des Sauvagesses</h3>
+        </div>
+        <div class="etiquettes-duo">
+          <div class="etiquette-frame">
+            <img src="assets/pastis2.png" alt="&Eacute;tiquette Pastis" loading="lazy" />
+          </div>
+          <div class="etiquette-placeholder" id="pastis1Slot">
+            &Eacute;tiquette 1 &mdash; &agrave; venir
+          </div>
+        </div>
+        <div class="mockups-duo">
+          <div class="mockup-frame mockup-pastis">
+            <img src="assets/pastism1.png" alt="Mockup Pastis 1" loading="lazy" />
+          </div>
+          <div class="mockup-frame mockup-pastis">
+            <img src="assets/pastism2.png" alt="Mockup Pastis 2" loading="lazy" />
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    // ── Cursor ─────────────────────────────────────────
+    (function(){
+      var c = document.getElementById('cursor');
+      var f = document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){ c.style.display='none'; f.style.display='none'; return; }
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){ mx=e.clientX; my=e.clientY; c.style.left=mx-5+'px'; c.style.top=my-5+'px'; });
+      (function tick(){ fx+=(mx-fx)*0.18; fy+=(my-fy)*0.18; f.style.left=fx-16+'px'; f.style.top=fy-16+'px'; requestAnimationFrame(tick); })();
+    })();
+
+    // ── Reveal ─────────────────────────────────────────
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){ if(e[0].isIntersecting) setTimeout(function(){ r.classList.add('visible'); },i*55); },{threshold:0.06}).observe(r);
+    });
+
+    // ── Mobile menu ────────────────────────────────────
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    // ── Pastis1 auto-swap ──────────────────────────────
+    (function(){
+      var img=new Image();
+      img.onload=function(){
+        var slot=document.getElementById('pastis1Slot');
+        if(slot){ slot.outerHTML='<div class="etiquette-frame"><img src="assets/pastis1.png" alt="Étiquette Pastis 1" style="width:100%;display:block;" /></div>'; }
+      };
+      img.src='assets/pastis1.png';
+    })();
+
+    // ── Ridge draw on scroll ───────────────────────────
+    (function(){
+      var path=document.getElementById('ridgePath');
+      if(!path) return;
+      var len; try{ len=path.getTotalLength(); }catch(e){ len=1600; }
+      path.style.strokeDasharray=len;
+      path.style.strokeDashoffset=len;
+      var drawn=false;
+      new IntersectionObserver(function(entries){
+        if(!entries[0].isIntersecting||drawn) return;
+        drawn=true;
+        var t0=null,dur=2800;
+        requestAnimationFrame(function step(ts){
+          if(!t0) t0=ts;
+          var p=Math.min((ts-t0)/dur,1);
+          var e=p<0.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+          path.style.strokeDashoffset=len*(1-e);
+          if(p<1) requestAnimationFrame(step);
+        });
+      },{threshold:0.3}).observe(document.getElementById('ridgeSection'));
+    })();
+
+    // ── Scroll spy ─────────────────────────────────────
+    (function(){
+      var ids=['s-brief','s-territoire','s-saisons','s-botaniques','s-real'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting) return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0) dots.forEach(function(d,i){ d.classList.toggle('active',i===idx); });
+        });
+      },{threshold:0.3,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){ var el=document.getElementById(id); if(el) obs.observe(el); });
+    })();
+  </script>
+</body>
+</html>

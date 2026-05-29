@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --surface: #f8f8f8;
+      --accent1: #D66A77; --accent2: #97BAED; --accent3: #D66A77;
+      --text: #1a1a2e; --muted: #666676;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-syne: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+    .cursor { width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+    .cursor-follower { width: 36px; height: 36px; border: 1px solid rgba(214,106,119,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: linear-gradient(to bottom, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.0) 100%); border-bottom: 1px solid rgba(0,0,0,0.04); backdrop-filter: blur(12px); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg, #D66A77, #97BAED, #D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent2); }
+    .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.12; pointer-events: none; z-index: 0; }
+    .section-label { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent1); margin-bottom: 1rem; }
+    .section-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 5rem); line-height: 1; margin-bottom: 3rem; }
+    .page-content { padding: 10rem 4rem 6rem; position: relative; z-index: 1; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.08); font-size: 0.8rem; color: var(--muted); position: relative; z-index: 1; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent2); }
+    @media (max-width: 900px) { nav { padding: 1.2rem 2rem; } .nav-links { display: none; } .burger { display: flex; } .cursor, .cursor-follower { display: none !important; } body { cursor: auto !important; } * { cursor: auto !important; } .page-content { padding: 8rem 2rem 4rem; } footer { padding: 2rem; } }
+
+    /* MOBILE NAV */
+    .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 99999; position: fixed; top: 1.3rem; right: 1.5rem; }
+    .burger span { display: block; width: 24px; height: 1.5px; background: var(--text); transition: transform 0.3s, opacity 0.3s; }
+    .mobile-menu {
+      visibility: hidden;
+      opacity: 0;
+      position: fixed; inset: 0;
+      background: #ffffff;
+      z-index: 99998;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      overflow: hidden;
+    }
+    .mobile-menu.open { visibility: visible; opacity: 1; }
+    body.menu-open .burger { display: none; }
+    .mobile-menu-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: none; border: none;
+      font-size: 2rem; color: #000;
+      cursor: pointer; line-height: 1;
+      padding: 0.5rem;
+    }
+    .mobile-menu a {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+      color: #000;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      transition: background 0.15s, color 0.15s;
+    }
+    .mobile-menu a:first-of-type { border-top: 1px solid rgba(0,0,0,0.08); }
+    .mobile-menu a:hover { background: #f5f5f5; }
+    @media (max-width: 900px) { .burger { display: flex; } .cursor, .cursor-follower { display: none !important; } body { cursor: auto !important; } * { cursor: auto !important; } }
+      .cursor, .cursor-follower { display: none !important; }
+      body { cursor: auto !important; }
+      * { cursor: auto !important; }
+    }
+      .service-card { padding: 2rem 1.5rem; transition: background 0.4s ease; }
+      .service-card.in-view { background: #f4f6fb; }
+      .service-card.in-view::before { opacity: 1; }
+      .service-card.in-view }
+
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr !important; gap: 0; }
+      .service-card {
+        padding: 2rem 1.5rem;
+        opacity: 0.45;
+        transform: scale(0.97);
+        transition: opacity 0.4s ease, transform 0.4s ease, background 0.4s ease;
+      }
+      .service-card.active-card {
+        opacity: 1;
+        transform: scale(1);
+        background: #f4f6fb;
+      }
+      .service-card.active-card::before { opacity: 1 !important; }
+      .service-card.active-card }
+
+    .service-num { display: block; margin-bottom: 1.5rem; }
+    .service-num svg { display: block; stroke: rgba(0,0,0,0.15); fill: none; transition: stroke 0.4s, filter 0.4s, transform 0.3s; }
+    .service-card:hover .service-num svg { transform: scale(1.08); animation: iris-stroke 2.5s linear infinite; }
+    @keyframes iris-stroke {
+      0%   { stroke: rgba(214,106,119,0.9); filter: drop-shadow(0 0 8px rgba(214,106,119,0.5)); }
+      50%  { stroke: rgba(151,186,237,0.9); filter: drop-shadow(0 0 8px rgba(151,186,237,0.5)); }
+      100% { stroke: rgba(214,106,119,0.9); filter: drop-shadow(0 0 8px rgba(214,106,119,0.5)); }
+    }
+
+    @media (max-width: 900px) {
+      .service-num svg {
+        animation: iris-stroke 2.5s linear infinite !important;
+        transform: scale(1) !important;
+      }
+    }
+
+    /* ===== JORDAN SURFER ===== */
+    .game-section { margin-top: 5rem; }
+    .game-wrap { background: var(--surface); border: 1px solid rgba(0,0,0,0.07); border-radius: 1rem; padding: 3rem 2.5rem; text-align: center; }
+    .game-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0.4rem; }
+    .game-subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.8rem; }
+    .surfer-wrap { border-radius: 0.6rem; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); cursor: pointer; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    #surferCanvas { display: block; width: 100%; height: auto; }
+  </style>
+  <title>Comp&eacute;tences — Jordan Join</title>
+  <style>
+    .services-intro { max-width: 600px; margin-bottom: 4rem; color: var(--muted); line-height: 1.8; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5px; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); }
+    .service-card { background: var(--bg); padding: 3rem 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+    .service-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(151,186,237,0.1), transparent); opacity: 0; transition: opacity 0.3s; }
+    .service-card:hover::before { opacity: 1; }
+    .service-card:hover .service-who { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent3); margin-bottom: 0.5rem; }
+    .service-name { font-family: var(--font-display); font-size: 2rem; margin-bottom: 0.8rem; }
+    .service-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
+    .service-tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border: 1px solid rgba(0,0,0,0.12); border-radius: 2rem; color: var(--muted); }
+    .cta-band { margin-top: 5rem; padding: 4rem; background: var(--surface); border: 1px solid rgba(0,0,0,0.08); border-radius: 0.5rem; text-align: center; }
+    .cta-band h3 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 1rem; }
+    .cta-band p { color: var(--muted); margin-bottom: 2rem; }
+    .btn-outline { background: transparent; color: var(--text); padding: 0.9rem 2.5rem; border-radius: 0.4rem; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.08em; border: 1px solid rgba(255,255,255,0.4); transition: border-color 0.2s, transform 0.2s; display: inline-block; }
+    .btn-outline:hover { border-color: var(--accent1); color: var(--accent1); transform: translateY(-2px); }
+
+    /* ===== JORDAN SURFER ===== */
+    .game-section { margin-top: 5rem; }
+    .game-wrap { background: var(--surface); border: 1px solid rgba(0,0,0,0.07); border-radius: 1rem; padding: 3rem 2.5rem; text-align: center; }
+    .game-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0.4rem; }
+    .game-subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.8rem; }
+    .surfer-wrap { border-radius: 0.6rem; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); cursor: pointer; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    #surferCanvas { display: block; width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+        <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html" class="active">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+  <div class="page-content">
+    <div class="reveal">
+      <p class="section-label">Mon savoir-faire</p>
+      <h1 class="section-title">Comp&eacute;tences</h1>
+      <p class="services-intro">Design, web, marketing digital et communication &mdash; un ensemble de comp&eacute;tences transversal au service de projets qui laissent une trace.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num"><svg width="72" height="72" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="10" stroke-width="1.5"/><circle cx="24" cy="24" r="4" stroke-width="1.5"/><line x1="24" y1="8" x2="24" y2="4" stroke-width="1.5" stroke-linecap="round"/><line x1="24" y1="44" x2="24" y2="40" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="24" x2="4" y2="24" stroke-width="1.5" stroke-linecap="round"/><line x1="44" y1="24" x2="40" y2="24" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h2 class="service-name">Direction Artistique</h2>
+        <p class="service-desc">Concept créatif, direction de campagnes, supervision visuelle. Du brief au BAT, une vision cohérente et impactante.</p>
+        <div class="service-tags"><span class="tag">Print</span><span class="tag">Campagnes</span><span class="tag">Concept</span></div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num"><svg width="72" height="72" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="24,6 42,24 24,42 6,24" stroke-width="1.5" stroke-linejoin="round"/><polygon points="24,14 27,21 35,21 29,26 31,34 24,29 17,34 19,26 13,21 21,21" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+        <h2 class="service-name">Identité Visuelle</h2>
+        <p class="service-desc">Logo, charte graphique et déclinaisons. Une identité forte, cohérente, qui vous ressemble et reste dans les esprits.</p>
+        <div class="service-tags"><span class="tag">Logo</span><span class="tag">Charte</span><span class="tag">Supports</span></div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num"><svg width="72" height="72" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="10" width="36" height="28" rx="2" stroke-width="1.5"/><line x1="6" y1="18" x2="42" y2="18" stroke-width="1.5"/><circle cx="12" cy="14" r="1.5" opacity="0.5"/><circle cx="18" cy="14" r="1.5" opacity="0.5"/><circle cx="24" cy="14" r="1.5" opacity="0.5"/><line x1="14" y1="26" x2="34" y2="26" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="14" y1="31" x2="28" y2="31" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg></div>
+        <h2 class="service-name">Sites Web</h2>
+        <p class="service-desc">Sites vitrines et boutiques en ligne. Design soigné, code propre, expérience utilisateur pensée dans les moindres détails.</p>
+        <div class="service-tags"><span class="tag">Vitrine</span><span class="tag">E-commerce</span><span class="tag">Refonte</span></div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num"><svg width="72" height="72" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 18 L10 30 L18 30 L32 38 L32 10 L18 18 Z" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 20 C6 20 6 28 10 28" stroke-width="1.5" stroke-linecap="round"/><line x1="36" y1="16" x2="40" y2="12" stroke-width="1.5" stroke-linecap="round"/><line x1="38" y1="24" x2="43" y2="24" stroke-width="1.5" stroke-linecap="round"/><line x1="36" y1="32" x2="40" y2="36" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h2 class="service-name">Campagnes ADS</h2>
+        <p class="service-desc">Campagnes Meta et Google Ads pilotées avec précision. On optimise votre budget pour un retour maximal.</p>
+        <div class="service-tags"><span class="tag">Meta Ads</span><span class="tag">Google Ads</span><span class="tag">Retargeting</span></div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num"><svg width="72" height="72" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10 Q8 6 12 6 L36 6 Q40 6 40 10 L40 26 Q40 30 36 30 L28 30 L22 38 L22 30 L12 30 Q8 30 8 26 Z" stroke-width="1.5" stroke-linejoin="round"/><line x1="16" y1="16" x2="32" y2="16" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="16" y1="22" x2="26" y2="22" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg></div>
+        <h2 class="service-name">Community Management</h2>
+        <p class="service-desc">Gestion de vos réseaux sociaux, création de contenu et animation de communauté. Un feed cohérent qui convertit.</p>
+        <div class="service-tags"><span class="tag">Instagram</span><span class="tag">LinkedIn</span><span class="tag">TikTok</span></div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num"><svg width="72" height="72" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="12" stroke-width="1.5"/><line x1="29" y1="29" x2="42" y2="42" stroke-width="1.5" stroke-linecap="round"/><polyline points="13,24 17,18 21,22 25,14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h2 class="service-name">Référencement SEO</h2>
+        <p class="service-desc">Audit, optimisation et stratégie de contenu pour vous rendre visible sur Google là où ça compte vraiment.</p>
+        <div class="service-tags"><span class="tag">Audit SEO</span><span class="tag">Contenu</span><span class="tag">Technique</span></div>
+      </div>
+    </div>
+    <!-- JORDAN SURFER -->
+    <div class="game-section reveal">
+      <div class="game-wrap">
+        <p class="section-label">Pause cr&eacute;a</p>
+        <h2 class="game-title">Une journ&eacute;e de bureau habituelle</h2>
+        <p class="game-subtitle">Sautez par-dessus les briefs, r&eacute;unions et deadlines &mdash; clic ou Espace pour sauter</p>
+        <div class="surfer-wrap">
+          <canvas id="surferCanvas" width="680" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-band reveal">
+      <h3>Une opportunit&eacute; en t&ecirc;te&nbsp;?</h3>
+      <p>Je suis disponible pour en discuter &mdash; poste, mission ou collaboration.</p>
+      <a href="contact.html" class="btn-outline">Prendre contact</a>
+    </div>
+  </div>
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+  
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+  <div class="grain"></div>
+  <script>
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('follower');
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!hasHover) {
+      cursor.style.display = 'none';
+      follower.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    } else {
+      let mx = 0, my = 0, fx = 0, fy = 0;
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx - 6 + 'px';
+        cursor.style.top = my - 6 + 'px';
+      });
+      function animateFollower() {
+        fx += (mx - fx) * 0.18;
+        fy += (my - fy) * 0.18;
+        follower.style.left = fx - 18 + 'px';
+        follower.style.top = fy - 18 + 'px';
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+    }
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // ===== JORDAN SURFER =====
+    (function(){
+      var cv = document.getElementById('surferCanvas');
+      if(!cv) return;
+      // ── Garde anti-double-init (le script est dupliqué, une seule instance doit tourner)
+      if(cv.dataset.init) return;
+      cv.dataset.init = '1';
+
+      var cx = cv.getContext('2d');
+      var W = cv.width, H = cv.height;
+      var ROSE='#D66A77', BLUE='#97BAED', DARK='#1a1a2e', MUT='#8888a0';
+      var GY = H - 44; // ground Y
+
+      // State
+      var state = 'idle'; // idle | play | dead
+      var score=0, best=+(sessionStorage.getItem('jsBest')||0);
+      var frame=0, speed=4.5, deadFrames=0;
+      var DEAD_HOLD = 52; // frames avant redémarrage auto (~0.85s)
+
+      // Player  (hitbox + visuel)
+      var PH=44, PW=32;
+      var pl = { x:68, y:GY-PH, w:PW, h:PH, vy:0, grnd:true, coyote:0 };
+
+      function doJump(){
+        if(pl.grnd || pl.coyote>0){ pl.vy=-14; pl.grnd=false; pl.coyote=0; }
+      }
+      function restart(){
+        state='play'; score=0; frame=0; speed=4.5; deadFrames=0;
+        pl.y=GY-PH; pl.vy=0; pl.grnd=true; pl.coyote=0;
+        obs=[]; obsCd=110;
+      }
+
+      // Obstacles
+      var obs=[], obsCd=110;
+      var WORDS=['Brief','Réunion','V12','Deadline','Retours','Pivot','CR','Appel','Brief V2'];
+
+      // Lignes de vitesse
+      var slines=Array.from({length:6},function(){
+        return{x:Math.random()*W,y:15+Math.random()*(GY-30),len:14+Math.random()*24,s:0.7+Math.random()*1.2};
+      });
+
+      // Input — la mort se relance toute seule, pas besoin de gérer l'input en dead
+      function onInput(){
+        if(state==='idle')restart();
+        else if(state==='play')doJump();
+      }
+      document.addEventListener('keydown',function(e){
+        if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();onInput();}
+      });
+      cv.addEventListener('click',onInput);
+      cv.addEventListener('touchstart',function(e){e.preventDefault();onInput();},{passive:false});
+
+      // Rect arrondi
+      function rr(x,y,w,h,r){
+        cx.beginPath();
+        cx.moveTo(x+r,y);cx.lineTo(x+w-r,y);cx.arcTo(x+w,y,x+w,y+r,r);
+        cx.lineTo(x+w,y+h-r);cx.arcTo(x+w,y+h,x+w-r,y+h,r);
+        cx.lineTo(x+r,y+h);cx.arcTo(x,y+h,x,y+h-r,r);
+        cx.lineTo(x,y+r);cx.arcTo(x,y,x+r,y,r);cx.closePath();
+      }
+
+      // ── Bonhomme monoline sur planche ──
+      function drawPlayer(){
+        var mx=pl.x+PW/2, ty=pl.y;
+        var sw=state==='play'?Math.sin(frame*0.28)*7:0;
+        cx.save();
+        cx.strokeStyle=ROSE;cx.lineWidth=2.5;cx.lineCap='round';cx.lineJoin='round';
+        // ombre
+        cx.fillStyle='rgba(0,0,0,0.07)';
+        cx.beginPath();cx.ellipse(mx,GY+3,pl.grnd?17:11,3,0,0,Math.PI*2);cx.fill();
+        // planche de surf
+        cx.beginPath();cx.ellipse(mx,ty+PH-4,18,4.5,0,0,Math.PI*2);cx.stroke();
+        // jambes
+        cx.beginPath();cx.moveTo(mx,ty+27);cx.lineTo(mx-7+sw,ty+PH-8);cx.stroke();
+        cx.beginPath();cx.moveTo(mx,ty+27);cx.lineTo(mx+7-sw,ty+PH-8);cx.stroke();
+        // corps
+        cx.beginPath();cx.moveTo(mx,ty+12);cx.lineTo(mx,ty+27);cx.stroke();
+        // bras (oscillent en opposition)
+        cx.beginPath();cx.moveTo(mx-10+sw*0.5,ty+19);cx.lineTo(mx+10-sw*0.5,ty+19);cx.stroke();
+        // tête
+        cx.beginPath();cx.arc(mx,ty+7,5.5,0,Math.PI*2);cx.stroke();
+        cx.restore();
+      }
+
+      function render(){
+        cx.clearRect(0,0,W,H);
+        // fond dégradé
+        var sk=cx.createLinearGradient(0,0,0,GY);
+        sk.addColorStop(0,'#f6f9ff');sk.addColorStop(1,'#edf2f9');
+        cx.fillStyle=sk;cx.fillRect(0,0,W,GY);
+        // grille
+        cx.strokeStyle='rgba(151,186,237,0.09)';cx.lineWidth=1;
+        for(var i=0;i<W;i+=65){cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,GY);cx.stroke();}
+        // lignes de vitesse
+        if(state==='play'){
+          cx.strokeStyle='rgba(151,186,237,0.18)';cx.lineWidth=1.5;cx.lineCap='round';
+          slines.forEach(function(l){
+            l.x-=l.s*speed*0.38;if(l.x+l.len<0)l.x=W+l.len;
+            cx.beginPath();cx.moveTo(l.x,l.y);cx.lineTo(l.x+l.len,l.y);cx.stroke();
+          });
+        }
+        // sol
+        cx.fillStyle='rgba(0,0,0,0.06)';cx.fillRect(0,GY,W,1.5);
+        cx.fillStyle='#eff2f7';cx.fillRect(0,GY+1.5,W,H-GY-1.5);
+        // obstacles : fond uni rose + texte blanc bien lisible
+        obs.forEach(function(o){
+          cx.fillStyle=ROSE;rr(o.x,o.y,o.w,o.h,6);cx.fill();
+          var g=cx.createLinearGradient(o.x,o.y,o.x,o.y+14);
+          g.addColorStop(0,'rgba(255,255,255,0.2)');g.addColorStop(1,'rgba(255,255,255,0)');
+          cx.fillStyle=g;rr(o.x,o.y,o.w,o.h,6);cx.fill();
+          cx.fillStyle='#fff';cx.font='bold 11px system-ui,sans-serif';
+          cx.textAlign='center';cx.textBaseline='middle';
+          cx.fillText(o.lbl,o.x+o.w/2,o.y+o.h/2);
+        });
+        drawPlayer();
+        // HUD
+        if(state!=='idle'){
+          cx.fillStyle=MUT;cx.font='11px system-ui,sans-serif';
+          cx.textAlign='right';cx.textBaseline='top';
+          cx.fillText(score+'m',W-12,10);
+          if(best>0)cx.fillText('Record : '+best+'m',W-12,25);
+        }
+        // flash rouge à la mort
+        if(state==='dead'){
+          var a=Math.max(0,0.38*(1-deadFrames/DEAD_HOLD));
+          cx.fillStyle='rgba(214,106,119,'+a+')';cx.fillRect(0,0,W,H);
+        }
+        // écran de démarrage
+        if(state==='idle'){
+          cx.fillStyle='rgba(255,255,255,0.9)';
+          rr(W/2-162,GY/2-26,324,52,12);cx.fill();
+          cx.strokeStyle='rgba(0,0,0,0.05)';cx.lineWidth=1;
+          rr(W/2-162,GY/2-26,324,52,12);cx.stroke();
+          cx.fillStyle=DARK;cx.font='bold 13px system-ui';
+          cx.textAlign='center';cx.textBaseline='middle';
+          cx.fillText(score>0?'Encore un run ? Cliquez ou Espace':'Cliquez ou Espace pour commencer',W/2,GY/2-7);
+          cx.fillStyle=MUT;cx.font='11px system-ui';
+          cx.fillText('Sautez par-dessus les obstacles !',W/2,GY/2+10);
+        }
+      }
+
+      function loop(){
+        requestAnimationFrame(loop);
+        frame++;
+        // mort → flash + redémarrage automatique
+        if(state==='dead'){deadFrames++;if(deadFrames>=DEAD_HOLD)restart();render();return;}
+
+        score=Math.floor(frame/6);
+        speed=4.5+Math.floor(frame/300)*0.45;
+
+        // physique
+        pl.vy+=0.72;pl.y+=pl.vy;
+        if(pl.coyote>0)pl.coyote--;
+        if(pl.y>=GY-PH){
+          pl.y=GY-PH;pl.vy=0;pl.grnd=true;pl.coyote=0;
+        } else {
+          if(pl.grnd&&pl.vy>0)pl.coyote=7; // vient de quitter le sol
+          pl.grnd=false;
+        }
+
+        // spawn
+        obsCd--;
+        if(obsCd<=0){
+          var h=36+(Math.random()*20|0);
+          obs.push({x:W+8,y:GY-h,w:60,h:h,lbl:WORDS[Math.random()*WORDS.length|0]});
+          obsCd=90+(Math.random()*55|0);
+        }
+        obs.forEach(function(o){o.x-=speed;});
+        obs=obs.filter(function(o){return o.x+o.w>0;});
+
+        // collision (hitbox réduite = plus clément)
+        var hit=obs.some(function(o){
+          return pl.x+10<o.x+o.w-4 &&
+                 pl.x+PW-10>o.x+4 &&
+                 pl.y+8<o.y+o.h &&
+                 pl.y+PH-10>o.y;
+        });
+        if(hit){
+          state='dead';deadFrames=0;
+          if(score>best){best=score;sessionStorage.setItem('jsBest',best);}
+        }
+        render();
+      }
+
+      loop(); // démarre (affiche l'écran idle)
+    })();
+
+  </script>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // ===== JORDAN SURFER =====
+    (function(){
+      var cv = document.getElementById('surferCanvas');
+      if(!cv) return;
+      // ── Garde anti-double-init (le script est dupliqué, une seule instance doit tourner)
+      if(cv.dataset.init) return;
+      cv.dataset.init = '1';
+
+      var cx = cv.getContext('2d');
+      var W = cv.width, H = cv.height;
+      var ROSE='#D66A77', BLUE='#97BAED', DARK='#1a1a2e', MUT='#8888a0';
+      var GY = H - 44; // ground Y
+
+      // State
+      var state = 'idle'; // idle | play | dead
+      var score=0, best=+(sessionStorage.getItem('jsBest')||0);
+      var frame=0, speed=4.5, deadFrames=0;
+      var DEAD_HOLD = 52; // frames avant redémarrage auto (~0.85s)
+
+      // Player  (hitbox + visuel)
+      var PH=44, PW=32;
+      var pl = { x:68, y:GY-PH, w:PW, h:PH, vy:0, grnd:true, coyote:0 };
+
+      function doJump(){
+        if(pl.grnd || pl.coyote>0){ pl.vy=-14; pl.grnd=false; pl.coyote=0; }
+      }
+      function restart(){
+        state='play'; score=0; frame=0; speed=4.5; deadFrames=0;
+        pl.y=GY-PH; pl.vy=0; pl.grnd=true; pl.coyote=0;
+        obs=[]; obsCd=110;
+      }
+
+      // Obstacles
+      var obs=[], obsCd=110;
+      var WORDS=['Brief','Réunion','V12','Deadline','Retours','Pivot','CR','Appel','Brief V2'];
+
+      // Lignes de vitesse
+      var slines=Array.from({length:6},function(){
+        return{x:Math.random()*W,y:15+Math.random()*(GY-30),len:14+Math.random()*24,s:0.7+Math.random()*1.2};
+      });
+
+      // Input — la mort se relance toute seule, pas besoin de gérer l'input en dead
+      function onInput(){
+        if(state==='idle')restart();
+        else if(state==='play')doJump();
+      }
+      document.addEventListener('keydown',function(e){
+        if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();onInput();}
+      });
+      cv.addEventListener('click',onInput);
+      cv.addEventListener('touchstart',function(e){e.preventDefault();onInput();},{passive:false});
+
+      // Rect arrondi
+      function rr(x,y,w,h,r){
+        cx.beginPath();
+        cx.moveTo(x+r,y);cx.lineTo(x+w-r,y);cx.arcTo(x+w,y,x+w,y+r,r);
+        cx.lineTo(x+w,y+h-r);cx.arcTo(x+w,y+h,x+w-r,y+h,r);
+        cx.lineTo(x+r,y+h);cx.arcTo(x,y+h,x,y+h-r,r);
+        cx.lineTo(x,y+r);cx.arcTo(x,y,x+r,y,r);cx.closePath();
+      }
+
+      // ── Bonhomme monoline sur planche ──
+      function drawPlayer(){
+        var mx=pl.x+PW/2, ty=pl.y;
+        var sw=state==='play'?Math.sin(frame*0.28)*7:0;
+        cx.save();
+        cx.strokeStyle=ROSE;cx.lineWidth=2.5;cx.lineCap='round';cx.lineJoin='round';
+        // ombre
+        cx.fillStyle='rgba(0,0,0,0.07)';
+        cx.beginPath();cx.ellipse(mx,GY+3,pl.grnd?17:11,3,0,0,Math.PI*2);cx.fill();
+        // planche de surf
+        cx.beginPath();cx.ellipse(mx,ty+PH-4,18,4.5,0,0,Math.PI*2);cx.stroke();
+        // jambes
+        cx.beginPath();cx.moveTo(mx,ty+27);cx.lineTo(mx-7+sw,ty+PH-8);cx.stroke();
+        cx.beginPath();cx.moveTo(mx,ty+27);cx.lineTo(mx+7-sw,ty+PH-8);cx.stroke();
+        // corps
+        cx.beginPath();cx.moveTo(mx,ty+12);cx.lineTo(mx,ty+27);cx.stroke();
+        // bras (oscillent en opposition)
+        cx.beginPath();cx.moveTo(mx-10+sw*0.5,ty+19);cx.lineTo(mx+10-sw*0.5,ty+19);cx.stroke();
+        // tête
+        cx.beginPath();cx.arc(mx,ty+7,5.5,0,Math.PI*2);cx.stroke();
+        cx.restore();
+      }
+
+      function render(){
+        cx.clearRect(0,0,W,H);
+        // fond dégradé
+        var sk=cx.createLinearGradient(0,0,0,GY);
+        sk.addColorStop(0,'#f6f9ff');sk.addColorStop(1,'#edf2f9');
+        cx.fillStyle=sk;cx.fillRect(0,0,W,GY);
+        // grille
+        cx.strokeStyle='rgba(151,186,237,0.09)';cx.lineWidth=1;
+        for(var i=0;i<W;i+=65){cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,GY);cx.stroke();}
+        // lignes de vitesse
+        if(state==='play'){
+          cx.strokeStyle='rgba(151,186,237,0.18)';cx.lineWidth=1.5;cx.lineCap='round';
+          slines.forEach(function(l){
+            l.x-=l.s*speed*0.38;if(l.x+l.len<0)l.x=W+l.len;
+            cx.beginPath();cx.moveTo(l.x,l.y);cx.lineTo(l.x+l.len,l.y);cx.stroke();
+          });
+        }
+        // sol
+        cx.fillStyle='rgba(0,0,0,0.06)';cx.fillRect(0,GY,W,1.5);
+        cx.fillStyle='#eff2f7';cx.fillRect(0,GY+1.5,W,H-GY-1.5);
+        // obstacles : fond uni rose + texte blanc bien lisible
+        obs.forEach(function(o){
+          cx.fillStyle=ROSE;rr(o.x,o.y,o.w,o.h,6);cx.fill();
+          var g=cx.createLinearGradient(o.x,o.y,o.x,o.y+14);
+          g.addColorStop(0,'rgba(255,255,255,0.2)');g.addColorStop(1,'rgba(255,255,255,0)');
+          cx.fillStyle=g;rr(o.x,o.y,o.w,o.h,6);cx.fill();
+          cx.fillStyle='#fff';cx.font='bold 11px system-ui,sans-serif';
+          cx.textAlign='center';cx.textBaseline='middle';
+          cx.fillText(o.lbl,o.x+o.w/2,o.y+o.h/2);
+        });
+        drawPlayer();
+        // HUD
+        if(state!=='idle'){
+          cx.fillStyle=MUT;cx.font='11px system-ui,sans-serif';
+          cx.textAlign='right';cx.textBaseline='top';
+          cx.fillText(score+'m',W-12,10);
+          if(best>0)cx.fillText('Record : '+best+'m',W-12,25);
+        }
+        // flash rouge à la mort
+        if(state==='dead'){
+          var a=Math.max(0,0.38*(1-deadFrames/DEAD_HOLD));
+          cx.fillStyle='rgba(214,106,119,'+a+')';cx.fillRect(0,0,W,H);
+        }
+        // écran de démarrage
+        if(state==='idle'){
+          cx.fillStyle='rgba(255,255,255,0.9)';
+          rr(W/2-162,GY/2-26,324,52,12);cx.fill();
+          cx.strokeStyle='rgba(0,0,0,0.05)';cx.lineWidth=1;
+          rr(W/2-162,GY/2-26,324,52,12);cx.stroke();
+          cx.fillStyle=DARK;cx.font='bold 13px system-ui';
+          cx.textAlign='center';cx.textBaseline='middle';
+          cx.fillText(score>0?'Encore un run ? Cliquez ou Espace':'Cliquez ou Espace pour commencer',W/2,GY/2-7);
+          cx.fillStyle=MUT;cx.font='11px system-ui';
+          cx.fillText('Sautez par-dessus les obstacles !',W/2,GY/2+10);
+        }
+      }
+
+      function loop(){
+        requestAnimationFrame(loop);
+        frame++;
+        // mort → flash + redémarrage automatique
+        if(state==='dead'){deadFrames++;if(deadFrames>=DEAD_HOLD)restart();render();return;}
+
+        score=Math.floor(frame/6);
+        speed=4.5+Math.floor(frame/300)*0.45;
+
+        // physique
+        pl.vy+=0.72;pl.y+=pl.vy;
+        if(pl.coyote>0)pl.coyote--;
+        if(pl.y>=GY-PH){
+          pl.y=GY-PH;pl.vy=0;pl.grnd=true;pl.coyote=0;
+        } else {
+          if(pl.grnd&&pl.vy>0)pl.coyote=7; // vient de quitter le sol
+          pl.grnd=false;
+        }
+
+        // spawn
+        obsCd--;
+        if(obsCd<=0){
+          var h=36+(Math.random()*20|0);
+          obs.push({x:W+8,y:GY-h,w:60,h:h,lbl:WORDS[Math.random()*WORDS.length|0]});
+          obsCd=90+(Math.random()*55|0);
+        }
+        obs.forEach(function(o){o.x-=speed;});
+        obs=obs.filter(function(o){return o.x+o.w>0;});
+
+        // collision (hitbox réduite = plus clément)
+        var hit=obs.some(function(o){
+          return pl.x+10<o.x+o.w-4 &&
+                 pl.x+PW-10>o.x+4 &&
+                 pl.y+8<o.y+o.h &&
+                 pl.y+PH-10>o.y;
+        });
+        if(hit){
+          state='dead';deadFrames=0;
+          if(score>best){best=score;sessionStorage.setItem('jsBest',best);}
+        }
+        render();
+      }
+
+      loop(); // démarre (affiche l'écran idle)
+    })();
+
+  </script>
+  <script>
+    var mq = window.matchMedia('(max-width: 900px)');
+    function initScrollHighlight() {
+      if (!mq.matches) return;
+      var cards = Array.from(document.querySelectorAll('.service-card'));
+      if (!cards.length) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          entry.target.classList.toggle('active-card', entry.isIntersecting);
+        });
+      }, { threshold: 0.5 });
+      cards.forEach(function(c) { observer.observe(c); });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollHighlight);
+    } else {
+      initScrollHighlight();
+    }
+    mq.addEventListener('change', initScrollHighlight);
+
+    // ===== JORDAN SURFER =====
+    (function(){
+      var cv = document.getElementById('surferCanvas');
+      if(!cv) return;
+      // ── Garde anti-double-init (le script est dupliqué, une seule instance doit tourner)
+      if(cv.dataset.init) return;
+      cv.dataset.init = '1';
+
+      var cx = cv.getContext('2d');
+      var W = cv.width, H = cv.height;
+      var ROSE='#D66A77', BLUE='#97BAED', DARK='#1a1a2e', MUT='#8888a0';
+      var GY = H - 44; // ground Y
+
+      // State
+      var state = 'idle'; // idle | play | dead
+      var score=0, best=+(sessionStorage.getItem('jsBest')||0);
+      var frame=0, speed=4.5, deadFrames=0;
+      var DEAD_HOLD = 52; // frames avant redémarrage auto (~0.85s)
+
+      // Player  (hitbox + visuel)
+      var PH=44, PW=32;
+      var pl = { x:68, y:GY-PH, w:PW, h:PH, vy:0, grnd:true, coyote:0 };
+
+      function doJump(){
+        if(pl.grnd || pl.coyote>0){ pl.vy=-14; pl.grnd=false; pl.coyote=0; }
+      }
+      function restart(){
+        state='play'; score=0; frame=0; speed=4.5; deadFrames=0;
+        pl.y=GY-PH; pl.vy=0; pl.grnd=true; pl.coyote=0;
+        obs=[]; obsCd=110;
+      }
+
+      // Obstacles
+      var obs=[], obsCd=110;
+      var WORDS=['Brief','Réunion','V12','Deadline','Retours','Pivot','CR','Appel','Brief V2'];
+
+      // Lignes de vitesse
+      var slines=Array.from({length:6},function(){
+        return{x:Math.random()*W,y:15+Math.random()*(GY-30),len:14+Math.random()*24,s:0.7+Math.random()*1.2};
+      });
+
+      // Input — la mort se relance toute seule, pas besoin de gérer l'input en dead
+      function onInput(){
+        if(state==='idle')restart();
+        else if(state==='play')doJump();
+      }
+      document.addEventListener('keydown',function(e){
+        if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();onInput();}
+      });
+      cv.addEventListener('click',onInput);
+      cv.addEventListener('touchstart',function(e){e.preventDefault();onInput();},{passive:false});
+
+      // Rect arrondi
+      function rr(x,y,w,h,r){
+        cx.beginPath();
+        cx.moveTo(x+r,y);cx.lineTo(x+w-r,y);cx.arcTo(x+w,y,x+w,y+r,r);
+        cx.lineTo(x+w,y+h-r);cx.arcTo(x+w,y+h,x+w-r,y+h,r);
+        cx.lineTo(x+r,y+h);cx.arcTo(x,y+h,x,y+h-r,r);
+        cx.lineTo(x,y+r);cx.arcTo(x,y,x+r,y,r);cx.closePath();
+      }
+
+      // ── Bonhomme monoline sur planche ──
+      function drawPlayer(){
+        var mx=pl.x+PW/2, ty=pl.y;
+        var sw=state==='play'?Math.sin(frame*0.28)*7:0;
+        cx.save();
+        cx.strokeStyle=ROSE;cx.lineWidth=2.5;cx.lineCap='round';cx.lineJoin='round';
+        // ombre
+        cx.fillStyle='rgba(0,0,0,0.07)';
+        cx.beginPath();cx.ellipse(mx,GY+3,pl.grnd?17:11,3,0,0,Math.PI*2);cx.fill();
+        // planche de surf
+        cx.beginPath();cx.ellipse(mx,ty+PH-4,18,4.5,0,0,Math.PI*2);cx.stroke();
+        // jambes
+        cx.beginPath();cx.moveTo(mx,ty+27);cx.lineTo(mx-7+sw,ty+PH-8);cx.stroke();
+        cx.beginPath();cx.moveTo(mx,ty+27);cx.lineTo(mx+7-sw,ty+PH-8);cx.stroke();
+        // corps
+        cx.beginPath();cx.moveTo(mx,ty+12);cx.lineTo(mx,ty+27);cx.stroke();
+        // bras (oscillent en opposition)
+        cx.beginPath();cx.moveTo(mx-10+sw*0.5,ty+19);cx.lineTo(mx+10-sw*0.5,ty+19);cx.stroke();
+        // tête
+        cx.beginPath();cx.arc(mx,ty+7,5.5,0,Math.PI*2);cx.stroke();
+        cx.restore();
+      }
+
+      function render(){
+        cx.clearRect(0,0,W,H);
+        // fond dégradé
+        var sk=cx.createLinearGradient(0,0,0,GY);
+        sk.addColorStop(0,'#f6f9ff');sk.addColorStop(1,'#edf2f9');
+        cx.fillStyle=sk;cx.fillRect(0,0,W,GY);
+        // grille
+        cx.strokeStyle='rgba(151,186,237,0.09)';cx.lineWidth=1;
+        for(var i=0;i<W;i+=65){cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,GY);cx.stroke();}
+        // lignes de vitesse
+        if(state==='play'){
+          cx.strokeStyle='rgba(151,186,237,0.18)';cx.lineWidth=1.5;cx.lineCap='round';
+          slines.forEach(function(l){
+            l.x-=l.s*speed*0.38;if(l.x+l.len<0)l.x=W+l.len;
+            cx.beginPath();cx.moveTo(l.x,l.y);cx.lineTo(l.x+l.len,l.y);cx.stroke();
+          });
+        }
+        // sol
+        cx.fillStyle='rgba(0,0,0,0.06)';cx.fillRect(0,GY,W,1.5);
+        cx.fillStyle='#eff2f7';cx.fillRect(0,GY+1.5,W,H-GY-1.5);
+        // obstacles : fond uni rose + texte blanc bien lisible
+        obs.forEach(function(o){
+          cx.fillStyle=ROSE;rr(o.x,o.y,o.w,o.h,6);cx.fill();
+          var g=cx.createLinearGradient(o.x,o.y,o.x,o.y+14);
+          g.addColorStop(0,'rgba(255,255,255,0.2)');g.addColorStop(1,'rgba(255,255,255,0)');
+          cx.fillStyle=g;rr(o.x,o.y,o.w,o.h,6);cx.fill();
+          cx.fillStyle='#fff';cx.font='bold 11px system-ui,sans-serif';
+          cx.textAlign='center';cx.textBaseline='middle';
+          cx.fillText(o.lbl,o.x+o.w/2,o.y+o.h/2);
+        });
+        drawPlayer();
+        // HUD
+        if(state!=='idle'){
+          cx.fillStyle=MUT;cx.font='11px system-ui,sans-serif';
+          cx.textAlign='right';cx.textBaseline='top';
+          cx.fillText(score+'m',W-12,10);
+          if(best>0)cx.fillText('Record : '+best+'m',W-12,25);
+        }
+        // flash rouge à la mort
+        if(state==='dead'){
+          var a=Math.max(0,0.38*(1-deadFrames/DEAD_HOLD));
+          cx.fillStyle='rgba(214,106,119,'+a+')';cx.fillRect(0,0,W,H);
+        }
+        // écran de démarrage
+        if(state==='idle'){
+          cx.fillStyle='rgba(255,255,255,0.9)';
+          rr(W/2-162,GY/2-26,324,52,12);cx.fill();
+          cx.strokeStyle='rgba(0,0,0,0.05)';cx.lineWidth=1;
+          rr(W/2-162,GY/2-26,324,52,12);cx.stroke();
+          cx.fillStyle=DARK;cx.font='bold 13px system-ui';
+          cx.textAlign='center';cx.textBaseline='middle';
+          cx.fillText(score>0?'Encore un run ? Cliquez ou Espace':'Cliquez ou Espace pour commencer',W/2,GY/2-7);
+          cx.fillStyle=MUT;cx.font='11px system-ui';
+          cx.fillText('Sautez par-dessus les obstacles !',W/2,GY/2+10);
+        }
+      }
+
+      function loop(){
+        requestAnimationFrame(loop);
+        frame++;
+        // mort → flash + redémarrage automatique
+        if(state==='dead'){deadFrames++;if(deadFrames>=DEAD_HOLD)restart();render();return;}
+
+        score=Math.floor(frame/6);
+        speed=4.5+Math.floor(frame/300)*0.45;
+
+        // physique
+        pl.vy+=0.72;pl.y+=pl.vy;
+        if(pl.coyote>0)pl.coyote--;
+        if(pl.y>=GY-PH){
+          pl.y=GY-PH;pl.vy=0;pl.grnd=true;pl.coyote=0;
+        } else {
+          if(pl.grnd&&pl.vy>0)pl.coyote=7; // vient de quitter le sol
+          pl.grnd=false;
+        }
+
+        // spawn
+        obsCd--;
+        if(obsCd<=0){
+          var h=36+(Math.random()*20|0);
+          obs.push({x:W+8,y:GY-h,w:60,h:h,lbl:WORDS[Math.random()*WORDS.length|0]});
+          obsCd=90+(Math.random()*55|0);
+        }
+        obs.forEach(function(o){o.x-=speed;});
+        obs=obs.filter(function(o){return o.x+o.w>0;});
+
+        // collision (hitbox réduite = plus clément)
+        var hit=obs.some(function(o){
+          return pl.x+10<o.x+o.w-4 &&
+                 pl.x+PW-10>o.x+4 &&
+                 pl.y+8<o.y+o.h &&
+                 pl.y+PH-10>o.y;
+        });
+        if(hit){
+          state='dead';deadFrames=0;
+          if(score>best){best=score;sessionStorage.setItem('jsBest',best);}
+        }
+        render();
+      }
+
+      loop(); // démarre (affiche l'écran idle)
+    })();
+
+  </script>
+</body>
+</html>

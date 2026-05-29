@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g-rouge:  #D93C1A;
+      --g-jaune:  #F5C040;
+      --g-noir:   #1A1108;
+      --g-creme:  #FFF8F0;
+      --surface:  #f5f2ed;
+      --text:     #1a1a1a;
+      --muted:    #666666;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+
+    .cursor { width: 10px; height: 10px; background: var(--g-rouge); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
+    .cursor-follower { width: 32px; height: 32px; border: 1px solid rgba(217,60,26,0.35); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--g-rouge); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* ── HERO ─────────────────────────── */
+    .gr-hero { position: relative; min-height: 78vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 4rem 5rem; overflow: hidden; background: var(--g-noir); }
+    .gr-hero-noise { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.35; pointer-events: none; }
+    .gr-hero-line { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--g-rouge) 0%, var(--g-jaune) 50%, var(--g-rouge) 100%); }
+    .gr-hero-back { display: inline-flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2.5rem; transition: color 0.2s; position: relative; z-index: 2; width: fit-content; }
+    .gr-hero-back:hover { color: rgba(255,255,255,0.8); }
+    .gr-hero-logo { max-height: 130px; object-fit: contain; position: relative; z-index: 2; margin-bottom: 1.4rem; display: block; filter: drop-shadow(0 0 32px rgba(245,192,64,0.18)); }
+    .gr-hero-tags { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1.5rem; position: relative; z-index: 2; }
+    .gr-tag { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 2rem; }
+    .gr-tag-r { background: rgba(217,60,26,0.18); color: var(--g-rouge); border: 1px solid rgba(217,60,26,0.3); }
+    .gr-tag-y { background: rgba(245,192,64,0.12); color: var(--g-jaune); border: 1px solid rgba(245,192,64,0.25); }
+    .gr-hero-title { font-family: var(--font-display); font-size: clamp(6rem,14vw,14rem); line-height: 0.83; color: #fff; position: relative; z-index: 2; letter-spacing: -0.01em; }
+    .gr-hero-sub { font-style: italic; font-size: 1rem; color: rgba(255,255,255,0.4); position: relative; z-index: 2; margin-top: 1.2rem; }
+
+    /* sticker déco hero — supprimés du hero, placés sur la page */
+    @media(max-width:900px){ .gr-hero{padding:7rem 2rem 4rem;} .gr-hero-title{font-size:clamp(4rem,18vw,8rem);} }
+
+    /* stickers collés sur la page */
+    .page-sticker { position: absolute; pointer-events: none; z-index: 50; }
+    .page-sticker img { height: auto; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.22)); }
+    @media(max-width:900px){ .page-sticker{display:none;} }
+
+    /* ── REVEAL ───────────────────────── */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── DOT NAV ──────────────────────── */
+    .dos-progress { position: fixed; right: 1.6rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.75rem; z-index: 500; }
+    .dos-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.15); transition: all 0.3s; text-decoration: none; }
+    .dos-dot.active { background: var(--g-rouge); transform: scale(1.65); }
+    @media(max-width:1100px){ .dos-progress{display:none;} }
+
+    /* ── SHARED ───────────────────────── */
+    .dos-label { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--g-rouge); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; }
+    .dos-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.07); }
+    .dos-label-light { color: var(--g-jaune); }
+    .dos-label-light::after { background: rgba(255,255,255,0.07); }
+    .dos-section { margin-bottom: 6rem; scroll-margin-top: 6rem; }
+    .gr-content { padding: 5.5rem 4rem 7rem; max-width: 1180px; margin: 0 auto; position: relative; }
+    @media(max-width:900px){ .gr-content{padding:3.5rem 2rem 5rem;} }
+
+    /* ── BRIEF ────────────────────────── */
+    .brief-wrap { display: flex; gap: 2rem; align-items: flex-start; }
+    .brief-paper { flex: 1; background: #fdf9f4; border: 1px solid rgba(0,0,0,0.07); border-radius: 0.6rem; padding: 2.8rem; position: relative; overflow: hidden; box-shadow: 0 3px 24px rgba(0,0,0,0.06); }
+    .brief-paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.026) 27px,rgba(0,0,0,0.026) 28px); }
+    .brief-paper-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid rgba(0,0,0,0.05); }
+    .bph-badge { display: inline-block; font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.12em; color: var(--g-rouge); border: 2px solid var(--g-rouge); padding: 0.3rem 0.9rem; border-radius: 3px; opacity: 0.85; margin-bottom: 0.4rem; }
+    .bph-sub { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
+    .bph-ref { font-family: monospace; font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 1.6; }
+    .brief-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; margin-bottom: 1rem; }
+    .bf { padding-bottom: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.13); }
+    .bf-full { grid-column: 1/-1; }
+    .bf-label { display: block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .bf-val { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .brief-validated { position: absolute; bottom: 2rem; right: 2rem; width: 78px; height: 78px; opacity: 0.5; transform: rotate(-8deg); }
+    .postit { background: #fef9c3; padding: 1.4rem 1.6rem; border-radius: 2px; box-shadow: 2px 5px 18px rgba(0,0,0,0.13); font-family: 'Caveat', cursive; font-size: 1.1rem; line-height: 1.6; color: #5c4400; max-width: 210px; flex-shrink: 0; position: relative; margin-top: 1.5rem; transform: rotate(-2.5deg); }
+    .postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 26px; background: rgba(0,0,0,0.05); border-radius: 2px 2px 0 0; }
+    .postit-arrow { display: block; font-size: 0.9rem; margin-bottom: 0.3rem; opacity: 0.4; }
+    @media(max-width:900px){ .brief-wrap{flex-direction:column;} .brief-fields{grid-template-columns:1fr;} }
+
+    /* ── RS DARK CARD ─────────────────── */
+    .rs-card { background: var(--g-noir); border-radius: 0.8rem; padding: 3.5rem 3.5rem 2.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; }
+    .rs-card-title { font-family: var(--font-display); font-size: clamp(1.8rem,3vw,2.6rem); color: #fff; line-height: 1; margin-bottom: 0.5rem; }
+    .rs-card-sub { font-size: 0.85rem; color: rgba(255,255,255,0.35); line-height: 1.8; max-width: 480px; margin-bottom: 2rem; }
+    @media(max-width:900px){ .rs-card{padding:2.2rem;} }
+
+    /* ── FEED MARQUEE ─────────────────── */
+    .feed-marquee { overflow: hidden; margin: 0 -3.5rem; }
+    .feed-row { display: flex; margin-bottom: 0.6rem; }
+    .feed-row:last-child { margin-bottom: 0; }
+    .feed-track { display: flex; gap: 0.55rem; flex-shrink: 0; animation: feed-l 90s linear infinite; }
+    .feed-track.rev { animation: feed-r 72s linear infinite; }
+    .feed-marquee:hover .feed-track { animation-play-state: paused; }
+    .feed-track img { width: 178px; height: 178px; object-fit: cover; border-radius: 0.3rem; flex-shrink: 0; display: block; }
+    @keyframes feed-l { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+    @keyframes feed-r { 0%{transform:translateX(-50%);} 100%{transform:translateX(0);} }
+    @media(max-width:900px){ .feed-track img{width:130px;height:130px;} .feed-marquee{margin:0 -2.2rem;} }
+
+    /* ── STORIES ──────────────────────── */
+    .stories-wrap { display: grid; grid-template-columns: 1fr 280px; gap: 4rem; align-items: center; padding: 3.5rem; background: #f7f5f0; border-radius: 0 0 0.8rem 0.8rem; }
+    .stories-text h3 { font-family: var(--font-display); font-size: clamp(2rem,3.5vw,3rem); color: var(--text); margin-bottom: 0.8rem; line-height: 0.95; }
+    .stories-text p { font-size: 0.9rem; color: var(--muted); line-height: 1.9; }
+    .story-phone { width: 260px; height: 462px; border-radius: 2.4rem; overflow: hidden; position: relative; background: #000; box-shadow: 0 20px 56px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.06); }
+    .story-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.2s ease; }
+    .story-progress { position: absolute; top: 0.8rem; left: 0.7rem; right: 0.7rem; display: flex; gap: 0.25rem; z-index: 10; }
+    .story-pb { flex: 1; height: 2px; background: rgba(255,255,255,0.25); border-radius: 1px; overflow: hidden; }
+    .story-pb-fill { height: 100%; width: 0%; background: #fff; }
+    .story-tap-l, .story-tap-r { position: absolute; top: 0; bottom: 0; width: 48%; z-index: 20; cursor: pointer; }
+    .story-tap-l { left: 0; }
+    .story-tap-r { right: 0; }
+    .story-counter { position: absolute; bottom: 0.9rem; left: 0; right: 0; text-align: center; font-size: 0.62rem; color: rgba(255,255,255,0.35); letter-spacing: 0.12em; z-index: 10; }
+    @media(max-width:900px){ .stories-wrap{grid-template-columns:1fr;gap:2.5rem;} .story-phone{margin:0 auto;} }
+
+    /* ── INTERFACE ────────────────────── */
+    .iface-card { background: #0d0d0d; border-radius: 0.8rem; padding: 3.5rem; }
+    .iface-card .rs-card-title { margin-bottom: 0.5rem; }
+    .iface-card .rs-card-sub { margin-bottom: 2.5rem; }
+    .iface-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+    .iface-frame { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+    .iface-frame img { width: 100%; display: block; }
+    .iface-frame-label { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-align: center; margin-top: 0.7rem; }
+    @media(max-width:700px){ .iface-grid{grid-template-columns:1fr;} }
+
+    /* ── VIDEOS ───────────────────────── */
+    .videos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+    .video-block-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem; display: block; }
+    .video-frame { border-radius: 0.7rem; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+    .video-frame video { width: 100%; display: block; max-height: 460px; }
+    @media(max-width:700px){ .videos-grid{grid-template-columns:1fr;} }
+
+    /* ── MERCH ────────────────────────── */
+    .merch-header { background: var(--g-noir); border-radius: 0.8rem 0.8rem 0 0; padding: 3rem 3.5rem 2.5rem; position: relative; overflow: hidden; }
+    .merch-header-ghost { position: absolute; bottom: -0.5rem; right: 1rem; font-family: var(--font-display); font-size: 9rem; line-height: 1; color: rgba(255,255,255,0.04); pointer-events: none; letter-spacing: -0.04em; }
+    .merch-header h2 { font-family: var(--font-display); font-size: clamp(3.5rem,7vw,7rem); color: #fff; line-height: 0.88; position: relative; z-index: 2; }
+    .merch-header h2 span { color: var(--g-jaune); }
+    .merch-header p { font-size: 0.88rem; color: rgba(255,255,255,0.38); margin-top: 1rem; max-width: 500px; line-height: 1.85; position: relative; z-index: 2; }
+    .merch-body { background: var(--g-creme); border-radius: 0 0 0.8rem 0.8rem; padding: 3.5rem; }
+    .collections-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.8rem 3.5rem; }
+    .collections-grid > div { min-width: 0; overflow: hidden; }
+    .coll-name { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--g-rouge); margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.8rem; }
+    .coll-name::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.08); }
+    .coll-imgs { display: flex; gap: 0.55rem; overflow: hidden; width: 100%; }
+    .coll-imgs img { width: 0; flex: 1; min-width: 0; height: 200px; object-fit: cover; border-radius: 0.5rem; display: block; transition: transform 0.3s; }
+    .coll-imgs img:hover { transform: scale(1.03) translateY(-3px); }
+    .coll-single img { width: 100%; max-width: 100%; height: 260px; object-fit: cover; border-radius: 0.5rem; display: block; transition: transform 0.3s; }
+    .coll-single img:hover { transform: scale(1.02); }
+    @media(max-width:900px){ .collections-grid{grid-template-columns:1fr;} .merch-body,.merch-header{padding:2.2rem;} }
+
+    /* ── GOODIES ──────────────────────── */
+    .goodies-row { display: flex; gap: 1.5rem; align-items: flex-end; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .goodie-item { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    .goodie-label { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .goodie-item img { max-height: 200px; max-width: 220px; width: auto; object-fit: contain; border-radius: 0.4rem; display: block; }
+    .stickers-section { display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap; }
+    .stickers-full img { width: 100%; max-width: 680px; border-radius: 0.6rem; display: block; box-shadow: 0 6px 24px rgba(0,0,0,0.1); }
+    .stickers-indiv { display: flex; flex-direction: column; gap: 1rem; }
+    .stickers-indiv img { width: 120px; height: auto; border-radius: 0.4rem; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15)); transition: transform 0.25s; }
+    .stickers-indiv img:hover { transform: rotate(5deg) scale(1.1); }
+
+    /* ── AFFICHES ─────────────────────── */
+    .affiches-scroll { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 2.5rem; scrollbar-width: thin; scrollbar-color: var(--g-rouge) rgba(0,0,0,0.05); }
+    .affiches-scroll::-webkit-scrollbar { height: 3px; }
+    .affiches-scroll::-webkit-scrollbar-thumb { background: var(--g-rouge); border-radius: 2px; }
+    .affiche-e-frame { flex-shrink: 0; width: 240px; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.1); }
+    .affiche-e-frame img { width: 100%; display: block; }
+    .affiches-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .affiche-duo-frame { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.1); }
+    .affiche-duo-frame img { width: 100%; display: block; }
+    @media(max-width:700px){ .affiches-duo{grid-template-columns:1fr;} }
+
+    /* ── MENU & FIDÉLITÉ ──────────────── */
+    .menu-fidel { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+    .menu-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .menu-frame, .fidel-frame { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.1); }
+    .menu-frame img, .fidel-frame img { width: 100%; display: block; }
+    .fidel-label { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem; display: block; }
+    @media(max-width:900px){ .menu-fidel{grid-template-columns:1fr;} }
+
+    footer { background: #fff; border-top: 1px solid #eee; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #999; }
+    @media(max-width:900px){ footer{padding:1.5rem 2rem;} }
+  </style>
+  <title>Graille &mdash; Communication &amp; Direction Artistique &mdash; On fait des bulles&nbsp;?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════ -->
+  <header class="gr-hero">
+    <div class="gr-hero-noise"></div>
+    <div class="gr-hero-line"></div>
+
+    <a href="projets.html" class="gr-hero-back">&larr; Retour aux projets</a>
+    <img src="assets/logograille.png" class="gr-hero-logo" alt="Logo Graille" />
+    <div class="gr-hero-tags">
+      <span class="gr-tag gr-tag-r">R&eacute;seaux Sociaux</span>
+      <span class="gr-tag gr-tag-r">UI&thinsp;/&thinsp;UX</span>
+      <span class="gr-tag gr-tag-r">Vid&eacute;o</span>
+      <span class="gr-tag gr-tag-y">Merch &amp; V&ecirc;tements</span>
+      <span class="gr-tag gr-tag-y">Print &amp; Affiches</span>
+      <span class="gr-tag gr-tag-r">Identit&eacute;</span>
+    </div>
+    <h1 class="gr-hero-title">GRAILLE</h1>
+    <p class="gr-hero-sub">Communication int&eacute;grale &amp; direction artistique &mdash; Start-up food, Lyon</p>
+  </header>
+
+  <main class="gr-content">
+
+    <!-- Stickers collés aléatoirement sur la page -->
+    <div class="page-sticker" style="top:6%;right:-1%;transform:rotate(-9deg);">
+      <img src="assets/collantgraille2.png" style="width:170px;" alt="" />
+    </div>
+    <div class="page-sticker" style="top:34%;left:-2%;transform:rotate(7deg);">
+      <img src="assets/collantgraille1.png" style="width:200px;" alt="" />
+    </div>
+    <div class="page-sticker" style="top:62%;right:0%;transform:rotate(-4deg);">
+      <img src="assets/collantgraille3.png" style="width:155px;" alt="" />
+    </div>
+    <div class="page-sticker" style="top:86%;left:1%;transform:rotate(12deg);">
+      <img src="assets/collantgraille2.png" style="width:130px;" alt="" />
+    </div>
+
+    <div class="dos-progress">
+      <a href="#s-brief"     class="dos-dot active" title="Brief"></a>
+      <a href="#s-rs"        class="dos-dot" title="R&eacute;seaux Sociaux"></a>
+      <a href="#s-interface" class="dos-dot" title="Interface"></a>
+      <a href="#s-videos"    class="dos-dot" title="Vid&eacute;os"></a>
+      <a href="#s-merch"     class="dos-dot" title="Merch"></a>
+      <a href="#s-goodies"   class="dos-dot" title="Goodies"></a>
+      <a href="#s-affiches"  class="dos-dot" title="Affiches"></a>
+      <a href="#s-menu"      class="dos-dot" title="Menu &amp; Fid&eacute;lit&eacute;"></a>
+    </div>
+
+    <!-- ══ 01 BRIEF ══════════════════════ -->
+    <section class="dos-section" id="s-brief">
+      <div class="dos-label reveal">01 &mdash; Le brief</div>
+      <div class="brief-wrap">
+        <div class="brief-paper reveal">
+          <div class="brief-paper-header">
+            <div>
+              <div class="bph-badge">Brief Cr&eacute;atif</div>
+              <div class="bph-sub">Graille Lyon &middot; Communication &amp; Direction Artistique</div>
+            </div>
+            <div class="bph-ref">R&eacute;f.&nbsp;GRL&#8209;2023&#8209;001</div>
+          </div>
+          <div class="brief-fields">
+            <div class="bf"><span class="bf-label">Client</span><span class="bf-val">Graille &mdash; Start-up food, Lyon</span></div>
+            <div class="bf"><span class="bf-label">Concept</span><span class="bf-val">Distributeurs de plats faits maison, cuisin&eacute;s frais chaque matin</span></div>
+            <div class="bf"><span class="bf-label">Cibles</span><span class="bf-val">&Eacute;tudiants &mdash; grandes &eacute;coles lyonnaises (UCLY, INSEEC&hellip;)</span></div>
+            <div class="bf"><span class="bf-label">Livrables</span><span class="bf-val">RS &middot; UI/UX &middot; Vid&eacute;o &middot; Merch &middot; Print &middot; Affiches</span></div>
+            <div class="bf bf-full"><span class="bf-label">Objectif</span><span class="bf-val">Faire conna&icirc;tre les distributeurs au sein des &eacute;coles, cr&eacute;er une communaut&eacute; autour de la marque, pr&eacute;parer et accompagner les inaugurations dans les nouvelles &eacute;coles, construire une identit&eacute; visuelle forte et d&eacute;sirable.</span></div>
+            <div class="bf bf-full"><span class="bf-label">Scope</span><span class="bf-val">Alternance en master 2 &mdash; strat&eacute;gie de contenu, campagnes d&rsquo;inauguration, refonte de l&rsquo;interface distributeur, collection de merch &eacute;tudiante, vid&eacute;os publicitaires produit.</span></div>
+          </div>
+          <div class="brief-validated">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="36" stroke="#D93C1A" stroke-width="3" opacity="0.8"/>
+              <circle cx="40" cy="40" r="31" stroke="#D93C1A" stroke-width="1" opacity="0.5"/>
+              <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#D93C1A" opacity="0.9">VALID&Eacute;</text>
+              <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#D93C1A" opacity="0.7">GRL. 2023</text>
+            </svg>
+          </div>
+        </div>
+        <div class="postit reveal" style="transform:rotate(2.2deg);">
+          <span class="postit-arrow">&#x2191;</span>
+          Faire de la<br>pause d&eacute;j<br>un truc cool
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 02 RÉSEAUX SOCIAUX ═════════════ -->
+    <section class="dos-section" id="s-rs">
+      <div class="dos-label reveal">02 &mdash; R&eacute;seaux sociaux</div>
+
+      <!-- Feed -->
+      <div class="rs-card reveal">
+        <div class="dos-label dos-label-light" style="margin-bottom:1rem;">Feed Instagram</div>
+        <p class="rs-card-sub">Contenus quotidiens pour une communaut&eacute; d&rsquo;&eacute;tudiants &mdash; annonces produit, humeur du jour, temps forts et culture Graille. Passe la souris pour stopper le d&eacute;filement.</p>
+        <div class="feed-marquee">
+          <!-- Row 1 → left (grs1-15 ×2) -->
+          <div class="feed-row">
+            <div class="feed-track">
+              <img src="assets/grs1.png" alt="" loading="lazy"><img src="assets/grs2.png" alt="" loading="lazy"><img src="assets/grs3.png" alt="" loading="lazy"><img src="assets/grs4.png" alt="" loading="lazy"><img src="assets/grs5.png" alt="" loading="lazy"><img src="assets/grs6.png" alt="" loading="lazy"><img src="assets/grs7.png" alt="" loading="lazy"><img src="assets/grs8.png" alt="" loading="lazy"><img src="assets/grs9.png" alt="" loading="lazy"><img src="assets/grs10.png" alt="" loading="lazy"><img src="assets/grs12.png" alt="" loading="lazy"><img src="assets/grs14.png" alt="" loading="lazy"><img src="assets/grs15.png" alt="" loading="lazy">
+              <img src="assets/grs1.png" alt="" loading="lazy"><img src="assets/grs2.png" alt="" loading="lazy"><img src="assets/grs3.png" alt="" loading="lazy"><img src="assets/grs4.png" alt="" loading="lazy"><img src="assets/grs5.png" alt="" loading="lazy"><img src="assets/grs6.png" alt="" loading="lazy"><img src="assets/grs7.png" alt="" loading="lazy"><img src="assets/grs8.png" alt="" loading="lazy"><img src="assets/grs9.png" alt="" loading="lazy"><img src="assets/grs10.png" alt="" loading="lazy"><img src="assets/grs12.png" alt="" loading="lazy"><img src="assets/grs14.png" alt="" loading="lazy"><img src="assets/grs15.png" alt="" loading="lazy">
+            </div>
+          </div>
+          <!-- Row 2 → right (grs16-32 ×2) -->
+          <div class="feed-row">
+            <div class="feed-track rev">
+              <img src="assets/grs16.png" alt="" loading="lazy"><img src="assets/grs17.png" alt="" loading="lazy"><img src="assets/grs18.png" alt="" loading="lazy"><img src="assets/grs19.png" alt="" loading="lazy"><img src="assets/grs20.png" alt="" loading="lazy"><img src="assets/grs21.png" alt="" loading="lazy"><img src="assets/grs22.png" alt="" loading="lazy"><img src="assets/grs23.png" alt="" loading="lazy"><img src="assets/grs24.png" alt="" loading="lazy"><img src="assets/grs25.png" alt="" loading="lazy"><img src="assets/grs26.png" alt="" loading="lazy"><img src="assets/grs27.png" alt="" loading="lazy"><img src="assets/grs29.png" alt="" loading="lazy"><img src="assets/grs30.png" alt="" loading="lazy"><img src="assets/grs31.png" alt="" loading="lazy"><img src="assets/grs32.png" alt="" loading="lazy">
+              <img src="assets/grs16.png" alt="" loading="lazy"><img src="assets/grs17.png" alt="" loading="lazy"><img src="assets/grs18.png" alt="" loading="lazy"><img src="assets/grs19.png" alt="" loading="lazy"><img src="assets/grs20.png" alt="" loading="lazy"><img src="assets/grs21.png" alt="" loading="lazy"><img src="assets/grs22.png" alt="" loading="lazy"><img src="assets/grs23.png" alt="" loading="lazy"><img src="assets/grs24.png" alt="" loading="lazy"><img src="assets/grs25.png" alt="" loading="lazy"><img src="assets/grs26.png" alt="" loading="lazy"><img src="assets/grs27.png" alt="" loading="lazy"><img src="assets/grs29.png" alt="" loading="lazy"><img src="assets/grs30.png" alt="" loading="lazy"><img src="assets/grs31.png" alt="" loading="lazy"><img src="assets/grs32.png" alt="" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stories -->
+      <div class="stories-wrap reveal">
+        <div class="stories-text">
+          <h3>Stories<br>Instagram</h3>
+          <p style="margin-top:0.6rem;">15 stories con&ccedil;ues pour &ecirc;tre vues en plein &eacute;cran &mdash; formats verticaux, animations, teasing de nouveaux produits et &eacute;v&eacute;nements d&rsquo;inauguration.<br><br>Clique gauche &amp; droite pour naviguer.</p>
+        </div>
+        <div class="story-phone-wrap">
+          <div class="story-phone">
+            <img class="story-img" id="storyImg" src="assets/gst1.png" alt="Story Graille" />
+            <div class="story-progress" id="storyProg">
+              <div class="story-pb"><div class="story-pb-fill" id="spf0"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf1"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf2"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf3"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf4"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf5"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf6"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf7"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf8"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf9"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf10"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf11"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf12"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf13"></div></div>
+              <div class="story-pb"><div class="story-pb-fill" id="spf14"></div></div>
+            </div>
+            <div class="story-tap-l" id="storyTapL"></div>
+            <div class="story-tap-r" id="storyTapR"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 03 INTERFACE DISTRIBUTEUR ═════ -->
+    <section class="dos-section" id="s-interface">
+      <div class="dos-label reveal">03 &mdash; Interface distributeur</div>
+      <div class="iface-card reveal">
+        <p class="rs-card-title">Refonte UX&thinsp;/&thinsp;UI</p>
+        <p class="rs-card-sub">Reprise compl&egrave;te de l&rsquo;&eacute;cran de commande des distributeurs &mdash; hi&eacute;rarchie visuelle, lisibilit&eacute; en condition r&eacute;elle (debout, en mouvement), et exp&eacute;rience d&rsquo;achat fluide pour l&rsquo;&eacute;tudiant press&eacute;.</p>
+        <div class="iface-grid">
+          <div>
+            <div class="iface-frame"><img src="assets/intergraille1.png" alt="Interface distributeur Graille &mdash; &eacute;cran 1" loading="lazy" /></div>
+            <p class="iface-frame-label">Accueil</p>
+          </div>
+          <div>
+            <div class="iface-frame"><img src="assets/intergraille2.png" alt="Interface distributeur Graille &mdash; &eacute;cran 2" loading="lazy" /></div>
+            <p class="iface-frame-label">S&eacute;lection produit</p>
+          </div>
+          <div>
+            <div class="iface-frame"><img src="assets/intergraille3.png" alt="Interface distributeur Graille &mdash; &eacute;cran 3" loading="lazy" /></div>
+            <p class="iface-frame-label">Paiement &amp; confirmation</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 04 VIDÉOS ═══════════════════════ -->
+    <section class="dos-section" id="s-videos">
+      <div class="dos-label reveal">04 &mdash; Vid&eacute;os publicitaires</div>
+      <p class="reveal" style="font-size:0.92rem;color:var(--muted);line-height:1.85;max-width:580px;margin-bottom:2.5rem;">Deux formats vid&eacute;o courts con&ccedil;us pour les r&eacute;seaux &mdash; un spot d&rsquo;inauguration pour l&rsquo;UCLY et un format r&eacute;current pour valoriser chaque nouveau produit du menu.</p>
+      <div class="videos-grid reveal">
+        <div class="video-block">
+          <span class="video-block-label">Spot inauguration &mdash; UCLY</span>
+          <div class="video-frame">
+            <video autoplay muted loop playsinline preload="auto">
+              <source src="assets/vidéopubgraille.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <div class="video-block">
+          <span class="video-block-label">Spot produit &mdash; Cacahu&egrave;te 3 chocolats</span>
+          <div class="video-frame">
+            <video autoplay muted loop playsinline preload="auto">
+              <source src="assets/pubchoco.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 05 MERCH ════════════════════════ -->
+    <section class="dos-section" id="s-merch">
+      <div class="dos-label reveal">05 &mdash; Collections &amp; merch</div>
+      <div class="reveal">
+        <div class="merch-header">
+          <div class="merch-header-ghost">MERCH</div>
+          <h2>Collections<br>de v&ecirc;tements</h2>
+          <p>De la tête aux pieds &mdash; t-shirts, sweats et accessoires qui transforment les &eacute;tudiants en ambassadeurs de la marque.</p>
+        </div>
+        <div class="merch-body">
+          <div class="collections-grid">
+
+            <!-- Graille la Vie -->
+            <div>
+              <div class="coll-name">Graille la Vie</div>
+              <div class="coll-imgs">
+                <img src="assets/glv1.png" alt="Graille la Vie 1" loading="lazy" />
+                <img src="assets/glv2.png" alt="Graille la Vie 2" loading="lazy" />
+                <img src="assets/glv3.png" alt="Graille la Vie 3" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Graille Ressort -->
+            <div>
+              <div class="coll-name">Graille Ressort</div>
+              <div class="coll-imgs">
+                <img src="assets/grailleressort1.png" alt="Graille Ressort 1" loading="lazy" />
+                <img src="assets/grailleressort2.png" alt="Graille Ressort 2" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Clémentine Graille -->
+            <div>
+              <div class="coll-name">Cl&eacute;mentine Graille</div>
+              <div class="coll-imgs">
+                <img src="assets/clem1.png" alt="Cl&eacute;mentine Graille 1" loading="lazy" />
+                <img src="assets/clem2.png" alt="Cl&eacute;mentine Graille 2" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Style Université -->
+            <div>
+              <div class="coll-name">Style Universit&eacute;</div>
+              <div class="coll-single">
+                <img src="assets/grailleuni.png" alt="Style Universit&eacute;" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Tampon Fait avec Amour -->
+            <div>
+              <div class="coll-name">Tampon Fait avec Amour</div>
+              <div class="coll-imgs">
+                <img src="assets/avecamour1.png" alt="Fait avec Amour 1" loading="lazy" />
+                <img src="assets/avecamour2.png" alt="Fait avec Amour 2" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Gang de Tomate -->
+            <div>
+              <div class="coll-name">Gang de Tomate</div>
+              <div class="coll-imgs">
+                <img src="assets/gang1.png" alt="Gang de Tomate 1" loading="lazy" />
+                <img src="assets/gang2.png" alt="Gang de Tomate 2" loading="lazy" />
+                <img src="assets/gang3.png" alt="Gang de Tomate 3" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Don't Mess With Food -->
+            <div>
+              <div class="coll-name">Don&rsquo;t Mess With Food</div>
+              <div class="coll-imgs">
+                <img src="assets/dontmess1.png" alt="Don't Mess 1" loading="lazy" />
+                <img src="assets/dontmess2.png" alt="Don't Mess 2" loading="lazy" />
+                <img src="assets/dontmess3.png" alt="Don't Mess 3" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Contraste -->
+            <div>
+              <div class="coll-name">Contraste</div>
+              <div class="coll-single">
+                <img src="assets/contrastegraille.png" alt="Contraste Graille" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Course Poursuite -->
+            <div>
+              <div class="coll-name">Course Poursuite</div>
+              <div class="coll-single">
+                <img src="assets/coursepoursuite.png" alt="Course Poursuite" loading="lazy" />
+              </div>
+            </div>
+
+            <!-- Eh Pelo -->
+            <div>
+              <div class="coll-name">Eh Pelo <span style="font-size:0.58rem;color:var(--muted);letter-spacing:0.08em;text-transform:none;">(argot lyonnais)</span></div>
+              <div class="coll-imgs">
+                <img src="assets/pelo.png" alt="Eh Pelo 1" loading="lazy" />
+                <img src="assets/pelo2.png" alt="Eh Pelo 2" loading="lazy" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 06 GOODIES ══════════════════════ -->
+    <section class="dos-section" id="s-goodies">
+      <div class="dos-label reveal">06 &mdash; Goodies &amp; accessoires</div>
+      <div class="reveal">
+        <div class="goodies-row">
+          <div class="goodie-item">
+            <img src="assets/gourdegraille.png" alt="Gourde Graille" loading="lazy" />
+            <span class="goodie-label">Gourde</span>
+          </div>
+          <div class="goodie-item">
+            <img src="assets/piment.png" alt="Chaussette Piment" loading="lazy" />
+            <span class="goodie-label">Chaussette Piment</span>
+          </div>
+          <div class="goodie-item">
+            <img src="assets/graillesquad1.png" alt="Graille Squad 1" loading="lazy" />
+            <span class="goodie-label">Graille Squad</span>
+          </div>
+          <div class="goodie-item">
+            <img src="assets/graillesquad2.png" alt="Graille Squad 2" loading="lazy" />
+            <span class="goodie-label">&nbsp;</span>
+          </div>
+        </div>
+        <div class="stickers-section">
+          <div class="stickers-full">
+            <p style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;">Planche d&rsquo;autocollants &mdash; pour les ordis &eacute;tudiants</p>
+            <img src="assets/autograille.png" alt="Planche autocollants Graille" loading="lazy" />
+          </div>
+          <div class="stickers-indiv">
+            <p style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">Autocollants</p>
+            <img src="assets/collantgraille1.png" alt="Collant 1" loading="lazy" />
+            <img src="assets/collantgraille2.png" alt="Collant 2" loading="lazy" />
+            <img src="assets/collantgraille3.png" alt="Collant 3" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 07 AFFICHES ═════════════════════ -->
+    <section class="dos-section" id="s-affiches">
+      <div class="dos-label reveal">07 &mdash; Affiches</div>
+      <p class="reveal" style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Arriv&eacute;e dans une nouvelle &eacute;cole &mdash; faire glisser</p>
+      <div class="affiches-scroll reveal">
+        <div class="affiche-e-frame"><img src="assets/newecole1.png" alt="Affiche nouvelle &eacute;cole 1" loading="lazy" /></div>
+        <div class="affiche-e-frame"><img src="assets/newecole2.png" alt="Affiche nouvelle &eacute;cole 2" loading="lazy" /></div>
+        <div class="affiche-e-frame"><img src="assets/newecole3.png" alt="Affiche nouvelle &eacute;cole 3" loading="lazy" /></div>
+        <div class="affiche-e-frame"><img src="assets/newecole4.png" alt="Affiche nouvelle &eacute;cole 4" loading="lazy" /></div>
+        <div class="affiche-e-frame"><img src="assets/newecole5.png" alt="Affiche nouvelle &eacute;cole 5" loading="lazy" /></div>
+      </div>
+      <div class="affiches-duo reveal">
+        <div class="affiche-duo-frame"><img src="assets/affichegraille1.png" alt="Affiche Graille 1" loading="lazy" /></div>
+        <div class="affiche-duo-frame"><img src="assets/affichegraille2.png" alt="Affiche Graille 2" loading="lazy" /></div>
+      </div>
+    </section>
+
+    <!-- ══ 08 MENU & FIDÉLITÉ ══════════════ -->
+    <section class="dos-section" id="s-menu">
+      <div class="dos-label reveal">08 &mdash; Menu &amp; fid&eacute;lit&eacute;</div>
+      <div class="menu-fidel reveal">
+        <div>
+          <p style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;">Planches menu</p>
+          <div class="menu-duo">
+            <div class="menu-frame"><img src="assets/menu2.png" alt="Menu Graille 2" loading="lazy" /></div>
+            <div class="menu-frame"><img src="assets/menu1.png" alt="Menu Graille 1" loading="lazy" /></div>
+          </div>
+        </div>
+        <div>
+          <span class="fidel-label">Carte de fid&eacute;lit&eacute;</span>
+          <div class="fidel-frame"><img src="assets/fidelite.png" alt="Carte fid&eacute;lit&eacute; Graille" loading="lazy" /></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    // CURSOR
+    (function(){
+      var c=document.getElementById('cursor'),f=document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){c.style.display='none';f.style.display='none';return;}
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx-5+'px';c.style.top=my-5+'px';});
+      (function tick(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;f.style.left=fx-16+'px';f.style.top=fy-16+'px';requestAnimationFrame(tick);})();
+    })();
+
+    // REVEAL
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){
+        if(e[0].isIntersecting) setTimeout(function(){r.classList.add('visible');},i*45);
+      },{threshold:0.05}).observe(r);
+    });
+
+    // MOBILE MENU
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    // DOT NAV
+    (function(){
+      var ids=['s-brief','s-rs','s-interface','s-videos','s-merch','s-goodies','s-affiches','s-menu'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting)return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0)dots.forEach(function(d,i){d.classList.toggle('active',i===idx);});
+        });
+      },{threshold:0.25,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+    })();
+
+    // STORY VIEWER
+    (function(){
+      var stories=['gst1','gst2','gst3','gst4','gst5','gst6','gst7','gst8','gst9','gst10','gst11','gst12','gst13','gst14','gst15'];
+      var N=stories.length, cur=0, timer=null;
+      var DURATION=4500;
+
+      var imgEl=document.getElementById('storyImg');
+
+      function fills(){
+        return stories.map(function(_,i){ return document.getElementById('spf'+i); });
+      }
+
+      function render(){
+        // fade
+        imgEl.style.opacity='0';
+        setTimeout(function(){
+          imgEl.src='assets/'+stories[cur]+'.png';
+          imgEl.style.opacity='1';
+        },180);
+
+        // progress bars
+        fills().forEach(function(f,i){
+          if(!f)return;
+          f.style.transition='none';
+          f.style.width=i<cur?'100%':'0%';
+          if(i===cur){
+            setTimeout(function(){
+              f.style.transition='width '+DURATION+'ms linear';
+              f.style.width='100%';
+            },30);
+          }
+        });
+
+        clearTimeout(timer);
+        timer=setTimeout(function(){if(cur<N-1)go(1);},DURATION);
+      }
+
+      function go(dir){
+        cur=Math.max(0,Math.min(N-1,cur+dir));
+        render();
+      }
+
+      document.getElementById('storyTapL').addEventListener('click',function(){go(-1);});
+      document.getElementById('storyTapR').addEventListener('click',function(){go(1);});
+
+      render();
+    })();
+  </script>
+</body>
+</html>

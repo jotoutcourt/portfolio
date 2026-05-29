@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --c-rouge:  #BE1E3B;
+      --c-creme:  #FFF8F2;
+      --c-noir:   #150608;
+      --c-poudre: #F5E8EA;
+      --surface:  #F9F4F1;
+      --text:     #1a1a1a;
+      --muted:    #777777;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-serif:   'Cormorant Garamond', serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+
+    .cursor { width: 10px; height: 10px; background: var(--c-rouge); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
+    .cursor-follower { width: 32px; height: 32px; border: 1px solid rgba(190,30,59,0.35); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--c-rouge); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* ── HERO ─────────────────────────── */
+    .cr-hero { position: relative; min-height: 72vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 4rem 5rem; overflow: hidden; background: var(--c-noir); }
+    .cr-hero-img { position: absolute; inset: 0; background: url('assets/affichecroquine.png') center/cover no-repeat; opacity: 0.07; pointer-events: none; }
+    .cr-hero-grad { position: absolute; inset: 0; background: linear-gradient(to top, var(--c-noir) 55%, rgba(21,6,8,0.5)); pointer-events: none; }
+    .cr-hero-line { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--c-rouge) 0%, #e86080 50%, var(--c-rouge) 100%); }
+    .cr-hero-back { display: inline-flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2.5rem; transition: color 0.2s; position: relative; z-index: 2; width: fit-content; }
+    .cr-hero-back:hover { color: rgba(255,255,255,0.8); }
+    .cr-hero-logo { max-height: 100px; object-fit: contain; position: relative; z-index: 2; margin-bottom: 1.4rem; display: block; filter: drop-shadow(0 0 28px rgba(190,30,59,0.3)); }
+    .cr-hero-tags { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1.5rem; position: relative; z-index: 2; }
+    .cr-tag { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 2rem; background: rgba(190,30,59,0.18); color: #e86080; border: 1px solid rgba(190,30,59,0.3); }
+    .cr-hero-title { font-family: var(--font-display); font-size: clamp(5rem,13vw,13rem); line-height: 0.83; color: #fff; position: relative; z-index: 2; letter-spacing: -0.01em; }
+    .cr-hero-sub { font-family: var(--font-serif); font-style: italic; font-size: 1.3rem; color: rgba(255,255,255,0.45); position: relative; z-index: 2; margin-top: 1rem; letter-spacing: 0.03em; }
+    @media(max-width:900px){ .cr-hero{padding:7rem 2rem 4rem;} .cr-hero-title{font-size:clamp(4rem,18vw,8rem);} }
+
+    /* ── REVEAL ───────────────────────── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── DOT NAV ──────────────────────── */
+    .dos-progress { position: fixed; right: 1.6rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.75rem; z-index: 500; }
+    .dos-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.15); transition: all 0.3s; text-decoration: none; }
+    .dos-dot.active { background: var(--c-rouge); transform: scale(1.65); }
+    @media(max-width:1100px){ .dos-progress{display:none;} }
+
+    /* ── SHARED ───────────────────────── */
+    .dos-label { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-rouge); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; }
+    .dos-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.07); }
+    .dos-section { margin-bottom: 6rem; scroll-margin-top: 6rem; }
+    .cr-content { padding: 5.5rem 4rem 7rem; max-width: 1120px; margin: 0 auto; position: relative; }
+    @media(max-width:900px){ .cr-content{padding:3.5rem 2rem 5rem;} }
+
+    /* ── BRIEF ────────────────────────── */
+    .brief-wrap { display: flex; gap: 2rem; align-items: flex-start; }
+    .brief-paper { flex: 1; background: var(--c-creme); border: 1px solid rgba(190,30,59,0.1); border-radius: 0.6rem; padding: 2.8rem; position: relative; overflow: hidden; box-shadow: 0 3px 24px rgba(0,0,0,0.05); }
+    .brief-paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.025) 27px,rgba(0,0,0,0.025) 28px); }
+    .brief-paper-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid rgba(190,30,59,0.08); }
+    .bph-badge { display: inline-block; font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.12em; color: var(--c-rouge); border: 2px solid var(--c-rouge); padding: 0.3rem 0.9rem; border-radius: 3px; opacity: 0.85; margin-bottom: 0.4rem; }
+    .bph-sub { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
+    .bph-ref { font-family: monospace; font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 1.6; }
+    .brief-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
+    .bf { padding-bottom: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.12); }
+    .bf-full { grid-column: 1/-1; }
+    .bf-label { display: block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .bf-val { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .brief-validated { position: absolute; bottom: 2rem; right: 2rem; width: 78px; height: 78px; opacity: 0.45; transform: rotate(-8deg); }
+    .postit { background: #fef9c3; padding: 1.4rem 1.6rem; border-radius: 2px; box-shadow: 2px 5px 18px rgba(0,0,0,0.13); font-family: 'Caveat', cursive; font-size: 1.1rem; line-height: 1.6; color: #5c4400; max-width: 200px; flex-shrink: 0; position: relative; margin-top: 1.5rem; transform: rotate(-2.5deg); }
+    .postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 26px; background: rgba(0,0,0,0.05); border-radius: 2px 2px 0 0; }
+    @media(max-width:900px){ .brief-wrap{flex-direction:column;} .brief-fields{grid-template-columns:1fr;} }
+
+    /* ── TYPEWRITER NOM ──────────────── */
+    .nom-retenu { margin-bottom: 3rem; overflow: hidden; }
+    .nom-retenu-label { font-size: 0.62rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+    .nom-retenu-text { font-family: 'Courier New', Courier, monospace; font-size: clamp(2.2rem, 5.5vw, 5rem); font-weight: 700; color: var(--c-rouge); white-space: nowrap; overflow: hidden; width: 0; border-right: 3px solid var(--c-rouge); line-height: 1.1; }
+    .nom-retenu-text.typed { animation: typing 1s steps(8, end) forwards, blink-caret 0.75s step-end 1s 5; }
+    @keyframes typing { from { width: 0; } to { width: 8ch; } }
+    @keyframes blink-caret { 50% { border-color: transparent; } }
+
+    /* ── CONCEPT / WHY ────────────────── */
+    .why-card { background: var(--c-noir); border-radius: 0.8rem; padding: 3.5rem; text-align: center; margin-bottom: 2.5rem; position: relative; overflow: hidden; }
+    .why-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(190,30,59,0.15) 0%, transparent 65%); pointer-events: none; }
+    .why-label { font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(190,30,59,0.7); margin-bottom: 1.5rem; }
+    .why-text { font-family: var(--font-display); font-size: clamp(1.6rem,3.5vw,3rem); color: #fff; line-height: 1.15; letter-spacing: 0.04em; position: relative; z-index: 2; }
+    .why-text span { color: var(--c-rouge); }
+    .concept-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 2rem; }
+    .concept-item { background: var(--c-poudre); border-radius: 0.5rem; padding: 1.4rem 1.6rem; border-left: 3px solid var(--c-rouge); }
+    .concept-item p { font-size: 0.9rem; line-height: 1.7; color: var(--text); }
+    @media(max-width:700px){ .concept-list{grid-template-columns:1fr;} }
+
+    /* ── LOGO ─────────────────────────── */
+    .logo-section { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .logo-display { background: var(--c-creme); border-radius: 0.8rem; display: flex; align-items: center; justify-content: center; padding: 3.5rem; box-shadow: 0 6px 32px rgba(0,0,0,0.07); }
+    .logo-display img { max-width: 280px; width: 100%; height: auto; }
+    .logo-info { }
+    .logo-info h3 { font-family: var(--font-display); font-size: 2.2rem; color: var(--text); margin-bottom: 1.5rem; line-height: 1; }
+    .logo-point { display: flex; gap: 1rem; margin-bottom: 1.2rem; align-items: flex-start; }
+    .logo-point-num { font-family: var(--font-display); font-size: 1.4rem; color: var(--c-rouge); flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
+    .logo-point p { font-size: 0.9rem; line-height: 1.7; color: var(--text); }
+    .baseline-pill { display: inline-block; background: var(--c-rouge); color: #fff; font-family: var(--font-serif); font-style: italic; font-size: 1.1rem; padding: 0.6rem 1.4rem; border-radius: 2rem; margin-top: 1.5rem; letter-spacing: 0.03em; }
+    @media(max-width:900px){ .logo-section{grid-template-columns:1fr;gap:2rem;} }
+
+    /* ── COLOR PALETTE ───────────────── */
+    .color-palette { display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; }
+    .color-swatch { flex: 1; min-width: 100px; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 3px 16px rgba(0,0,0,0.1); }
+    .color-swatch-block { height: 90px; }
+    .color-swatch-info { padding: 0.8rem 1rem; background: #fff; }
+    .color-swatch-name { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.25rem; }
+    .color-swatch-hex { font-family: 'Courier New', Courier, monospace; font-size: 0.82rem; color: var(--text); font-weight: 600; }
+
+    /* ── TOV ──────────────────────────── */
+    .tov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .tov-card { border-radius: 0.6rem; overflow: hidden; }
+    .tov-card-header { padding: 1rem 1.6rem; font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; }
+    .tov-dont .tov-card-header { background: #f5f5f5; color: #999; }
+    .tov-do .tov-card-header { background: var(--c-rouge); color: rgba(255,255,255,0.8); }
+    .tov-card-body { padding: 1.6rem; background: #fafafa; }
+    .tov-do .tov-card-body { background: var(--c-creme); }
+    .tov-dont-text { font-size: 0.92rem; color: #999; line-height: 1.7; text-decoration: line-through; text-decoration-color: rgba(0,0,0,0.25); }
+    .tov-do-text { font-size: 0.92rem; color: var(--text); line-height: 1.7; font-style: italic; }
+    .tov-pair { margin-bottom: 1.5rem; }
+    .tov-pair:last-child { margin-bottom: 0; }
+    @media(max-width:700px){ .tov-grid{grid-template-columns:1fr;} }
+
+    /* ── PORTRAITS ────────────────────── */
+    .portraits-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    .portrait-card { border-radius: 0.8rem; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.09); }
+    .portrait-card-img { position: relative; overflow: hidden; background: #1a1a1a; }
+    .portrait-card-img img { width: 100%; display: block; max-height: 260px; object-fit: cover; }
+    .portrait-card-body { background: var(--c-creme); padding: 1.4rem 1.6rem; }
+    .portrait-card-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--c-rouge); margin-bottom: 0.5rem; }
+    .portrait-card-name { font-family: var(--font-display); font-size: 1.5rem; color: var(--text); margin-bottom: 0.5rem; line-height: 1; }
+    .portrait-card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+    .portraits-traits { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.5rem; }
+    .trait-pill { background: var(--c-poudre); color: var(--c-rouge); border: 1px solid rgba(190,30,59,0.2); border-radius: 2rem; padding: 0.35rem 1rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .portrait-quote { background: var(--c-noir); border-radius: 0.6rem; padding: 2rem 2.5rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+    .portrait-quote-item { flex: 1; min-width: 200px; }
+    .portrait-quote-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.5rem; }
+    .portrait-quote-val { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: #fff; line-height: 1.6; }
+    .portrait-quote-val em { color: var(--c-rouge); font-style: normal; }
+    @media(max-width:900px){ .portraits-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:600px){ .portraits-grid{grid-template-columns:1fr;} }
+
+    /* ── STORYTELLING ─────────────────── */
+    .story-wrap { background: var(--c-noir); border-radius: 0.8rem; padding: 4rem 5rem; position: relative; overflow: hidden; }
+    .story-wrap::before { content: ''; position: absolute; top: -30%; left: -10%; width: 60%; height: 80%; background: radial-gradient(ellipse, rgba(190,30,59,0.08) 0%, transparent 65%); pointer-events: none; }
+    .story-title { font-family: var(--font-display); font-size: clamp(2.5rem,5vw,4.5rem); color: #fff; line-height: 0.9; margin-bottom: 3rem; position: relative; z-index: 2; }
+    .story-title span { color: var(--c-rouge); }
+    .story-para { font-family: var(--font-serif); font-size: 1.2rem; color: rgba(255,255,255,0.7); line-height: 2; margin-bottom: 2rem; position: relative; z-index: 2; }
+    .story-para:last-of-type { color: rgba(255,255,255,0.85); }
+    .cr { color: var(--c-rouge); font-weight: 600; font-style: italic; }
+    .story-cta { font-family: var(--font-serif); font-style: italic; font-size: 1.4rem; color: #fff; margin-top: 2.5rem; position: relative; z-index: 2; }
+    .story-cta em { color: var(--c-rouge); font-style: normal; font-weight: 600; }
+    @media(max-width:900px){ .story-wrap{padding:2.5rem;} }
+
+    /* ── RECETTES FLIP ─────────────────── */
+    .recettes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .recette-card { height: 260px; perspective: 1000px; cursor: pointer; }
+    .recette-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.4,0,0.2,1); }
+    .recette-card:hover .recette-card-inner,
+    .recette-card.flipped .recette-card-inner { transform: rotateY(180deg); }
+    .recette-front, .recette-back { position: absolute; inset: 0; border-radius: 0.6rem; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .recette-front { background: var(--c-creme); border: 1px solid rgba(190,30,59,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; box-shadow: 0 3px 16px rgba(0,0,0,0.06); }
+    .recette-front-picto { color: var(--c-rouge); }
+    .recette-front-name { font-family: var(--font-display); font-size: 1.75rem; color: var(--c-rouge); text-align: center; line-height: 1.05; letter-spacing: 0.02em; }
+    .recette-front-hint { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(190,30,59,0.4); }
+    .recette-back { background: var(--c-rouge); transform: rotateY(180deg); padding: 1.8rem; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 6px 24px rgba(190,30,59,0.25); }
+    .recette-back-name { font-family: var(--font-display); font-size: 1rem; color: rgba(255,255,255,0.5); margin-bottom: 0.5rem; letter-spacing: 0.1em; }
+    .recette-back-line { width: 28px; height: 1px; background: rgba(255,255,255,0.3); margin-bottom: 0.8rem; }
+    .recette-back-desc { font-size: 0.85rem; color: rgba(255,255,255,0.92); line-height: 1.75; }
+    @media(max-width:900px){ .recettes-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:600px){ .recettes-grid{grid-template-columns:1fr;} }
+
+    /* ── RS SAINT-VALENTIN ────────────── */
+    .stval-card { background: var(--c-noir); border-radius: 0.8rem; padding: 3rem; }
+    .stval-card-header { margin-bottom: 2rem; }
+    .stval-card-title { font-family: var(--font-display); font-size: 2.4rem; color: #fff; line-height: 1; }
+    .stval-card-title span { color: var(--c-rouge); }
+    .stval-card-sub { font-size: 0.85rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem; max-width: 420px; line-height: 1.8; }
+    .stval-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .stval-frame { border-radius: 0.5rem; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.4); }
+    .stval-frame img { width: 100%; display: block; }
+    @media(max-width:700px){ .stval-grid{grid-template-columns:1fr;} }
+
+    /* ── AFFICHES ─────────────────────── */
+    .affiches-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .affiche-frame { border-radius: 0.7rem; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); position: relative; }
+    .affiche-frame img { width: 100%; display: block; }
+    .affiche-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+    .affiche-badge { position: absolute; top: 1rem; left: 1rem; background: var(--c-rouge); color: #fff; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 2rem; }
+    @media(max-width:700px){ .affiches-duo{grid-template-columns:1fr;} }
+
+    footer { background: #fff; border-top: 1px solid #eee; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #999; }
+    @media(max-width:900px){ footer{padding:1.5rem 2rem;} }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <title>Croquine &mdash; Direction Artistique &amp; Identit&eacute; &mdash; On fait des bulles&nbsp;?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════ -->
+  <header class="cr-hero">
+    <div class="cr-hero-img"></div>
+    <div class="cr-hero-grad"></div>
+    <div class="cr-hero-line"></div>
+    <a href="projets.html" class="cr-hero-back">&larr; Retour aux projets</a>
+    <div class="cr-hero-tags">
+      <span class="cr-tag">Direction Artistique</span>
+      <span class="cr-tag">Identit&eacute; Visuelle</span>
+      <span class="cr-tag">Concept &amp; Strat&eacute;gie</span>
+      <span class="cr-tag">R&eacute;seaux Sociaux</span>
+      <span class="cr-tag">Print</span>
+    </div>
+    <h1 class="cr-hero-title">CROQUINE</h1>
+    <p class="cr-hero-sub">Lancement de marque &mdash; Croquettes sal&eacute;es, France</p>
+  </header>
+
+  <main class="cr-content">
+
+    <div class="dos-progress">
+      <a href="#s-brief"      class="dos-dot active" title="Brief"></a>
+      <a href="#s-concept"    class="dos-dot" title="Concept"></a>
+      <a href="#s-logo"       class="dos-dot" title="Logo"></a>
+      <a href="#s-tov"        class="dos-dot" title="Tone of Voice"></a>
+      <a href="#s-portraits"  class="dos-dot" title="Portraits"></a>
+      <a href="#s-story"      class="dos-dot" title="Storytelling"></a>
+      <a href="#s-recettes"   class="dos-dot" title="Recettes"></a>
+      <a href="#s-rs"         class="dos-dot" title="R&eacute;seaux Sociaux"></a>
+      <a href="#s-affiches"   class="dos-dot" title="Affiches"></a>
+    </div>
+
+    <!-- ══ 01 BRIEF ══════════════════════ -->
+    <section class="dos-section" id="s-brief">
+      <div class="dos-label reveal">01 &mdash; Le brief</div>
+      <div class="brief-wrap">
+        <div class="brief-paper reveal">
+          <div class="brief-paper-header">
+            <div>
+              <div class="bph-badge">Brief Cr&eacute;atif</div>
+              <div class="bph-sub">Croquine &middot; Lancement marque &amp; Direction Artistique</div>
+            </div>
+            <div class="bph-ref">R&eacute;f.&nbsp;CRQ&#8209;2023&#8209;001</div>
+          </div>
+          <div class="brief-fields">
+            <div class="bf"><span class="bf-label">Produit</span><span class="bf-val">Croquettes sal&eacute;es &mdash; recette fran&ccedil;aise traditionnelle remise au go&ucirc;t du jour</span></div>
+<div class="bf"><span class="bf-label">Cibles</span><span class="bf-val">25&ndash;40 ans &mdash; amateurs d&rsquo;ap&eacute;ritifs, food enthusiasts, jeunes actifs</span></div>
+            <div class="bf"><span class="bf-label">March&eacute;</span><span class="bf-val">France &mdash; GMS &amp; circuit direct</span></div>
+            <div class="bf bf-full"><span class="bf-label">Livrables</span><span class="bf-val">Nom de marque &middot; Univers graphique &middot; Logo &middot; Concept cr&eacute;atif &middot; Tone of Voice &middot; Storytelling &middot; Portraits chinois &middot; Key visual &middot; Posts RS &middot; Noms de recettes &middot; Affiches</span></div>
+            <div class="bf bf-full"><span class="bf-label">Objectif</span><span class="bf-val">Trouver un nom de marque disponible, cr&eacute;er son univers graphique et d&eacute;velopper un concept cr&eacute;atif complet &mdash; ancr&eacute; dans la tradition fran&ccedil;aise mais radicalement d&eacute;cal&eacute;.</span></div>
+          </div>
+          <div class="brief-validated">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="36" stroke="#BE1E3B" stroke-width="3" opacity="0.8"/>
+              <circle cx="40" cy="40" r="31" stroke="#BE1E3B" stroke-width="1" opacity="0.5"/>
+              <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#BE1E3B" opacity="0.9">VALID&Eacute;</text>
+              <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#BE1E3B" opacity="0.7">CRQ. 2023</text>
+            </svg>
+          </div>
+        </div>
+        <div class="postit reveal" style="transform:rotate(2deg);">
+          <span style="display:block;font-size:0.9rem;margin-bottom:0.3rem;opacity:0.4;">&#x2191;</span>
+          Rendre les<br>croquettes<br><strong>sexy</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 02 CONCEPT ════════════════════ -->
+    <section class="dos-section" id="s-concept">
+      <div class="dos-label reveal">02 &mdash; L&rsquo;id&eacute;e &amp; le WHY</div>
+
+      <div class="nom-retenu">
+        <p class="nom-retenu-label">Nom retenu</p>
+        <p class="nom-retenu-text" id="nomTypewriter">Croquine</p>
+      </div>
+
+      <div class="why-card reveal">
+        <p class="why-label">Notre mission</p>
+        <p class="why-text">RASSEMBLER LES PROCHES<br><span>AUTOUR D&rsquo;UNE EXP&Eacute;RIENCE</span><br>CULINAIRE AMUSANTE<br>CONVIVIALE &amp; CHALEUREUSE</p>
+      </div>
+
+      <div class="concept-list reveal">
+        <div class="concept-item">
+          <p><strong>Croquine, pourquoi ?</strong><br>Croquette / croquant / coquin.e &mdash; un nom qui porte en lui le produit, le fun et la s&eacute;duction. Trois mots pour une marque.</p>
+        </div>
+        <div class="concept-item">
+          <p><strong>Food porn comme moteur</strong><br>Rendre le produit d&eacute;sirable en jouant sur le visuel, la texture, le croquant &mdash; inspir&eacute; du food porn pour faire saliver avant de croquer.</p>
+        </div>
+        <div class="concept-item">
+          <p><strong>L&rsquo;univers os&eacute;</strong><br>Des jeux de mots plus ou moins culott&eacute;s, une communication d&eacute;cal&eacute;e &mdash; pour surprendre, amuser et cr&eacute;er le bouche-&agrave;-oreille.</p>
+        </div>
+        <div class="concept-item">
+          <p><strong>Les pr&eacute;liminaires d&rsquo;une soir&eacute;e</strong><br>Les croquettes au c&oelig;ur de l&rsquo;ap&eacute;ritif convivial : avec des amis, des coll&egrave;gues, la famille &mdash; des r&eacute;cettes originales pour briser la glace et faire rire.</p>
+        </div>
+        <div class="concept-item">
+          <p><strong>La tradition revisit&eacute;e</strong><br>Comme dans les vieux pots on fait les meilleures confitures : une recette fran&ccedil;aise ancrée dans les traditions, remise &agrave; jour avec une bonne dose d&rsquo;humour.</p>
+        </div>
+        <div class="concept-item">
+          <p><strong>Clean label &amp; 100% fran&ccedil;ais</strong><br>Une ligne de production courte et nationale, des ingr&eacute;dients transparents &mdash; pour convaincre autant par les valeurs que par le go&ucirc;t.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 03 LOGO & IDENTITÉ ══════════════ -->
+    <section class="dos-section" id="s-logo">
+      <div class="dos-label reveal">03 &mdash; Identit&eacute; visuelle &amp; logo</div>
+      <div class="logo-section reveal">
+        <div class="logo-display">
+          <img src="assets/logocroquine.png" alt="Logo Croquine" />
+        </div>
+        <div class="logo-info">
+          <h3>Un logo<br>qui se croque</h3>
+          <div class="logo-point">
+            <span class="logo-point-num">01</span>
+            <p>Le &laquo;&nbsp;O&nbsp;&raquo; de Croquine est remplac&eacute; par une croquette &mdash; pour pr&eacute;senter le produit d&egrave;s la premi&egrave;re lecture du nom.</p>
+          </div>
+          <div class="logo-point">
+            <span class="logo-point-num">02</span>
+            <p>Typographie &agrave; contour &eacute;pais &mdash; gourmandise, lisibilit&eacute;, et un caract&egrave;re affirmé qui rappelle les emballages food premium.</p>
+          </div>
+          <div class="logo-point">
+            <span class="logo-point-num">03</span>
+            <p>Rouge carmin &mdash; le c&ocirc;t&eacute; sexy de la marque sans &ecirc;tre criard, en harmonie avec les codes de l&rsquo;alimentation et de la s&eacute;duction.</p>
+          </div>
+          <div class="logo-point">
+            <span class="logo-point-num">04</span>
+            <p>Sobri&eacute;t&eacute; graphique pour contrebalancer les prises de parole os&eacute;es : le logo reste &eacute;l&eacute;gant, la com peut se l&acirc;cher.</p>
+          </div>
+          <div class="baseline-pill">&laquo;&nbsp;Faites croc-croc&nbsp;&raquo;</div>
+        </div>
+      </div>
+
+      <div class="color-palette reveal">
+        <div class="color-swatch">
+          <div class="color-swatch-block" style="background:#BE1E3B;"></div>
+          <div class="color-swatch-info">
+            <p class="color-swatch-name">Rouge carmin</p>
+            <p class="color-swatch-hex">#BE1E3B</p>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch-block" style="background:#FFF8F2;border-bottom:1px solid rgba(0,0,0,0.05);"></div>
+          <div class="color-swatch-info">
+            <p class="color-swatch-name">Cr&egrave;me</p>
+            <p class="color-swatch-hex">#FFF8F2</p>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch-block" style="background:#F5E8EA;"></div>
+          <div class="color-swatch-info">
+            <p class="color-swatch-name">Poudre</p>
+            <p class="color-swatch-hex">#F5E8EA</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 04 TONE OF VOICE ═══════════════ -->
+    <section class="dos-section" id="s-tov">
+      <div class="dos-label reveal">04 &mdash; Tone of voice</div>
+      <div class="tov-grid reveal">
+        <div class="tov-card tov-dont">
+          <div class="tov-card-header">&mdash; &Agrave; &eacute;viter</div>
+          <div class="tov-card-body">
+            <div class="tov-pair">
+              <p class="tov-dont-text">&laquo;&nbsp;Des croquettes qui conviennent parfaitement &agrave; votre ap&eacute;ritif&nbsp;!&nbsp;&raquo;</p>
+            </div>
+            <div class="tov-pair">
+              <p class="tov-dont-text">&laquo;&nbsp;Faire frire les croquettes dans la casserole pendant 15 minutes.&nbsp;&raquo;</p>
+            </div>
+          </div>
+        </div>
+        <div class="tov-card tov-do">
+          <div class="tov-card-header">+ Être d&eacute;cal&eacute; &amp; s&eacute;ducteur</div>
+          <div class="tov-card-body">
+            <div class="tov-pair">
+              <p class="tov-do-text">&laquo;&nbsp;Des croquettes pour vous <strong style="color:var(--c-rouge)">en mettre plein la bouche</strong> &agrave; vos ap&eacute;ros&nbsp;!&nbsp;&raquo;</p>
+            </div>
+            <div class="tov-pair">
+              <p class="tov-do-text">&laquo;&nbsp;Plongez d&eacute;licatement les croquettes dans la casserole et laissez <strong style="color:var(--c-rouge)">monter la temp&eacute;rature</strong> pendant 15 minutes.&nbsp;&raquo;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;padding:1.6rem 2rem;background:var(--c-poudre);border-radius:0.6rem;border-left:3px solid var(--c-rouge);" class="reveal">
+        <p style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--c-rouge);margin-bottom:0.5rem;">Traits de caract&egrave;re</p>
+        <p style="font-family:var(--font-serif);font-size:1.1rem;font-style:italic;color:var(--text);line-height:1.8;">Gourmande, <strong>culott&eacute;e</strong>, raffin&eacute;e, p&eacute;tillante, impertinente</p>
+        <div style="margin-top:1rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+          <div>
+            <p style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">Le matin</p>
+            <p style="font-family:var(--font-serif);font-style:italic;color:var(--text);">&laquo;&nbsp;Cocoricro&nbsp;!&nbsp;&raquo;</p>
+          </div>
+          <div>
+            <p style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">Dans la journ&eacute;e</p>
+            <p style="font-family:var(--font-serif);font-style:italic;color:var(--text);">&laquo;&nbsp;Hello les croquin.e.s&nbsp;!&nbsp;&raquo;</p>
+          </div>
+          <div>
+            <p style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">Citation pr&eacute;f&eacute;r&eacute;e</p>
+            <p style="font-family:var(--font-serif);font-style:italic;color:var(--text);">&laquo;&nbsp;N&rsquo;en faire qu&rsquo;une bouch&eacute;e&nbsp;&raquo;</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 05 PORTRAITS CHINOIS ═══════════ -->
+    <section class="dos-section" id="s-portraits">
+      <div class="dos-label reveal">05 &mdash; Portraits chinois</div>
+      <div class="portraits-grid reveal">
+        <div class="portrait-card">
+          <div class="portrait-card-img">
+            <img src="assets/joey.gif" alt="Joey Tribbiani" />
+          </div>
+          <div class="portrait-card-body">
+            <p class="portrait-card-label">Si Croquine &eacute;tait un personnage</p>
+            <p class="portrait-card-name">Joey Tribbiani</p>
+            <p class="portrait-card-desc">Toujours faim, adore manger avec les doigts. Dr&ocirc;le, sans artifices, un c&ocirc;t&eacute; m&eacute;diterran&eacute;en qu&rsquo;on adore &mdash; et des amis pour la vie autour de la table.</p>
+          </div>
+        </div>
+        <div class="portrait-card">
+          <div class="portrait-card-img">
+            <img src="assets/cene.jpg" alt="La Cène de Léonard de Vinci" />
+          </div>
+          <div class="portrait-card-body">
+            <p class="portrait-card-label">Si Croquine &eacute;tait une &oelig;uvre d&rsquo;art</p>
+            <p class="portrait-card-name">La C&egrave;ne</p>
+            <p class="portrait-card-desc">Le partage autour de la table, des aliments traditionnels sans artifices, et une tablée qui rassemble &mdash; L&eacute;onard de Vinci aurait ador&eacute; les croquettes.</p>
+          </div>
+        </div>
+        <div class="portrait-card" style="background:var(--c-poudre);box-shadow:none;border:1px solid rgba(190,30,59,0.12);">
+          <div class="portrait-card-body" style="background:transparent;padding:1.8rem;">
+            <p class="portrait-card-label" style="margin-bottom:1rem;">Sujets de conversation</p>
+            <div style="display:flex;flex-direction:column;gap:0.7rem;">
+              <div style="display:flex;align-items:center;gap:0.8rem;"><span style="width:6px;height:6px;background:var(--c-rouge);border-radius:50%;flex-shrink:0;"></span><p style="font-size:0.88rem;color:var(--text);">Le food porn</p></div>
+              <div style="display:flex;align-items:center;gap:0.8rem;"><span style="width:6px;height:6px;background:var(--c-rouge);border-radius:50%;flex-shrink:0;"></span><p style="font-size:0.88rem;color:var(--text);">Les derniers potins</p></div>
+              <div style="display:flex;align-items:center;gap:0.8rem;"><span style="width:6px;height:6px;background:var(--c-rouge);border-radius:50%;flex-shrink:0;"></span><p style="font-size:0.88rem;color:var(--text);">&Eacute;co-responsabilit&eacute;</p></div>
+              <div style="display:flex;align-items:center;gap:0.8rem;"><span style="width:6px;height:6px;background:var(--c-rouge);border-radius:50%;flex-shrink:0;"></span><p style="font-size:0.88rem;color:var(--text);">Le monde de demain</p></div>
+            </div>
+            <p class="portrait-card-label" style="margin-top:1.5rem;margin-bottom:0.6rem;">Traits de caract&egrave;re</p>
+            <div class="portraits-traits">
+              <span class="trait-pill">Gourmande</span>
+              <span class="trait-pill">Culott&eacute;e</span>
+              <span class="trait-pill">Raffin&eacute;e</span>
+              <span class="trait-pill">P&eacute;tillante</span>
+              <span class="trait-pill">Impertinente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 06 STORYTELLING ════════════════ -->
+    <section class="dos-section" id="s-story">
+      <div class="dos-label reveal">06 &mdash; Storytelling</div>
+      <div class="story-wrap reveal">
+        <h2 class="story-title">UNE HISTOIRE<br><span>CROC-CROC</span></h2>
+
+        <p class="story-para" id="sp0">On plante le d&eacute;cor&nbsp;: <span class="cr">date improvis&eacute; &agrave; la maison</span>, pas tr&egrave;s dou&eacute;.e pour la s&eacute;duction. Comment l&rsquo;impressionner&nbsp;? C&rsquo;est vrai cette fois <span class="cr">cette personne vous pla&icirc;t vraiment</span>. Vous auriez d&ucirc; acheter des fleurs et en plus y&rsquo;a rien &agrave; manger&hellip; Direction le supermarch&eacute;. <span class="cr">Oh cette nouvelle marque a l&rsquo;air sympa&nbsp;!</span></p>
+
+        <p class="story-para" id="sp1">Notification sur votre Insta. Merde, elle arrive dans 5 minutes&hellip; Vous remontez vite fait chez vous, un dernier coup d&rsquo;&oelig;il dans le miroir. <span class="cr">Oh, elle est dans l&rsquo;ascenseur&nbsp;!</span></p>
+
+        <p class="story-para" id="sp2">Dans votre cuisine &ccedil;a s&rsquo;agite. La tension d&rsquo;une rencontre, <span class="cr">la temp&eacute;rature qui monte</span>, l&rsquo;entr&eacute;e en &eacute;bullition, l&rsquo;attente de <span class="cr">la chaleur du premier baiser</span>&hellip; C&rsquo;est bon, l&rsquo;ap&eacute;ritif est pr&ecirc;t et la sonnette r&eacute;sonne dans l&rsquo;entr&eacute;e.</p>
+
+        <p class="story-para" id="sp3">Croquine, c&rsquo;est <span class="cr">le nouvel incontournable de vos soir&eacute;es</span>&nbsp;: la promesse d&rsquo;une nouvelle sc&egrave;ne pour vos papilles &agrave; chaque bouch&eacute;e gr&acirc;ce &agrave; des recettes originales et culott&eacute;es. Chez Croquine, on prend la vie du bon c&ocirc;t&eacute; et on ne manque pas une occasion de rire et partager.</p>
+
+        <p class="story-para" id="sp4">Nous nous engageons &agrave; proposer &agrave; nos croquin.e.s des produits de qualit&eacute; au go&ucirc;t unique avec une diversit&eacute; de recettes gourmandes, le tout dans une d&eacute;marche <span class="cr">clean label</span> pour plus de naturalit&eacute; et de transparence. La fra&icirc;cheur optimale de nos produits est possible gr&acirc;ce &agrave; une ligne de production courte et <span class="cr">100% fran&ccedil;aise</span>.</p>
+
+        <p class="story-cta">Maintenant que vous avez tous les ingr&eacute;dients en main pour une bonne soir&eacute;e,<br>il est temps de <em>faire croc-croc&nbsp;!</em></p>
+      </div>
+    </section>
+
+    <!-- ══ 07 RECETTES ════════════════════ -->
+    <section class="dos-section" id="s-recettes">
+      <div class="dos-label reveal">07 &mdash; Les recettes</div>
+      <p class="reveal" style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:520px;margin-bottom:2.5rem;">Sept noms de recettes con&ccedil;us dans l&rsquo;esprit Croquine &mdash; jeux de mots, double sens, et toujours une pointe d&rsquo;impertinence.</p>
+      <div class="recettes-grid reveal">
+
+        <!-- FELA'FEL -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="17" cy="34" r="8" stroke="currentColor" stroke-width="1.8"/>
+                  <circle cx="35" cy="34" r="8" stroke="currentColor" stroke-width="1.8"/>
+                  <circle cx="26" cy="21" r="8" stroke="currentColor" stroke-width="1.8"/>
+                  <line x1="26" y1="13" x2="26" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M23 10 C23 7 20 7 20 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+                  <path d="M29 10 C29 7 32 7 32 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+                </svg>
+              </div>
+              <p class="recette-front-name">FELA&rsquo;FEL</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">FELA&rsquo;FEL</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Croquettes v&eacute;g&eacute;tariennes &agrave; base de falafels &mdash; pour les croquin.e.s qui font du bien &agrave; la plan&egrave;te.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- COCHONNERIE -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="26" cy="30" r="14" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M14 20 L10 13 L19 18" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+                  <path d="M38 20 L42 13 L33 18" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+                  <circle cx="21" cy="26" r="1.8" fill="currentColor"/>
+                  <circle cx="31" cy="26" r="1.8" fill="currentColor"/>
+                  <ellipse cx="26" cy="32" rx="4" ry="3" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="24" cy="32" r="1" fill="currentColor" opacity="0.5"/>
+                  <circle cx="28" cy="32" r="1" fill="currentColor" opacity="0.5"/>
+                </svg>
+              </div>
+              <p class="recette-front-name">COCHONNERIE</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">COCHONNERIE</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Jambon et fromage &mdash; le classique qu&rsquo;on assume pleinement, sans honte et sans retenue.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- HEN-THAÏ -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- bol -->
+                  <path d="M10 28 C10 40 42 40 42 28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                  <line x1="10" y1="28" x2="42" y2="28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <!-- contenu ondulé -->
+                  <path d="M16 24 C18 21 20 23 22 21 C24 19 26 21 28 19 C30 17 32 19 34 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                  <!-- baguette gauche -->
+                  <line x1="18" y1="6" x2="24" y2="26" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                  <!-- baguette droite -->
+                  <line x1="26" y1="6" x2="30" y2="26" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p class="recette-front-name">HEN-THA&Iuml;</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">HEN-THA&Iuml;</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Crevettes roses, basilic tha&iuml; et curry rouge &mdash; exotique et qui r&eacute;chauffe.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- KAMA-PRIKA -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M26 46 C18 42 12 32 14 20 C16 10 22 6 28 8 C34 10 36 18 30 26 C28 30 28 38 26 46Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <path d="M28 8 C28 8 32 6 34 4 C34 4 30 2 26 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                  <circle cx="22" cy="22" r="2" fill="currentColor" opacity="0.4"/>
+                  <circle cx="26" cy="30" r="1.5" fill="currentColor" opacity="0.3"/>
+                </svg>
+              </div>
+              <p class="recette-front-name">KAMA-PRIKA</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">KAMA-PRIKA</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Poulet, paprika, oignon &mdash; une recette qui &eacute;pice vos soir&eacute;es avec tout le s&eacute;rieux du Kama-sutra.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHORIZ'HOT -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M26 46 C16 40 12 28 16 20 C18 16 20 12 18 8 C18 8 24 13 24 20 C24 20 26 15 29 10 C29 10 34 17 32 24 C32 24 36 19 36 14 C36 14 42 23 40 33 C38 41 32 46 26 46Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <path d="M26 40 C22 36 20 30 22 26 C22 26 24 29 24 33 C24 33 26 30 28 26 C28 26 32 31 30 35 C29 38 27 40 26 40Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+              </div>
+              <p class="recette-front-name">CHORIZ&rsquo;HOT</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">CHORIZ&rsquo;HOT</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Chorizo ib&eacute;rique, paprika fum&eacute;, fromage espagnol &mdash; caliente, tr&egrave;s caliente.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAROILLES COUCHE TOI-LÀ -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 40 L26 10 L44 40 Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+                  <circle cx="22" cy="34" r="2.8" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="31" cy="28" r="2.2" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="29" cy="36" r="1.6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <p class="recette-front-name" style="font-size:1.3rem;">MAROILLES<br>COUCHE TOI-L&Agrave;</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">MAROILLES COUCHE TOI-L&Agrave;</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Recette r&eacute;gionale &agrave; base de maroilles &mdash; ch&rsquo;est bien meilleur au nord.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BO-LOLO -->
+        <div class="recette-card" onclick="this.classList.toggle('flipped')">
+          <div class="recette-card-inner">
+            <div class="recette-front">
+              <div class="recette-front-picto">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 28 C8 40 44 40 44 28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                  <line x1="8" y1="28" x2="44" y2="28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M16 22 C16 18 20 18 20 22 C20 26 24 26 24 22 C24 18 28 18 28 22 C28 26 32 26 32 22 C32 18 36 18 36 22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+                  <path d="M22 12 C22 10 24 10 24 12 C24 14 22 14 22 16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.55"/>
+                  <path d="M30 12 C30 10 32 10 32 12 C32 14 30 14 30 16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.55"/>
+                </svg>
+              </div>
+              <p class="recette-front-name">BO-LOLO</p>
+              <p class="recette-front-hint">survoler pour la recette</p>
+            </div>
+            <div class="recette-back">
+              <p class="recette-back-name">BO-LOLO</p>
+              <div class="recette-back-line"></div>
+              <p class="recette-back-desc">Croquettes &agrave; la bolognaise &mdash; parce qu&rsquo;il y a des classiques qu&rsquo;on ne se lasse pas de red&eacute;couvrir.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ 08 RS SAINT-VALENTIN ═══════════ -->
+    <section class="dos-section" id="s-rs">
+      <div class="dos-label reveal">08 &mdash; R&eacute;seaux sociaux</div>
+      <div class="stval-card reveal">
+        <div class="stval-card-header">
+          <p class="stval-card-title">Saint-<span>Valentin</span></p>
+          <p class="stval-card-sub">Trois posts con&ccedil;us pour la Saint-Valentin &mdash; dans le ton Croquine&nbsp;: s&eacute;duction, double sens et foodporn pour transformer l&rsquo;occasion en terrain de jeu.</p>
+        </div>
+        <div class="stval-grid">
+          <div class="stval-frame"><img src="assets/stval1.png" alt="Post Saint-Valentin 1" loading="lazy" /></div>
+          <div class="stval-frame"><img src="assets/stval2.png" alt="Post Saint-Valentin 2" loading="lazy" /></div>
+          <div class="stval-frame"><img src="assets/stval3.png" alt="Post Saint-Valentin 3" loading="lazy" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 09 AFFICHES ════════════════════ -->
+    <section class="dos-section" id="s-affiches">
+      <div class="dos-label reveal">09 &mdash; Affiches</div>
+      <div class="affiches-duo reveal">
+        <div>
+          <p class="affiche-label">Teaser m&eacute;tro &mdash; avant d&eacute;voilement</p>
+          <div class="affiche-frame">
+            <div class="affiche-badge">Teaser</div>
+            <img src="assets/croquinemetro.png" alt="Affiche m&eacute;tro teaser Croquine" loading="lazy" />
+          </div>
+        </div>
+        <div>
+          <p class="affiche-label">Affiche compl&egrave;te &mdash; r&eacute;v&eacute;lation de la marque</p>
+          <div class="affiche-frame">
+            <div class="affiche-badge">R&eacute;v&eacute;lation</div>
+            <img src="assets/affichecroquine.png" alt="Affiche Croquine" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    // CURSOR
+    (function(){
+      var c=document.getElementById('cursor'),f=document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){c.style.display='none';f.style.display='none';return;}
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx-5+'px';c.style.top=my-5+'px';});
+      (function tick(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;f.style.left=fx-16+'px';f.style.top=fy-16+'px';requestAnimationFrame(tick);})();
+    })();
+
+    // REVEAL (staggered per section)
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){
+        if(e[0].isIntersecting) setTimeout(function(){r.classList.add('visible');},i*40);
+      },{threshold:0.05}).observe(r);
+    });
+
+    // TYPEWRITER NOM
+    (function(){
+      var el=document.getElementById('nomTypewriter');
+      if(!el)return;
+      new IntersectionObserver(function(entries){
+        if(entries[0].isIntersecting){ el.classList.add('typed'); }
+      },{threshold:0.5}).observe(el);
+    })();
+
+    // STORY PARAGRAPHS — staggered reveal
+    (function(){
+      var paras=['sp0','sp1','sp2','sp3','sp4'];
+      paras.forEach(function(id,i){
+        var el=document.getElementById(id);
+        if(!el)return;
+        el.style.opacity='0';
+        el.style.transform='translateY(18px)';
+        el.style.transition='opacity 0.8s ease, transform 0.8s ease';
+        new IntersectionObserver(function(entries){
+          if(entries[0].isIntersecting){
+            setTimeout(function(){
+              el.style.opacity='1';
+              el.style.transform='none';
+            }, i*160);
+          }
+        },{threshold:0.1}).observe(el);
+      });
+    })();
+
+    // MOBILE MENU
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    // DOT NAV
+    (function(){
+      var ids=['s-brief','s-concept','s-logo','s-tov','s-portraits','s-story','s-recettes','s-rs','s-affiches'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting)return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0)dots.forEach(function(d,i){d.classList.toggle('active',i===idx);});
+        });
+      },{threshold:0.25,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+    })();
+  </script>
+</body>
+</html>

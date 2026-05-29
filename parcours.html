@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --surface: #f8f8f8;
+      --accent1: #D66A77; --accent2: #97BAED;
+      --text: #1a1a2e; --muted: #666676;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-syne: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+    .cursor { width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+    .cursor-follower { width: 36px; height: 36px; border: 1px solid rgba(214,106,119,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: linear-gradient(to bottom, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.0) 100%); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg, #D66A77, #97BAED, #D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent2); }
+    .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.12; pointer-events: none; z-index: 0; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.08); font-size: 0.8rem; color: var(--muted); position: relative; z-index: 1; }
+    @media (max-width: 900px) { nav { padding: 1.2rem 2rem; } .nav-links { display: none; } .burger { display: flex; } footer { padding: 2rem; } }
+    .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 99999; position: fixed; top: 1.3rem; right: 1.5rem; }
+    .burger span { display: block; width: 24px; height: 1.5px; background: var(--text); transition: transform 0.3s, opacity 0.3s; }
+    .mobile-menu { visibility: hidden; opacity: 0; position: fixed; inset: 0; background: #fff; z-index: 99998; display: flex; flex-direction: column; transition: opacity 0.25s ease, visibility 0.25s ease; overflow: hidden; }
+    .mobile-menu.open { visibility: visible; opacity: 1; }
+    body.menu-open .burger { display: none; }
+    .mobile-menu-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 2rem; color: #000; cursor: pointer; line-height: 1; padding: 0.5rem; }
+    .mobile-menu a { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.1em; color: #000; text-decoration: none; text-transform: uppercase; border-bottom: 1px solid rgba(0,0,0,0.08); transition: background 0.15s; }
+    .mobile-menu a:first-of-type { border-top: 1px solid rgba(0,0,0,0.08); }
+    .mobile-menu a:hover { background: #f5f5f5; }
+    @media (max-width: 900px) { .burger { display: flex; } }
+  </style>
+  <title>Parcours — Jordan Join</title>
+  <style>
+    /* ======= PAGE HEADER ======= */
+    .page-header {
+      padding: 9rem 4rem 3rem;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .page-header-left .section-label { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent1); margin-bottom: 0.8rem; }
+    .page-header-left h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1; }
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--accent1); color: #fff;
+      padding: 0.85rem 2rem; border-radius: 0.5rem;
+      text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.06em; transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(214,106,119,0.3);
+      white-space: nowrap;
+    }
+    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(214,106,119,0.4); }
+    .btn-download svg { width: 16px; height: 16px; }
+
+    /* ======= CV WRAPPER ======= */
+    .cv-wrap { padding: 0 4rem 6rem; position: relative; z-index: 1; }
+    .cv-layout {
+      display: grid; grid-template-columns: 290px 1fr;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.06);
+      border-radius: 0.8rem; overflow: hidden; max-width: 1060px; margin: 0 auto;
+    }
+
+    /* ======= SIDEBAR ======= */
+    .cv-sidebar {
+      background: #f4f5f8;
+      padding: 2.5rem;
+      align-self: start;
+      position: sticky; top: 6rem;
+    }
+    .cv-photo {
+      width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top;
+      border-radius: 0.5rem; display: block; margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .cv-block { margin-bottom: 2rem; }
+    .cv-block-label {
+      display: block; background: var(--accent1); color: #fff;
+      font-family: var(--font-display); letter-spacing: 0.2em; font-size: 0.72rem;
+      text-transform: uppercase; padding: 0.35rem 2.5rem 0.35rem 2.5rem;
+      margin: 0 -2.5rem 1.2rem -2.5rem;
+    }
+    .cv-block-text { font-size: 0.82rem; color: var(--muted); line-height: 1.75; }
+    .cv-hl {
+      background-image: linear-gradient(to right, rgba(214,106,119,0.22), rgba(214,106,119,0.22));
+      background-size: 0% 44%;
+      background-repeat: no-repeat;
+      background-position: 0% 92%;
+      transition: background-size 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      font-weight: 500;
+      color: var(--text);
+      padding: 0 1px;
+    }
+    .cv-hl.lit { background-size: 100% 44%; }
+    .cv-info-list { list-style: none; }
+    .cv-info-list li {
+      font-size: 0.82rem; color: var(--muted); padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .cv-info-list li:last-child { border-bottom: none; }
+    .cv-info-icon { color: var(--accent1); font-size: 0.9rem; flex-shrink: 0; }
+    .cv-interests-list { list-style: none; }
+    .cv-interests-list li { font-size: 0.82rem; color: var(--muted); padding: 0.35rem 0; display: flex; align-items: center; gap: 0.6rem; }
+    .cv-interests-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+
+    /* Skill bars */
+    .skill-group { margin-bottom: 1.2rem; }
+    .skill-group-label { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text); font-weight: 500; margin-bottom: 0.5rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .skill-tag {
+      font-size: 0.68rem; color: var(--muted); background: #fff;
+      border: 1px solid rgba(0,0,0,0.1); border-radius: 2rem;
+      padding: 0.2rem 0.6rem;
+      opacity: 0; transform: scale(0.85);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .skill-tag.popped { opacity: 1; transform: scale(1); }
+
+    /* ======= MAIN CONTENT ======= */
+    .cv-main { background: #fff; padding: 2.5rem 3rem; }
+    .cv-name-block { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .cv-name { font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.5rem); letter-spacing: 0.15em; line-height: 1; margin-bottom: 0.5rem; }
+    .cv-titles-text { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); line-height: 1.8; }
+
+    .cv-section { margin-bottom: 2.5rem; }
+    .cv-section-label {
+      display: block; background: var(--accent2); color: #fff;
+      font-family: var(--font-display); letter-spacing: 0.2em; font-size: 0.72rem;
+      text-transform: uppercase; padding: 0.35rem 3rem 0.35rem 3rem;
+      margin: 0 -3rem 1.5rem -3rem;
+    }
+
+    /* Experience cards */
+    .exp-item {
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      padding: 1.1rem 0; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-item:hover { background: rgba(151,186,237,0.04); margin: 0 -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; border-radius: 0.3rem; }
+    .exp-header { display: flex; align-items: flex-start; gap: 1rem; justify-content: space-between; }
+    .exp-header-left { flex: 1; }
+    .exp-job { font-family: var(--font-syne); font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 0.2rem; }
+    .exp-company { font-size: 0.78rem; color: var(--accent1); letter-spacing: 0.06em; }
+    .exp-date { font-size: 0.72rem; color: var(--muted); white-space: nowrap; padding-top: 0.2rem; text-align: right; }
+    .exp-toggle {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--muted); flex-shrink: 0; margin-top: 0.1rem;
+      transition: background 0.2s, border-color 0.2s, transform 0.3s;
+    }
+    .exp-item.open .exp-toggle { background: var(--accent1); border-color: var(--accent1); color: #fff; transform: rotate(45deg); }
+    .exp-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+      opacity: 0;
+    }
+    .exp-item.open .exp-body { max-height: 1000px; opacity: 1; }
+    .exp-body ul { list-style: none; padding: 1rem 0 0.5rem 0; }
+    .exp-body ul li { font-size: 0.82rem; color: var(--muted); line-height: 1.75; padding-left: 1.1rem; position: relative; margin-bottom: 0.2rem; }
+    .exp-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--accent1); font-size: 0.75rem; }
+    .exp-body p { font-size: 0.82rem; color: var(--muted); line-height: 1.75; padding-top: 0.8rem; }
+
+    .exp-skills { display: flex; flex-wrap: wrap; gap: 0.35rem; padding-top: 1rem; padding-bottom: 0.2rem; }
+    .exp-skill-tag {
+      font-size: 0.68rem; letter-spacing: 0.04em;
+      padding: 0.25rem 0.7rem; border-radius: 2rem;
+      border: 1px solid rgba(151,186,237,0.5);
+      color: var(--accent2); background: rgba(151,186,237,0.08);
+      opacity: 0; transform: translateY(6px) scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .exp-skill-tag.popped { opacity: 1; transform: translateY(0) scale(1); }
+
+    .exp-chips-label { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); opacity: 0.6; display: block; margin-top: 1rem; margin-bottom: 0.35rem; }
+    .exp-projects { display: flex; flex-wrap: wrap; gap: 0.3rem; padding-top: 0.7rem; margin-top: 0.5rem; border-top: 1px dashed rgba(0,0,0,0.07); }
+    .exp-proj-tag {
+      font-size: 0.67rem; letter-spacing: 0.04em;
+      padding: 0.2rem 0.65rem 0.2rem 0.5rem; border-radius: 2rem;
+      border: 1px solid rgba(214,106,119,0.35);
+      color: var(--accent1); background: rgba(214,106,119,0.04);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;
+      opacity: 0; transform: translateY(6px) scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+    }
+    .exp-proj-tag::before { content: '\2192'; font-size: 0.58rem; opacity: 0.65; }
+    .exp-proj-tag:hover { background: rgba(214,106,119,0.11); }
+    .exp-proj-tag.popped { opacity: 1; transform: translateY(0) scale(1); }
+
+    /* Formations */
+    .edu-item { padding: 1rem 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+    .edu-item:last-child { border-bottom: none; }
+    .edu-school { font-family: var(--font-syne); font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .edu-degree { font-size: 0.8rem; color: var(--accent1); margin-bottom: 0.2rem; }
+    .edu-years { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .edu-note { font-size: 0.78rem; color: var(--muted); font-style: italic; line-height: 1.6; }
+
+    /* Hint */
+    .cv-hint { text-align: center; font-size: 0.75rem; color: var(--muted); margin-bottom: 1.5rem; letter-spacing: 0.05em; opacity: 0.8; }
+    .cv-hint span { display: inline-block; animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
+
+    /* ======= RESPONSIVE ======= */
+    @media (max-width: 860px) {
+      .cv-wrap { padding: 0 1.5rem 4rem; }
+      .page-header { padding: 8rem 1.5rem 2rem; }
+      .cv-layout { grid-template-columns: 1fr; }
+      .cv-sidebar { position: static; padding: 2rem 1.5rem; }
+      .cv-block-label { margin: 0 -1.5rem 1rem -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+      .cv-main { padding: 2rem 1.5rem; }
+      .cv-section-label { margin: 0 -1.5rem 1.2rem -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+        <ul class="nav-links">
+      <li><a href="parcours.html" class="active">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+  <div class="grain"></div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header reveal">
+    <div class="page-header-left">
+      <p class="section-label">Mon parcours</p>
+      <h1>Curriculum Vit&aelig;</h1>
+    </div>
+    <a href="assets/cv-jordan-join.pdf" download="CV Jordan Join.pdf" class="btn-download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      T&eacute;l&eacute;charger mon CV
+    </a>
+  </div>
+
+  <p class="cv-hint reveal"><span>&#10092;</span>&nbsp; Cliquez sur une exp&eacute;rience pour la d&eacute;velopper &nbsp;<span>&#10093;</span></p>
+
+  <!-- CV LAYOUT -->
+  <div class="cv-wrap">
+    <div class="cv-layout reveal">
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="cv-sidebar">
+
+        <img class="cv-photo" src="assets/jo.png" alt="Jordan Join">
+
+        <div class="cv-block">
+          <span class="cv-block-label">Contexte</span>
+          <p class="cv-block-text">
+            Dipl&ocirc;m&eacute; d&rsquo;un <span class="cv-hl">Master&nbsp;2 de Direction Artistique</span> via le groupe Sup&nbsp;de&nbsp;Pub de Lyon, je poss&egrave;de une m&eacute;thodologie de travail rigoureuse et une forte cr&eacute;ativit&eacute;.<br><br>
+            Actuellement <span class="cv-hl">Responsable Marketing depuis&nbsp;2024</span> chez Labrha, je suis d&eacute;sormais &agrave; la <span class="cv-hl">recherche de ma prochaine aventure</span>.<br><br>
+            <span class="cv-hl">S&eacute;rieux, motiv&eacute; et ambitieux</span>, je suis &eacute;galement une personne tr&egrave;s sociable qui saura s&rsquo;int&eacute;grer naturellement et rapidement &agrave; votre &eacute;quipe.
+          </p>
+        </div>
+
+        <div class="cv-block">
+          <span class="cv-block-label">Informations</span>
+          <ul class="cv-info-list">
+            <li><span class="cv-info-icon">&#9675;</span> 29 ans</li>
+            <li><span class="cv-info-icon">&#9675;</span> 06&nbsp;19&nbsp;84&nbsp;27&nbsp;99</li>
+            <li><span class="cv-info-icon">&#9675;</span> jordan.join@icloud.com</li>
+            <li><span class="cv-info-icon">&#9675;</span> 49 Rue Tronchet, <strong>69006 Lyon</strong></li>
+            <li><span class="cv-info-icon">&#9675;</span> LinkedIn&nbsp;: Jordan Join</li>
+            <li><span class="cv-info-icon">&#9675;</span> Permis B</li>
+          </ul>
+        </div>
+
+        <div class="cv-block">
+          <span class="cv-block-label">Comp&eacute;tences</span>
+          <div class="skill-group" id="sg1">
+            <p class="skill-group-label">Cr&eacute;ation &amp; DA</p>
+            <div class="skill-tags">
+              <span class="skill-tag">Photoshop</span>
+              <span class="skill-tag">Illustrator</span>
+              <span class="skill-tag">InDesign</span>
+              <span class="skill-tag">Canva</span>
+            </div>
+          </div>
+          <div class="skill-group" id="sg2">
+            <p class="skill-group-label">Vid&eacute;o &amp; Motion</p>
+            <div class="skill-tags">
+              <span class="skill-tag">After Effects</span>
+              <span class="skill-tag">Premiere Pro</span>
+              <span class="skill-tag">Capcut</span>
+            </div>
+          </div>
+          <div class="skill-group" id="sg3">
+            <p class="skill-group-label">Web &amp; Dev</p>
+            <div class="skill-tags">
+              <span class="skill-tag">HTML / CSS</span>
+              <span class="skill-tag">WordPress</span>
+              <span class="skill-tag">WooCommerce</span>
+            </div>
+          </div>
+          <div class="skill-group" id="sg4">
+            <p class="skill-group-label">Marketing &amp; Digital</p>
+            <div class="skill-tags">
+              <span class="skill-tag">Strat&eacute;gie RS</span>
+              <span class="skill-tag">Mailing</span>
+              <span class="skill-tag">Meta/Google ADS</span>
+              <span class="skill-tag">SEO</span>
+            </div>
+          </div>
+          <div class="skill-group" id="sg5">
+            <p class="skill-group-label">Divers</p>
+            <div class="skill-tags">
+              <span class="skill-tag">Suite Office</span>
+              <span class="skill-tag">IA g&eacute;n&eacute;ratives</span>
+              <span class="skill-tag">Anglais B2</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-block">
+          <span class="cv-block-label">Int&eacute;r&ecirc;ts</span>
+          <ul class="cv-interests-list">
+            <li>Cr&eacute;ation musicale, compositions &amp; arrangements</li>
+            <li>Veille culturelle &amp; tendances visuelles</li>
+            <li>Cuisine technique</li>
+          </ul>
+        </div>
+
+      </aside>
+
+      <!-- ===== MAIN ===== -->
+      <main class="cv-main">
+
+        <div class="cv-name-block">
+          <h2 class="cv-name">JORDAN JOIN</h2>
+          <p class="cv-titles-text">
+            CR&Eacute;ATION PUBLICITAIRE &mdash; DIRECTION ARTISTIQUE<br>
+            MARKETING &mdash; COMMUNICATION
+          </p>
+        </div>
+
+        <div class="cv-section">
+          <span class="cv-section-label">Exp&eacute;riences Professionnelles</span>
+
+          <div class="exp-item" onclick="toggleExp(this)">
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <p class="exp-job">Responsable Marketing &amp; Communication</p>
+                <p class="exp-company">Laboratoire Labrha</p>
+              </div>
+              <div>
+                <p class="exp-date">Mars 2024 &mdash; Aujourd&rsquo;hui</p>
+              </div>
+              <div class="exp-toggle">+</div>
+            </div>
+            <div class="exp-body">
+              <ul>
+                <li>Gestion du marketing et de la communication &mdash; RS, ADS, Print, Event, Mailing</li>
+                <li>Direction artistique d&rsquo;une nouvelle gamme de produits : packagings de dispositifs m&eacute;dicaux, notices, cartes d&rsquo;implantation</li>
+                <li>Gestion du e-commerce Labrha &amp; Synapsya via WooCommerce &amp; Stripe</li>
+                <li>D&eacute;veloppement web (Wordpress / OVH / HTML), refonte compl&egrave;te de labrha.fr</li>
+                <li>Gestion des partenaires m&eacute;dias : magazines sant&eacute;, reportages, publicit&eacute;s TV</li>
+                <li>R&eacute;daction et optimisation d&rsquo;articles orient&eacute;s rhumatologie</li>
+                <li>Management d&rsquo;&eacute;quipe et tutorat d&rsquo;alternants</li>
+              </ul>
+              <span class="exp-chips-label">Comp&eacute;tences mobilis&eacute;es</span>
+              <div class="exp-skills">
+                <span class="exp-skill-tag">Direction Artistique</span>
+                <span class="exp-skill-tag">Strat&eacute;gie RS</span>
+                <span class="exp-skill-tag">Meta / Google ADS</span>
+                <span class="exp-skill-tag">SEO</span>
+                <span class="exp-skill-tag">Mailing</span>
+                <span class="exp-skill-tag">WordPress</span>
+                <span class="exp-skill-tag">WooCommerce</span>
+                <span class="exp-skill-tag">HTML / CSS</span>
+                <span class="exp-skill-tag">InDesign</span>
+                <span class="exp-skill-tag">Illustrator</span>
+                <span class="exp-skill-tag">Management</span>
+              </div>
+              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <div class="exp-projects">
+                <a href="projet-tenofort.html" class="exp-proj-tag">Tenofort</a>
+                <a href="projet-pandora.html" class="exp-proj-tag">Pandora</a>
+                <a href="projet-labrha-da.html" class="exp-proj-tag">Labrha Print</a>
+                <a href="projet-labrha-web.html" class="exp-proj-tag">Labrha.fr</a>
+                <a href="projet-labrha-social.html" class="exp-proj-tag">Labrha RS</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-item" onclick="toggleExp(this)">
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <p class="exp-job">Charg&eacute; de contenus &amp; Cr&eacute;ation</p>
+                <p class="exp-company">Graille</p>
+              </div>
+              <div><p class="exp-date">D&eacute;c. 2022 &mdash; Jan. 2023</p></div>
+              <div class="exp-toggle">+</div>
+            </div>
+            <div class="exp-body">
+              <p>R&eacute;flexion et cr&eacute;ation de supports de communication, community management, contenus web et print, photographie culinaire, UX Design pour distributeur automatique, organisation d&rsquo;&eacute;v&eacute;nements, et cr&eacute;ation d&rsquo;une marque capsule textile &laquo;&nbsp;Graille&nbsp;&raquo;.</p>
+              <span class="exp-chips-label">Comp&eacute;tences mobilis&eacute;es</span>
+              <div class="exp-skills">
+                <span class="exp-skill-tag">Community Management</span>
+                <span class="exp-skill-tag">Photoshop</span>
+                <span class="exp-skill-tag">Illustrator</span>
+                <span class="exp-skill-tag">Canva</span>
+                <span class="exp-skill-tag">Photographie</span>
+                <span class="exp-skill-tag">UX Design</span>
+                <span class="exp-skill-tag">Brand Identity</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-item" onclick="toggleExp(this)">
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <p class="exp-job">Community Manager &amp; Responsable DA</p>
+                <p class="exp-company">Kronos &middot; DJMAG</p>
+              </div>
+              <div><p class="exp-date">2022</p></div>
+              <div class="exp-toggle">+</div>
+            </div>
+            <div class="exp-body">
+              <p>Gestion des r&eacute;seaux sociaux de DJMAG, agence couvrant de grands artistes &amp; festivals. R&eacute;alisation de visuels web et print, d&eacute;ploiement de la nouvelle direction artistique sur les RS, web &amp; Magazine. Mise en place de nouveaux outils et cr&eacute;ation de formations pour l&rsquo;&eacute;quipe interne.</p>
+              <span class="exp-chips-label">Comp&eacute;tences mobilis&eacute;es</span>
+              <div class="exp-skills">
+                <span class="exp-skill-tag">Direction Artistique</span>
+                <span class="exp-skill-tag">Community Management</span>
+                <span class="exp-skill-tag">Strat&eacute;gie RS</span>
+                <span class="exp-skill-tag">Illustrator</span>
+                <span class="exp-skill-tag">Photoshop</span>
+                <span class="exp-skill-tag">Premiere Pro</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-item" onclick="toggleExp(this)">
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <p class="exp-job">Chef de projet</p>
+                <p class="exp-company">Lab Agency</p>
+              </div>
+              <div><p class="exp-date">2021 &mdash; 2022</p></div>
+              <div class="exp-toggle">+</div>
+            </div>
+            <div class="exp-body">
+              <p>Acteur 360 en agence de publicit&eacute; : graphisme, DA, storyboards, campagnes pour Action Contre la Faim, Merck, M&eacute;tropole de Metz. Community management politique, cr&eacute;ation d&rsquo;image de marque food.</p>
+              <span class="exp-chips-label">Comp&eacute;tences mobilis&eacute;es</span>
+              <div class="exp-skills">
+                <span class="exp-skill-tag">Direction Artistique</span>
+                <span class="exp-skill-tag">Graphisme</span>
+                <span class="exp-skill-tag">InDesign</span>
+                <span class="exp-skill-tag">Illustrator</span>
+                <span class="exp-skill-tag">Campagnes publicitaires</span>
+                <span class="exp-skill-tag">Community Management</span>
+                <span class="exp-skill-tag">Brand Identity</span>
+              </div>
+              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <div class="exp-projects">
+                <a href="projet-metz.html" class="exp-proj-tag">Play With Metz</a>
+                <a href="projet-sauvagesses.html" class="exp-proj-tag">Les Sauvagesses</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-item" onclick="toggleExp(this)">
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <p class="exp-job">Digital Marketer &mdash; Charg&eacute; de communication</p>
+                <p class="exp-company">F3DF</p>
+              </div>
+              <div><p class="exp-date">F&eacute;v. 2021 &mdash; Juil. 2021</p></div>
+              <div class="exp-toggle">+</div>
+            </div>
+            <div class="exp-body">
+              <p>Community management, tournage d&rsquo;&eacute;missions et reportages, r&eacute;alisation d&rsquo;interviews, montage vid&eacute;o, r&eacute;daction d&rsquo;articles, gestion WordPress, newsletters, gestion d&rsquo;&eacute;v&eacute;nements en ligne.</p>
+              <span class="exp-chips-label">Comp&eacute;tences mobilis&eacute;es</span>
+              <div class="exp-skills">
+                <span class="exp-skill-tag">Community Management</span>
+                <span class="exp-skill-tag">Premiere Pro</span>
+                <span class="exp-skill-tag">After Effects</span>
+                <span class="exp-skill-tag">WordPress</span>
+                <span class="exp-skill-tag">Mailing</span>
+                <span class="exp-skill-tag">R&eacute;daction</span>
+              </div>
+              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <div class="exp-projects">
+                <a href="projet-f3df.html" class="exp-proj-tag">F3DF RS</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-item" onclick="toggleExp(this)">
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <p class="exp-job">Projets Freelance</p>
+                <p class="exp-company">Ind&eacute;pendant</p>
+              </div>
+              <div><p class="exp-date">2021 &mdash; 2024</p></div>
+              <div class="exp-toggle">+</div>
+            </div>
+            <div class="exp-body">
+              <p>Missions de direction artistique, identit&eacute; visuelle, community management et communication digitale pour des associations, startups et acteurs de l&rsquo;&eacute;v&eacute;nementiel.</p>
+              <span class="exp-chips-label">Comp&eacute;tences mobilis&eacute;es</span>
+              <div class="exp-skills">
+                <span class="exp-skill-tag">Direction Artistique</span>
+                <span class="exp-skill-tag">Brand Identity</span>
+                <span class="exp-skill-tag">Community Management</span>
+                <span class="exp-skill-tag">Print</span>
+                <span class="exp-skill-tag">Illustrator</span>
+                <span class="exp-skill-tag">Photoshop</span>
+              </div>
+              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <div class="exp-projects">
+                <a href="projet-ames-soeur.html" class="exp-proj-tag">&Acirc;mes S&oelig;urs</a>
+                <a href="projet-festia-jeu.html" class="exp-proj-tag">Festia Jeu</a>
+                <a href="projet-oser.html" class="exp-proj-tag">Oser</a>
+                <a href="projet-la-scene.html" class="exp-proj-tag">La Sc&egrave;ne</a>
+                <a href="projet-vasculyon.html" class="exp-proj-tag">VascuLyon</a>
+                <a href="projet-levelup.html" class="exp-proj-tag">LevelUp</a>
+                <a href="projet-festia-id.html" class="exp-proj-tag">Festia ID</a>
+                <a href="projet-lerelais.html" class="exp-proj-tag">Le Relais</a>
+                <a href="projet-onfaitdesbulles.html" class="exp-proj-tag">On Fait des Bulles</a>
+                <a href="projet-festia-social.html" class="exp-proj-tag">Festia RS</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="cv-section">
+          <span class="cv-section-label">Formations</span>
+
+          <div class="edu-item">
+            <p class="edu-school">Sup de Pub &mdash; INSEEC Lyon</p>
+            <p class="edu-degree">Master Direction Artistique &mdash; Cr&eacute;ation publicitaire</p>
+            <p class="edu-years">2021 &mdash; Septembre 2023</p>
+            <p class="edu-note">Finaliste de la grande comp&eacute;tition nationale SUP DE PUB pour la campagne de l&rsquo;Institut Fran&ccedil;ais de Don du Sang (EFS).</p>
+            <span class="exp-chips-label" style="margin-top:0.9rem;">Projets li&eacute;s</span>
+            <div class="exp-projects" style="margin-top:0.2rem;">
+              <a href="projet-croquine.html" class="exp-proj-tag popped">Croquine</a>
+              <a href="projet-vogalib.html" class="exp-proj-tag popped">Vogalib</a>
+              <a href="projet-efs.html" class="exp-proj-tag popped">EFS</a>
+            </div>
+          </div>
+
+          <div class="edu-item">
+            <p class="edu-school">INSEEC Bordeaux</p>
+            <p class="edu-degree">Bachelor 3 Marketing, Communication &amp; &Eacute;v&eacute;nementiel</p>
+            <p class="edu-years">2020 &mdash; 2021</p>
+            <p class="edu-note">Membre du BDE &mdash; Responsable du p&ocirc;le communication et events.</p>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+  <div class="grain"></div>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('follower');
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!hasHover) {
+      cursor.style.display = 'none'; follower.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    } else {
+      let mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove', e => {
+        mx=e.clientX; my=e.clientY;
+        cursor.style.left=mx-6+'px'; cursor.style.top=my-6+'px';
+      });
+      function af(){ fx+=(mx-fx)*0.18; fy+=(my-fy)*0.18; follower.style.left=fx-18+'px'; follower.style.top=fy-18+'px'; requestAnimationFrame(af); }
+      af();
+    }
+
+    // Scroll reveal
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach((e,i) => { if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'), i*80); });
+    }, {threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(r => revealObs.observe(r));
+
+    // Highlighter effect on context phrases
+    const hlPara = document.querySelector('.cv-block-text');
+    if (hlPara) {
+      const hlObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const spans = entry.target.querySelectorAll('.cv-hl');
+            spans.forEach((span, i) => setTimeout(() => span.classList.add('lit'), 300 + i * 480));
+            hlObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      hlObs.observe(hlPara);
+    }
+
+    // Skill tags pop-in on scroll
+    const skillObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          const tags = entry.target.querySelectorAll('.skill-tag');
+          tags.forEach((t,i) => setTimeout(()=>t.classList.add('popped'), i*60));
+          skillObs.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.3});
+    document.querySelectorAll('.skill-group').forEach(g => skillObs.observe(g));
+
+    // Toggle experience
+    function toggleExp(el) {
+      const wasOpen = el.classList.contains('open');
+      document.querySelectorAll('.exp-item.open').forEach(e => {
+        e.classList.remove('open');
+        e.querySelectorAll('.exp-skill-tag, .exp-proj-tag').forEach(t => t.classList.remove('popped'));
+      });
+      if (!wasOpen) {
+        el.classList.add('open');
+        const skills = el.querySelectorAll('.exp-skill-tag');
+        skills.forEach((t, i) => setTimeout(() => t.classList.add('popped'), 280 + i * 55));
+        const projs = el.querySelectorAll('.exp-proj-tag');
+        const projDelay = 280 + skills.length * 55 + 100;
+        projs.forEach((t, i) => setTimeout(() => t.classList.add('popped'), projDelay + i * 45));
+      }
+    }
+
+    // Mobile menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
+</body>
+</html>

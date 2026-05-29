@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --m-soleil: #F0A800;
+      --m-nuit:   #1A2240;
+      --m-corail: #E05030;
+      --m-creme:  #FEF7E8;
+      --surface:  #f7f5f0;
+      --text:     #1a1a1a;
+      --muted:    #666666;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-serif:   'Playfair Display', serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; cursor: none; }
+
+    .cursor { width: 10px; height: 10px; background: var(--m-soleil); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
+    .cursor-follower { width: 32px; height: 32px; border: 1px solid rgba(240,168,0,0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media(max-width:900px){ .cursor,.cursor-follower{display:none!important;} body{cursor:auto!important;} *{cursor:auto!important;} }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg,#D66A77,#97BAED,#D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--m-soleil); }
+    @media(max-width:900px){ nav{padding:1.2rem 2rem;} .nav-links{display:none;} .burger{display:flex;} }
+
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:99999;position:fixed;top:1.3rem;right:1.5rem;}
+    .burger span{display:block;width:24px;height:1.5px;background:var(--text);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;inset:0;background:#fff;z-index:99998;display:flex;flex-direction:column;transition:opacity 0.25s,visibility 0.25s;}
+    .mobile-menu.open{visibility:visible;opacity:1;}
+    .mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:2rem;color:#000;cursor:pointer;}
+    .mobile-menu a{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;letter-spacing:0.1em;color:#000;text-decoration:none;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:first-of-type{border-top:1px solid rgba(0,0,0,0.08);}
+    .mobile-menu a:hover{background:#f5f5f5;}
+
+    /* HERO */
+    .mz-hero { position: relative; min-height: 72vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 4rem 4.5rem; overflow: hidden; background: var(--m-nuit); }
+    .mz-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; opacity: 0.28; }
+    .mz-hero-gradient { position: absolute; inset: 0; background: linear-gradient(to top, #1A2240 45%, rgba(26,34,64,0.3)); }
+    .mz-hero-back { display: inline-flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; transition: color 0.2s; position: relative; z-index: 2; width: fit-content; }
+    .mz-hero-back:hover { color: rgba(255,255,255,0.8); }
+    .mz-hero-badge { display: inline-block; font-size: 0.65rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--m-soleil); border: 1px solid rgba(240,168,0,0.35); padding: 0.28rem 0.85rem; border-radius: 2rem; margin-bottom: 1.2rem; position: relative; z-index: 2; }
+    .mz-hero-title { font-family: var(--font-display); font-size: clamp(4rem,9vw,9rem); line-height: 0.88; color: #fff; margin-bottom: 1.2rem; position: relative; z-index: 2; }
+    .mz-hero-title span { color: var(--m-soleil); }
+    .mz-hero-sub { font-family: var(--font-serif); font-style: italic; font-size: 1rem; color: rgba(255,255,255,0.5); position: relative; z-index: 2; }
+    @media(max-width:900px){ .mz-hero{padding:7rem 2rem 3.5rem;} }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .dos-progress { position: fixed; right: 1.6rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.75rem; z-index: 500; }
+    .dos-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.15); transition: all 0.3s; text-decoration: none; }
+    .dos-dot.active { background: var(--m-soleil); transform: scale(1.65); }
+    @media(max-width:1100px){ .dos-progress{display:none;} }
+
+    .dos-label { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--m-corail); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; }
+    .dos-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.07); }
+    .dos-section { margin-bottom: 6rem; scroll-margin-top: 6rem; }
+
+    .mz-content { padding: 5.5rem 4rem 7rem; max-width: 1100px; margin: 0 auto; position: relative; }
+    @media(max-width:900px){ .mz-content{padding:3.5rem 2rem 5rem;} }
+
+    /* BRIEF */
+    .brief-wrap { display: flex; gap: 2rem; align-items: flex-start; }
+    .brief-paper { flex: 1; background: #fdf9f4; border: 1px solid rgba(0,0,0,0.07); border-radius: 0.6rem; padding: 2.8rem; position: relative; overflow: hidden; box-shadow: 0 3px 24px rgba(0,0,0,0.06); }
+    .brief-paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(transparent,transparent 27px,rgba(0,0,0,0.026) 27px,rgba(0,0,0,0.026) 28px); }
+    .brief-paper-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid rgba(0,0,0,0.05); }
+    .bph-badge { display: inline-block; font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.12em; color: var(--m-nuit); border: 2px solid var(--m-nuit); padding: 0.3rem 0.9rem; border-radius: 3px; opacity: 0.8; margin-bottom: 0.4rem; }
+    .bph-sub { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
+    .bph-ref { font-family: monospace; font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 1.6; }
+    .brief-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; margin-bottom: 1rem; }
+    .bf { padding-bottom: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.13); }
+    .bf-full { grid-column: 1/-1; }
+    .bf-label { display: block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .bf-val { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .brief-validated { position: absolute; bottom: 2rem; right: 2rem; width: 78px; height: 78px; opacity: 0.5; transform: rotate(-8deg); }
+    .postit { background: #fef9c3; padding: 1.4rem 1.6rem; border-radius: 2px; box-shadow: 2px 5px 18px rgba(0,0,0,0.13); font-family: 'Caveat', cursive; font-size: 1.1rem; line-height: 1.6; color: #5c4400; max-width: 210px; flex-shrink: 0; position: relative; margin-top: 1.5rem; transform: rotate(-2.5deg); }
+    .postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 26px; background: rgba(0,0,0,0.05); border-radius: 2px 2px 0 0; }
+    .postit-arrow { display: block; font-size: 0.9rem; margin-bottom: 0.3rem; opacity: 0.4; }
+    @media(max-width:900px){ .brief-wrap{flex-direction:column;} .brief-fields{grid-template-columns:1fr;} }
+
+    /* TERRITOIRE */
+    .ville-mosaic { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 280px 280px; gap: 1rem; border-radius: 0.8rem; overflow: hidden; }
+    .ville-img { overflow: hidden; }
+    .ville-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+    .ville-img:hover img { transform: scale(1.04); }
+    .ville-img:first-child { grid-row: 1 / 3; }
+    @media(max-width:900px){ .ville-mosaic{grid-template-columns:1fr;grid-template-rows:auto;} .ville-img:first-child{grid-row:auto;} .ville-img{height:220px;} }
+
+    /* CONCEPT */
+    .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; }
+    .concept-tag { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--m-corail); border: 1px solid rgba(224,80,48,0.3); padding: 0.28rem 0.85rem; border-radius: 2rem; margin-bottom: 1.4rem; }
+    .concept-big { font-family: var(--font-display); font-size: clamp(2rem,3.8vw,3.2rem); line-height: 1.02; color: var(--m-nuit); margin-bottom: 1.4rem; }
+    .concept-text p { font-size: 0.93rem; color: var(--muted); line-height: 1.9; margin-bottom: 0.9rem; }
+    .concept-text em { color: var(--text); font-style: italic; }
+    .moodboard-frame { border-radius: 0.8rem; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.14); }
+    .moodboard-frame img { width: 100%; display: block; }
+    @media(max-width:900px){ .concept-grid{grid-template-columns:1fr;gap:2rem;} }
+
+    /* GRAOUILLI */
+    .graou-section { background: var(--m-nuit); border-radius: 0.8rem; padding: 3.5rem; }
+    .graou-eyebrow { font-size: 0.65rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--m-soleil); margin-bottom: 0.8rem; }
+    .graou-title { font-family: var(--font-display); font-size: clamp(2.2rem,4.5vw,4rem); color: #fff; line-height: 0.95; margin-bottom: 0.9rem; }
+    .graou-intro { font-size: 0.88rem; color: rgba(255,255,255,0.48); line-height: 1.9; max-width: 100%; margin-bottom: 2.5rem; }
+    .graou-inner { display: grid; grid-template-columns: 280px 1fr; gap: 3rem; align-items: start; }
+    .graou-img-col { display: flex; flex-direction: column; gap: 1rem; }
+    .graou-img-col img { width: 100%; border-radius: 0.5rem; display: block; object-fit: cover; box-shadow: 0 8px 32px rgba(0,0,0,0.45); }
+    .graou-img-col img:last-child { opacity: 0.8; }
+    @media(max-width:900px){ .graou-section{padding:2.2rem;} .graou-inner{grid-template-columns:1fr;} .graou-img-col{flex-direction:row;} .graou-img-col img{flex:1;max-height:180px;object-fit:cover;} }
+
+    /* QUIZ */
+    .quiz-wrap { max-width: 620px; }
+    .quiz-progress { display: flex; gap: 6px; margin-bottom: 2rem; }
+    .quiz-prog-dot { height: 3px; flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; transition: background 0.4s; }
+    .quiz-prog-dot.done { background: var(--m-soleil); }
+    .quiz-question { color: #fff; font-size: 1rem; line-height: 1.65; margin-bottom: 1.4rem; min-height: 3.2rem; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .quiz-opt { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.11); border-radius: 0.5rem; padding: 0.9rem 1.1rem; color: rgba(255,255,255,0.75); font-size: 0.84rem; cursor: pointer; text-align: left; transition: all 0.2s; font-family: var(--font-body); font-weight: 300; line-height: 1.4; }
+    .quiz-opt:hover:not(:disabled) { background: rgba(240,168,0,0.12); border-color: rgba(240,168,0,0.4); color: #fff; }
+    .quiz-opt.correct { background: rgba(40,100,64,0.5); border-color: #5ba87c; color: #fff; }
+    .quiz-opt.wrong { background: rgba(200,55,40,0.35); border-color: #c84030; color: #fff; }
+    .quiz-opt:disabled { cursor: default; }
+    .quiz-feedback { min-height: 2.5rem; font-size: 0.84rem; line-height: 1.65; color: rgba(255,255,255,0.48); margin-bottom: 1.5rem; }
+    .quiz-feedback.ok { color: #7dd4a8; }
+    .quiz-feedback.ko { color: #f08878; }
+    .quiz-btn { background: var(--m-soleil); color: var(--m-nuit); border: none; font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.1em; padding: 0.7rem 2.2rem; border-radius: 0.4rem; cursor: pointer; transition: opacity 0.2s; }
+    .quiz-btn:hover { opacity: 0.85; }
+    .quiz-btn:disabled { opacity: 0.28; cursor: default; }
+    .quiz-result { text-align: center; padding: 2rem 0 0.5rem; }
+    .quiz-score { font-family: var(--font-display); font-size: 5rem; color: var(--m-soleil); line-height: 1; }
+    .quiz-score-label { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 1.4rem; }
+    .quiz-result-text { font-size: 0.92rem; color: rgba(255,255,255,0.55); line-height: 1.85; max-width: 380px; margin: 0 auto 1.6rem; }
+    .quiz-retry { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.55); font-family: var(--font-body); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.55rem 1.4rem; border-radius: 2rem; cursor: pointer; transition: all 0.2s; }
+    .quiz-retry:hover { border-color: var(--m-soleil); color: var(--m-soleil); }
+    @media(max-width:600px){ .quiz-options{grid-template-columns:1fr;} }
+
+    /* RÉALISATIONS */
+    .mockup-hero { border-radius: 0.8rem; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.14); margin-bottom: 1.4rem; }
+    .mockup-hero img { width: 100%; display: block; }
+    .affiches-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .affiche-frame { border-radius: 0.6rem; overflow: hidden; box-shadow: 0 6px 28px rgba(0,0,0,0.12); position: relative; }
+    .affiche-frame img { width: 100%; display: block; }
+    .affiche-tag { position: absolute; bottom: 0.8rem; left: 0.8rem; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; background: rgba(0,0,0,0.52); color: #fff; padding: 0.22rem 0.65rem; border-radius: 2rem; backdrop-filter: blur(4px); }
+    @media(max-width:700px){ .affiches-duo{grid-template-columns:1fr;} }
+
+    footer { background: #fff; border-top: 1px solid #eee; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #999; }
+    @media(max-width:900px){ footer{padding:1.5rem 2rem;} }
+  </style>
+  <title>Metz Estival &mdash; Campagne &eacute;v&eacute;nementielle &mdash; On fait des bulles&nbsp;?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <header class="mz-hero">
+    <img class="mz-hero-bg" src="assets/metzville1.png" alt="" aria-hidden="true" />
+    <div class="mz-hero-gradient"></div>
+    <a href="projets.html" class="mz-hero-back">&larr; Retour aux projets</a>
+    <span class="mz-hero-badge">Direction Artistique &middot; Campagne &eacute;v&eacute;nementielle &middot; Communication urbaine</span>
+    <h1 class="mz-hero-title">Metz<br><span>Estival</span></h1>
+    <p class="mz-hero-sub">Campagne de communication &mdash; Festival d&rsquo;&eacute;t&eacute;</p>
+  </header>
+
+  <main class="mz-content">
+
+    <div class="dos-progress">
+      <a href="#s-brief"      class="dos-dot active" title="Brief"></a>
+      <a href="#s-territoire" class="dos-dot" title="Territoire"></a>
+      <a href="#s-concept"    class="dos-dot" title="Parti pris"></a>
+      <a href="#s-graouilli"  class="dos-dot" title="Le Graouilli"></a>
+      <a href="#s-real"       class="dos-dot" title="R&eacute;alisations"></a>
+    </div>
+
+    <!-- 01 BRIEF -->
+    <section class="dos-section" id="s-brief">
+      <div class="dos-label reveal">01 &mdash; Le brief</div>
+      <div class="brief-wrap">
+        <div class="brief-paper reveal">
+          <div class="brief-paper-header">
+            <div>
+              <div class="bph-badge">Brief Cr&eacute;atif</div>
+              <div class="bph-sub">Metz Estival &middot; Communication &eacute;v&eacute;nementielle</div>
+            </div>
+            <div class="bph-ref">R&eacute;f.&nbsp;METZ&#8209;2024&#8209;001</div>
+          </div>
+          <div class="brief-fields">
+            <div class="bf"><span class="bf-label">Client</span><span class="bf-val">Ville de Metz</span></div>
+            <div class="bf"><span class="bf-label">Cat&eacute;gorie</span><span class="bf-val">Communication &eacute;v&eacute;nementielle</span></div>
+            <div class="bf"><span class="bf-label">P&eacute;riode</span><span class="bf-val">&Eacute;t&eacute; 2024</span></div>
+            <div class="bf"><span class="bf-label">Formats</span><span class="bf-val">Affichage urbain &middot; Street art &eacute;ph&eacute;m&egrave;re</span></div>
+            <div class="bf bf-full"><span class="bf-label">Cibles</span><span class="bf-val">Habitants de Metz &amp; visiteurs &mdash; cr&eacute;er un sentiment de f&ecirc;te, de fierté locale et d&rsquo;envie de participer aux &eacute;v&eacute;nements de l&rsquo;&eacute;t&eacute;.</span></div>
+            <div class="bf bf-full"><span class="bf-label">Objectif</span><span class="bf-val">Concevoir une identit&eacute; visuelle estivale forte, ancrée dans l&rsquo;imaginaire messin, festive et distinctive. Transformer la ville elle-m&ecirc;me en terrain de jeu le temps de l&rsquo;&eacute;t&eacute;.</span></div>
+          </div>
+          <div class="brief-validated">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="36" stroke="#1A2240" stroke-width="3" opacity="0.8"/>
+              <circle cx="40" cy="40" r="31" stroke="#1A2240" stroke-width="1" opacity="0.5"/>
+              <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#1A2240" opacity="0.9">VALID&Eacute;</text>
+              <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#1A2240" opacity="0.7">METZ 2024</text>
+            </svg>
+          </div>
+        </div>
+        <div class="postit reveal" style="transform:rotate(2.5deg);">
+          <span class="postit-arrow">&#x2191;</span>
+          La ville<br>comme sc&egrave;ne,<br>les rues<br>comme affiche
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 TERRITOIRE -->
+    <section class="dos-section" id="s-territoire">
+      <div class="dos-label reveal">02 &mdash; Le territoire</div>
+      <p class="reveal" style="font-size:0.92rem;color:var(--muted);line-height:1.85;max-width:580px;margin-bottom:2.5rem;">Metz, ville d&rsquo;art et d&rsquo;histoire aux bords de la Moselle &mdash; architecture dor&eacute;e, cath&eacute;drale de lumi&egrave;re, espaces verts g&eacute;n&eacute;reux. Un cadre qui n&rsquo;a pas besoin d&rsquo;&ecirc;tre inventé &mdash; juste r&eacute;v&eacute;l&eacute;.</p>
+      <div class="ville-mosaic reveal">
+        <div class="ville-img"><img src="assets/metzville1.png" alt="Metz" loading="lazy" /></div>
+        <div class="ville-img"><img src="assets/metzville2.png" alt="Metz" loading="lazy" /></div>
+        <div class="ville-img"><img src="assets/metzville3.png" alt="Metz" loading="lazy" /></div>
+      </div>
+    </section>
+
+    <!-- 03 PARTI PRIS -->
+    <section class="dos-section" id="s-concept">
+      <div class="dos-label reveal">03 &mdash; Le parti pris</div>
+      <div class="concept-grid reveal">
+        <div class="concept-text">
+          <span class="concept-tag">&#x2728; Concept cr&eacute;atif</span>
+          <p class="concept-big">La ville<br>comme terrain<br>de jeu.</p>
+          <p>L&rsquo;id&eacute;e centrale&nbsp;: ne pas seulement communiquer <em>sur</em> les &eacute;v&eacute;nements, mais <em>int&eacute;grer la communication dans l&rsquo;espace urbain lui-m&ecirc;me</em>. Le street art &eacute;ph&eacute;m&egrave;re transforme chaque mur, chaque sol, chaque coin de rue en invitation &agrave; la f&ecirc;te.</p>
+          <p>Des interventions visuelles dispos&eacute;es aux carrefours strat&eacute;giques de la ville cr&eacute;ent un parcours de d&eacute;couverte qui surprend et donne envie de d&eacute;ambuler. Metz devient elle-m&ecirc;me le m&eacute;dia.</p>
+        </div>
+        <div class="moodboard-frame">
+          <img src="assets/metzmood.png" alt="Moodboard street art &eacute;ph&eacute;m&egrave;re Metz Estival" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 LE GRAOUILLI -->
+    <section class="dos-section" id="s-graouilli">
+      <div class="dos-label reveal">04 &mdash; La l&eacute;gende</div>
+      <div class="graou-section reveal">
+        <div class="graou-eyebrow">L&eacute;gende &middot; Culture locale &middot; Quiz interactif</div>
+        <h3 class="graou-title">Tu connais<br>le Graouilli&nbsp;?</h3>
+        <p class="graou-intro">Serpent monstrueux sorti des ruines de l&rsquo;Amphith&eacute;&acirc;tre romain, le Graouilli est la cr&eacute;ature fondatrice du folklore messin. Sa l&eacute;gende traverse les si&egrave;cles &mdash; mais la conna&icirc;s-tu vraiment&nbsp;?</p>
+        <div class="graou-inner">
+          <div class="graou-img-col">
+            <img src="assets/metzg.png" alt="Le Graouilli, monstre l&eacute;gendaire de Metz" loading="lazy" />
+            <img src="assets/metzg2.jpg" alt="Le Graouilli" loading="lazy" />
+          </div>
+          <div class="quiz-wrap" id="quizWrap">
+            <div class="quiz-progress">
+              <div class="quiz-prog-dot" id="pd0"></div>
+              <div class="quiz-prog-dot" id="pd1"></div>
+              <div class="quiz-prog-dot" id="pd2"></div>
+              <div class="quiz-prog-dot" id="pd3"></div>
+            </div>
+            <div id="quizQuestion" class="quiz-question"></div>
+            <div id="quizOptions"  class="quiz-options"></div>
+            <div id="quizFeedback" class="quiz-feedback"></div>
+            <button class="quiz-btn" id="quizNext" disabled>Suivant &rarr;</button>
+            <div id="quizResult" class="quiz-result" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 RÉALISATIONS -->
+    <section class="dos-section" id="s-real">
+      <div class="dos-label reveal">05 &mdash; R&eacute;alisations</div>
+      <div class="mockup-hero reveal">
+        <img src="assets/metzm.png" alt="Mockup Metz Estival" loading="lazy" />
+      </div>
+      <div class="affiches-duo reveal">
+        <div class="affiche-frame">
+          <img src="assets/metza1.png" alt="Affiche Metz Estival 1" loading="lazy" />
+          <span class="affiche-tag">Affiche 01</span>
+        </div>
+        <div class="affiche-frame">
+          <img src="assets/Metza2.png" alt="Affiche Metz Estival 2" loading="lazy" />
+          <span class="affiche-tag">Affiche 02</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    // CURSOR
+    (function(){
+      var c=document.getElementById('cursor'),f=document.getElementById('follower');
+      if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){c.style.display='none';f.style.display='none';return;}
+      var mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx-5+'px';c.style.top=my-5+'px';});
+      (function tick(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;f.style.left=fx-16+'px';f.style.top=fy-16+'px';requestAnimationFrame(tick);})();
+    })();
+
+    // REVEAL
+    document.querySelectorAll('.reveal').forEach(function(r,i){
+      new IntersectionObserver(function(e){
+        if(e[0].isIntersecting) setTimeout(function(){r.classList.add('visible');}, i*55);
+      },{threshold:0.06}).observe(r);
+    });
+
+    // MOBILE MENU
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu');
+      m.classList.toggle('open');
+      document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+    }
+
+    // DOT NAV
+    (function(){
+      var ids=['s-brief','s-territoire','s-concept','s-graouilli','s-real'];
+      var dots=Array.from(document.querySelectorAll('.dos-dot'));
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting) return;
+          var idx=ids.indexOf(e.target.id);
+          if(idx>=0) dots.forEach(function(d,i){d.classList.toggle('active',i===idx);});
+        });
+      },{threshold:0.3,rootMargin:'-10% 0px -50% 0px'});
+      ids.forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+    })();
+
+    // QUIZ
+    (function(){
+      var questions=[
+        {
+          q:"Qu&rsquo;est-ce que le Graouilli&nbsp;?",
+          opts:["Un g&eacute;ant de pierre","Un serpent-dragon monstrueux","Une sorci&egrave;re ma&eacute;fique","Un loup-garou des for&ecirc;ts messines"],
+          correct:1,
+          ok:"Exact&nbsp;! Le Graouilli est un redoutable serpent ailé qui terrorisait les habitants depuis les ruines de l&rsquo;Amphithéâtre romain.",
+          ko:"Pas tout à fait &mdash; le Graouilli est un serpent-dragon monstrueux, figure centrale du folklore messin."
+        },
+        {
+          q:"O&ugrave; se cachait le Graouilli avant d&rsquo;&ecirc;tre captur&eacute;&nbsp;?",
+          opts:["Sous la cath&eacute;drale Saint-&Eacute;tienne","Dans les caves de la citadelle","Dans les ruines de l&rsquo;amphith&eacute;&acirc;tre romain","Sous le pont des Morts"],
+          correct:2,
+          ok:"Bravo&nbsp;! Les ruines de l&rsquo;amphithéâtre romain étaient son repaire, d&rsquo;où il sortait pour terroriser la ville.",
+          ko:"Non &mdash; il se terrait dans les ruines de l&rsquo;amphith&eacute;&acirc;tre romain, symbole de la cit&eacute; antique."
+        },
+        {
+          q:"Qui aurait dompt&eacute; le Graouilli selon la l&eacute;gende&nbsp;?",
+          opts:["Charlemagne","Attila le Hun","Jeanne d&rsquo;Arc","Saint Cl&eacute;ment, premier &eacute;v&ecirc;que de Metz"],
+          correct:3,
+          ok:"Parfait&nbsp;! Saint Clément aurait neutralisé la créature grâce à son étole, la guidant jusqu&rsquo;à sa perte.",
+          ko:"C&rsquo;est Saint Cl&eacute;ment, premier &eacute;v&ecirc;que de Metz, qui aurait vaincu la b&ecirc;te avec son &eacute;tole sacr&eacute;e."
+        },
+        {
+          q:"Dans quelle rivi&egrave;re le Graouilli fut-il pr&eacute;cipit&eacute;&nbsp;?",
+          opts:["La Moselle","La Seille","Le Rhin","La Nied"],
+          correct:1,
+          ok:"Correct&nbsp;! C&rsquo;est dans la Seille que le monstre fut finalement noyé, mettant fin à la terreur.",
+          ko:"C&rsquo;est la Seille, affluent de la Moselle traversant Metz, qui re&ccedil;ut le monstre et mit fin &agrave; ses m&eacute;faits."
+        }
+      ];
+
+      var cur=0, score=0, answered=false;
+
+      function updateProg(){
+        for(var i=0;i<questions.length;i++){
+          var pd=document.getElementById('pd'+i);
+          if(pd) pd.classList.toggle('done', i<cur);
+        }
+      }
+
+      function render(){
+        var q=questions[cur];
+        document.getElementById('quizQuestion').innerHTML=q.q;
+        var opts=document.getElementById('quizOptions');
+        opts.innerHTML='';
+        q.opts.forEach(function(o,i){
+          var btn=document.createElement('button');
+          btn.className='quiz-opt';
+          btn.innerHTML=o;
+          btn.onclick=function(){answer(i);};
+          opts.appendChild(btn);
+        });
+        document.getElementById('quizFeedback').className='quiz-feedback';
+        document.getElementById('quizFeedback').innerHTML='';
+        var nxt=document.getElementById('quizNext');
+        nxt.disabled=true;
+        nxt.style.display='inline-block';
+        nxt.textContent='Suivant →';
+        document.getElementById('quizResult').style.display='none';
+        answered=false;
+        updateProg();
+      }
+
+      function answer(idx){
+        if(answered) return;
+        answered=true;
+        var q=questions[cur];
+        var btns=document.querySelectorAll('.quiz-opt');
+        btns.forEach(function(b,i){
+          b.disabled=true;
+          if(i===q.correct) b.classList.add('correct');
+          else if(i===idx)  b.classList.add('wrong');
+        });
+        var fb=document.getElementById('quizFeedback');
+        if(idx===q.correct){
+          score++;
+          fb.className='quiz-feedback ok';
+          fb.innerHTML='&#x2713;&ensp;'+q.ok;
+        } else {
+          fb.className='quiz-feedback ko';
+          fb.innerHTML='&#x2717;&ensp;'+q.ko;
+        }
+        var nxt=document.getElementById('quizNext');
+        nxt.disabled=false;
+        if(cur===questions.length-1) nxt.textContent='Voir mon score';
+      }
+
+      function next(){
+        if(!answered) return;
+        cur++;
+        if(cur>=questions.length){ showResult(); return; }
+        render();
+      }
+
+      function showResult(){
+        document.getElementById('quizQuestion').innerHTML='';
+        document.getElementById('quizOptions').innerHTML='';
+        document.getElementById('quizFeedback').innerHTML='';
+        document.getElementById('quizNext').style.display='none';
+        var msgs=[
+          'Hm&nbsp;&mdash; il est grand temps de se balader dans Metz&nbsp;!',
+          'Pas mal, tu connais quelques secrets de la cit&eacute;.',
+          'Tr&egrave;s bien&nbsp;! Tu as clairement l&rsquo;&acirc;me d&rsquo;un Messin.',
+          'Parfait&nbsp;! Le Graouilli t&rsquo;a &agrave; l&rsquo;&oelig;il.'
+        ];
+        var r=document.getElementById('quizResult');
+        r.innerHTML='<div class="quiz-score">'+score+'/'+questions.length+'</div>'
+          +'<div class="quiz-score-label">bonne'+(score>1?'s':'')+' r&eacute;ponse'+(score>1?'s':'')+'</div>'
+          +'<p class="quiz-result-text">'+msgs[score]+'</p>'
+          +'<button class="quiz-retry" onclick="window._quizReset()">Rejouer</button>';
+        r.style.display='block';
+        for(var i=0;i<questions.length;i++){
+          var pd=document.getElementById('pd'+i);
+          if(pd) pd.classList.add('done');
+        }
+      }
+
+      document.getElementById('quizNext').addEventListener('click', next);
+
+      window._quizReset=function(){
+        cur=0; score=0; answered=false;
+        render();
+      };
+
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#ffffff;--surface:#f8f8f8;--accent1:#D66A77;--accent2:#97BAED;--accent3:#D66A77;--text:#1a1a2e;--muted:#666676;--font-display:'Bebas Neue',sans-serif;--font-syne:'Syne',sans-serif;--font-body:'DM Sans',sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;overflow-x:hidden;cursor:none; }
+    .cursor{width:12px;height:12px;background:var(--accent2);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+    .cursor-follower{width:36px;height:36px;border:1px solid rgba(214,106,119,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.5rem 4rem;background:linear-gradient(to bottom,rgba(255,255,255,0.97) 0%,rgba(255,255,255,0) 100%);border-bottom:1px solid rgba(0,0,0,0.04);backdrop-filter:blur(12px);}
+    .nav-logo{font-family:var(--font-display);font-size:1.1rem;letter-spacing:.08em;text-decoration:none;background:linear-gradient(120deg,#D66A77,#97BAED,#D66A77);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--accent2);}
+    .grain{position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");opacity:.4;pointer-events:none;z-index:0;}
+    .section-label{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent1);margin-bottom:1rem;}
+    .section-title{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,5rem);line-height:1;margin-bottom:3rem;}
+    .page-content{padding:10rem 4rem 6rem;position:relative;z-index:1;}
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+    footer{padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(0,0,0,0.08);font-size:.8rem;color:var(--muted);position:relative;z-index:1;}
+    footer a{color:var(--muted);text-decoration:none;}
+    footer a:hover{color:var(--accent2);}
+    @media(max-width:900px){nav{padding:1.2rem 2rem;}.nav-links{display:none;}.page-content{padding:8rem 2rem 4rem;}footer{padding:2rem;}}
+
+    /* MOBILE NAV */
+    .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 99999; position: fixed; top: 1.3rem; right: 1.5rem; }
+    .burger span { display: block; width: 24px; height: 1.5px; background: var(--text); transition: transform 0.3s, opacity 0.3s; }
+    .mobile-menu {
+      visibility: hidden;
+      opacity: 0;
+      position: fixed; inset: 0;
+      background: #ffffff;
+      z-index: 99998;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      overflow: hidden;
+    }
+    .mobile-menu.open { visibility: visible; opacity: 1; }
+    body.menu-open .burger { display: none; }
+    .mobile-menu-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: none; border: none;
+      font-size: 2rem; color: #000;
+      cursor: pointer; line-height: 1;
+      padding: 0.5rem;
+    }
+    .mobile-menu a {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+      color: #000;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      transition: background 0.15s, color 0.15s;
+    }
+    .mobile-menu a:first-of-type { border-top: 1px solid rgba(0,0,0,0.08); }
+    .mobile-menu a:hover { background: #f5f5f5; }
+    @media (max-width: 900px) { .burger { display: flex; } .cursor, .cursor-follower { display: none !important; } body { cursor: auto !important; } * { cursor: auto !important; } }
+      .cursor, .cursor-follower { display: none !important; }
+      body { cursor: auto !important; }
+      * { cursor: auto !important; }
+    }
+  </style>
+  <title>Projets — On fait des bulles ?</title>
+  <style>
+    .accordion{display:flex;flex-direction:column;}
+    .accordion-item{border-top:1px solid rgba(255,255,255,.08);}
+    .accordion-item:last-child{border-bottom:1px solid rgba(255,255,255,.08);}
+    .accordion-trigger{width:100%;display:flex;justify-content:space-between;align-items:center;padding:2rem 0;background:none;border:none;color:var(--text);cursor:none;text-align:left;transition:color .2s;}
+    .accordion-trigger:hover{color:var(--accent2);}
+    .accordion-trigger-left{display:flex;align-items:center;gap:1.5rem;}
+    .accordion-num{font-family:var(--font-display);font-size:1.2rem;color:var(--muted);min-width:2.5rem;}
+    .accordion-name{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,3rem);letter-spacing:.03em;transition:color .2s;}
+    .accordion-trigger:hover .accordion-name{color:var(--accent2);}
+    .accordion-arrow{font-size:1.5rem;color:var(--muted);transition:transform .4s ease,color .2s;}
+    .accordion-item.open .accordion-arrow{transform:rotate(45deg);color:var(--accent2);}
+    .accordion-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1);}
+    .accordion-item.open .accordion-body{max-height:3000px;}
+    .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.08);margin-bottom:2.5rem;}
+    .proj-card{background:var(--bg);padding:2rem;display:flex;flex-direction:column;gap:1.2rem;text-decoration:none;color:var(--text);position:relative;overflow:hidden;transition:background .25s;cursor:none;}
+    .proj-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(151,186,237,0.1),transparent);opacity:0;transition:opacity .25s;}
+    .proj-card:hover::before{opacity:1;}
+    .proj-card:hover{background:#0d0c1a;}
+    .proj-card-icon{color:rgba(255,255,255,.35);transition:color .25s;}
+    .proj-card:hover .proj-card-icon{color:var(--accent2);}
+    .proj-card-body{flex:1;}
+    .proj-card-theme{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+    .proj-card-name{font-family:var(--font-display);font-size:1.4rem;letter-spacing:.03em;margin-bottom:.3rem;}
+    .proj-card-client{font-size:.8rem;color:var(--muted);}
+    .proj-card-arrow{color:var(--muted);font-size:1rem;transition:transform .2s,color .2s;align-self:flex-end;}
+    .proj-card:hover .proj-card-arrow{transform:translateX(4px);color:var(--accent2);}
+    @media(max-width:700px){.proj-grid{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+<nav><a href="index.html" class="nav-logo">Jordan Join</a>    <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul></nav>
+
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+  <div class="page-content">
+    <div class="reveal">
+      <p class="section-label">Réalisations</p>
+      <h1 class="section-title">Projets</h1>
+    </div>
+    <div class="accordion reveal">
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggle(this)">
+        <div class="accordion-trigger-left">
+          <span class="accordion-num">01</span>
+          <span class="accordion-name">Direction Artistique & Print</span>
+        </div>
+        <span class="accordion-arrow">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="proj-grid">
+      <a href="projet-tenofort.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="11.5" y1="11.5" x2="20.5" y2="20.5" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Compléments alimentaires · Sport</div>
+          <div class="proj-card-name">Tenofort</div>
+          <div class="proj-card-client">Labrha</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-metz.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="14" width="4" height="10" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="10" width="5" height="14" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="23" y="16" width="3" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="24" x2="28" y2="24" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Tourisme · Collectivité</div>
+          <div class="proj-card-name">Play With Metz</div>
+          <div class="proj-card-client">Eurométropole de Metz</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-croquine.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6 C10 6 8 10 8 14 C8 17 10 18 12 18 L12 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="6" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="6" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 6 C20 6 22 9 22 13 C22 16 20 18 18 18 L18 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Food</div>
+          <div class="proj-card-name">Croquine</div>
+          <div class="proj-card-client">Croquine</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-vogalib.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="7" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="12" x2="16" y2="18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="15" x2="19" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Médicament</div>
+          <div class="proj-card-name">Vogalib</div>
+          <div class="proj-card-client">Vogalib</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-pandora.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="11" x2="16" y2="21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="16" x2="21" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Médical · Rhumatologie</div>
+          <div class="proj-card-name">Pandora Viscosupplément</div>
+          <div class="proj-card-client">Labrha</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-labrha-da.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6 L13 16 L8 24 L24 24 L19 16 L19 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="13" cy="20" r="1.5" fill="currentColor" opacity="0.5"/><circle cx="18" cy="22" r="1" fill="currentColor" opacity="0.4"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Laboratoire · Santé</div>
+          <div class="proj-card-name">Labrha</div>
+          <div class="proj-card-client">Labrha</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-ames-soeur.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="8" width="20" height="16" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="12" x2="26" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="20" x2="26" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="8" x2="10" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="8" x2="16" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="22" y1="8" x2="22" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="20" x2="10" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="20" x2="16" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="22" y1="20" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Cinéma</div>
+          <div class="proj-card-name">Âmes sœur</div>
+          <div class="proj-card-client">Production indépendante</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-graille.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6 C10 6 8 10 8 14 C8 17 10 18 12 18 L12 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="6" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="6" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 6 C20 6 22 9 22 13 C22 16 20 18 18 18 L18 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Food</div>
+          <div class="proj-card-name">Graille</div>
+          <div class="proj-card-client">Graille</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-festia-id.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="9" width="16" height="15" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="24" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="6" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="6" x2="20" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="12" y="16" width="3" height="3" rx="0.5" fill="currentColor" opacity="0.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Événementiel</div>
+          <div class="proj-card-name">Festia</div>
+          <div class="proj-card-client">Festia</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggle(this)">
+        <div class="accordion-trigger-left">
+          <span class="accordion-num">02</span>
+          <span class="accordion-name">Identité Visuelle</span>
+        </div>
+        <span class="accordion-arrow">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="proj-grid">
+      <a href="projet-oser.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="16,6 19,13 27,13 21,18 23,26 16,21 9,26 11,18 5,13 13,13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Influenceur · Merch</div>
+          <div class="proj-card-name">Oser</div>
+          <div class="proj-card-client">Oser</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-lascene.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 22 L16 10 L26 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="4" y1="26" x2="28" y2="26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="26" x2="11" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="21" y1="26" x2="21" y2="20" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Événementiel</div>
+          <div class="proj-card-name">La Scène</div>
+          <div class="proj-card-client">La Scène</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-vasculyon-id.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="11" x2="16" y2="21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="16" x2="21" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Chirurgie vasculaire · Médical</div>
+          <div class="proj-card-name">Vasculyon</div>
+          <div class="proj-card-client">Vasculyon</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-sauvagesses.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6 L10 22 L22 22 L20 6 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="10" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="22" x2="16" y2="26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="26" x2="20" y2="26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Alcool</div>
+          <div class="proj-card-name">Les Sauvagesses</div>
+          <div class="proj-card-client">Les Sauvagesses</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-levelup.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="13" x2="16" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="17" x2="20" y2="21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="20" x2="14" y2="26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="20" x2="18" y2="26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Sport · Fitness</div>
+          <div class="proj-card-name">LevelUP</div>
+          <div class="proj-card-client">LevelUP</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-festia-id.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="9" width="16" height="15" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="24" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="6" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="6" x2="20" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="12" y="16" width="3" height="3" rx="0.5" fill="currentColor" opacity="0.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Événementiel · Concept · RS · Print</div>
+          <div class="proj-card-name">Festia</div>
+          <div class="proj-card-client">Festia — Projet post-études de A à Z</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-lerelais.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6 C12 6 10 10 10 14 C10 16 11 17 13 17 L13 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 6 L20 12 C20 15 18 17 16 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="17" x2="20" y2="26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Restaurant · Corse</div>
+          <div class="proj-card-name">Le Relais</div>
+          <div class="proj-card-client">Le Relais Sotta</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-graille.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6 C10 6 8 10 8 14 C8 17 10 18 12 18 L12 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="6" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="6" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 6 C20 6 22 9 22 13 C22 16 20 18 18 18 L18 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Food</div>
+          <div class="proj-card-name">Graille</div>
+          <div class="proj-card-client">Graille</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggle(this)">
+        <div class="accordion-trigger-left">
+          <span class="accordion-num">03</span>
+          <span class="accordion-name">Sites Web</span>
+        </div>
+        <span class="accordion-arrow">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="proj-grid">
+      <a href="projet-labrha-web.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6 L13 16 L8 24 L24 24 L19 16 L19 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="13" cy="20" r="1.5" fill="currentColor" opacity="0.5"/><circle cx="18" cy="22" r="1" fill="currentColor" opacity="0.4"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Laboratoire · Santé</div>
+          <div class="proj-card-name">Labrha.fr</div>
+          <div class="proj-card-client">Labrha</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-vasculyon-web.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="11" x2="16" y2="21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="16" x2="21" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Médical</div>
+          <div class="proj-card-name">Vasculyon.fr</div>
+          <div class="proj-card-client">Vasculyon</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-onfaitdesbulles.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/><circle cx="20" cy="10" r="1" fill="currentColor" opacity="0.3"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Agence créative</div>
+          <div class="proj-card-name">On fait des bulles</div>
+          <div class="proj-card-client">On fait des bulles</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" onclick="toggle(this)">
+        <div class="accordion-trigger-left">
+          <span class="accordion-num">04</span>
+          <span class="accordion-name">Réseaux Sociaux & ADS</span>
+        </div>
+        <span class="accordion-arrow">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="proj-grid">
+      <a href="projet-f3df.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 6 L26 11 L26 21 L16 26 L6 21 L6 11 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="16" y1="6" x2="16" y2="26" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="11" x2="26" y2="11" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Impression 3D</div>
+          <div class="proj-card-name">F3DF</div>
+          <div class="proj-card-client">F3DF</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-djmag.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="22" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="13" y1="22" x2="13" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="23" y1="20" x2="23" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="8" x2="23" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Musique · Médias</div>
+          <div class="proj-card-name">DJ Mag</div>
+          <div class="proj-card-client">DJ Mag</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-graille.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6 C10 6 8 10 8 14 C8 17 10 18 12 18 L12 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="6" x2="10" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="6" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 6 C20 6 22 9 22 13 C22 16 20 18 18 18 L18 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Food</div>
+          <div class="proj-card-name">Graille</div>
+          <div class="proj-card-client">Graille</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-labrha-social.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6 L13 16 L8 24 L24 24 L19 16 L19 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="13" cy="20" r="1.5" fill="currentColor" opacity="0.5"/><circle cx="18" cy="22" r="1" fill="currentColor" opacity="0.4"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Laboratoire · Santé</div>
+          <div class="proj-card-name">Labrha</div>
+          <div class="proj-card-client">Labrha</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+      <a href="projet-festia-id.html" class="proj-card">
+        <div class="proj-card-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="9" width="16" height="15" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="13" x2="24" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="6" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="6" x2="20" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="12" y="16" width="3" height="3" rx="0.5" fill="currentColor" opacity="0.5"/></svg></div>
+        <div class="proj-card-body">
+          <div class="proj-card-theme">Événementiel</div>
+          <div class="proj-card-name">Festia</div>
+          <div class="proj-card-client">Festia</div>
+        </div>
+        <div class="proj-card-arrow">→</div>
+      </a>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+<footer><span>© 2026 On fait des bulles ?</span><span>Lyon, France</span></footer>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+  <div class="grain"></div>
+  <script>
+    const cursor=document.getElementById('cursor'),follower=document.getElementById('follower');
+    const hasHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if(!hasHover){cursor.style.display='none';follower.style.display='none';document.body.style.cursor='auto';}
+    else {
+      let mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-6+'px';cursor.style.top=my-6+'px';});
+      function animateFollower(){fx+=(mx-fx)*0.18;fy+=(my-fy)*0.18;follower.style.left=fx-18+'px';follower.style.top=fy-18+'px';requestAnimationFrame(animateFollower);}
+      animateFollower();
+    }
+    document.querySelectorAll('.reveal').forEach((r,i)=>{new IntersectionObserver(([e])=>{if(e.isIntersecting)setTimeout(()=>r.classList.add('visible'),i*60);},{threshold:.1}).observe(r);});
+  </script>
+  <script>
+    function toggle(btn){
+      const item=btn.closest('.accordion-item');
+      const isOpen=item.classList.contains('open');
+      document.querySelectorAll('.accordion-item').forEach(i=>i.classList.remove('open'));
+      if(!isOpen)item.classList.add('open');
+    }
+  </script>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
+</body>
+</html>

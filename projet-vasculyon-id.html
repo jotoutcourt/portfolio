@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --surface: #f8f8f8;
+      --accent1: #D66A77; --accent2: #97BAED; --accent3: #D66A77;
+      --text: #1a1a2e; --muted: #666676;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+
+    /* DARK INTRO */
+    body {
+      background: #ffffff;
+      color: #1a1a1a;
+      font-family: var(--font-body);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    .cursor { width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+    .cursor-follower { width: 36px; height: 36px; border: 1px solid rgba(214,106,119,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+    @media (max-width: 900px) { .cursor, .cursor-follower { display: none !important; } body { cursor: auto !important; } * { cursor: auto !important; } }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); }
+    nav.light .nav-logo { background: linear-gradient(120deg, #D66A77, #97BAED, #D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    nav.light .nav-links a { color: #888; }
+    nav.light .nav-links a:hover { color: var(--accent1); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.08em; text-decoration: none; background: linear-gradient(120deg, #D66A77, #97BAED, #D66A77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent2); }
+    @media (max-width: 900px) { nav { padding: 1.2rem 2rem; } .nav-links { display: none; } .burger { display: flex; } }
+
+    /* MOBILE NAV */
+    .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 99999; position: fixed; top: 1.3rem; right: 1.5rem; }
+    .burger span { display: block; width: 24px; height: 1.5px; background: var(--text); transition: transform 0.3s, opacity 0.3s; }
+    .mobile-menu { visibility: hidden; opacity: 0; position: fixed; inset: 0; background: #ffffff; z-index: 99998; display: flex; flex-direction: column; transition: opacity 0.25s ease, visibility 0.25s ease; overflow: hidden; }
+    .mobile-menu.open { visibility: visible; opacity: 1; }
+    body.menu-open .burger { display: none; }
+    .mobile-menu-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 2rem; color: #000; cursor: pointer; line-height: 1; padding: 0.5rem; }
+    .mobile-menu a { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.1em; color: #000; text-decoration: none; text-transform: uppercase; border-bottom: 1px solid rgba(0,0,0,0.08); transition: background 0.15s, color 0.15s; }
+    .mobile-menu a:first-of-type { border-top: 1px solid rgba(0,0,0,0.08); }
+    .mobile-menu a:hover { background: #f5f5f5; }
+
+    /* DARK HERO */
+    .proj-hero { position: relative; min-height: 58vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 4rem 4rem; overflow: hidden; background: #0e1c2a; }
+    .proj-hero-grad { position: absolute; inset: 0; background: linear-gradient(to top, #0e1c2a 45%, rgba(14,28,42,0.3)); pointer-events: none; }
+    .proj-back { display: inline-flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; transition: color 0.2s; position: relative; z-index: 2; width: fit-content; }
+    .proj-back:hover { color: rgba(255,255,255,0.8); }
+    .proj-badge { display: inline-block; font-size: 0.65rem; letter-spacing: 0.26em; text-transform: uppercase; color: #4a9fc0; border: 1px solid rgba(74,159,192,0.35); padding: 0.28rem 0.85rem; border-radius: 2rem; margin-bottom: 1.2rem; position: relative; z-index: 2; }
+    .proj-title { font-family: var(--font-display); font-size: clamp(3rem,7vw,7rem); line-height: 0.93; color: #fff; margin-bottom: 1.2rem; position: relative; z-index: 2; }
+    .proj-sub { font-style: italic; font-size: 1rem; color: rgba(255,255,255,0.5); position: relative; z-index: 2; }
+    .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.12; pointer-events: none; z-index: 0; }
+
+    /* WHITE CONTENT AREA */
+    .proj-content {
+      position: relative;
+      z-index: 1;
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 5rem 4rem 6rem;
+    }
+    .proj-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    /* GALLERY */
+    .proj-gallery { position: static; order: 2; width: 100%; }
+    .proj-text { order: 1; }
+    .proj-gallery-main {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #f0f0f0;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px dashed #ddd;
+      color: #bbb;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+    }
+    .proj-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+    .proj-gallery-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    .proj-gallery-thumb {
+      aspect-ratio: 1;
+      background: #f0f0f0;
+      border-radius: 0.3rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      color: #ccc;
+      font-size: 0.7rem;
+    }
+    .proj-gallery-thumb.active { border-color: var(--accent1); }
+    .proj-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* TEXT CONTENT */
+    .proj-text { }
+    .proj-section { margin-bottom: 3.5rem; }
+    .proj-section-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+    }
+    .proj-section-title::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(to right, var(--accent1), var(--accent2));
+      margin-top: 0.5rem;
+    }
+    .proj-section p {
+      color: #555;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .proj-placeholder-white {
+      padding: 3rem;
+      border: 2px dashed #e0e0e0;
+      border-radius: 0.5rem;
+      text-align: center;
+      color: #bbb;
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    /* FOOTER on white */
+    footer {
+      background: #ffffff;
+      border-top: 1px solid #eee;
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #999;
+      position: relative;
+      z-index: 1;
+    }
+    footer a { color: #999; text-decoration: none; }
+    footer a:hover { color: var(--accent1); }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      .proj-hero { padding: 7rem 2rem 3rem; }
+      .proj-content { padding: 3rem 2rem 4rem; }
+      .proj-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .proj-gallery { position: static; }
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+    .lightbox.active { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 90vw; max-height: 90vh;
+      object-fit: contain;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 80px rgba(0,0,0,0.8);
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+    .lightbox.active img { transform: scale(1); }
+    .lightbox-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      color: #fff; font-size: 2.5rem; line-height: 1;
+      cursor: pointer; opacity: 0.7; transition: opacity 0.2s;
+      background: none; border: none;
+    }
+    .lightbox-close:hover { opacity: 1; }
+    .proj-gallery-main { cursor: zoom-in; }
+    /* ────────────────────────────────────────
+       VASCULYON — Assets & rich sections
+    ──────────────────────────────────────── */
+
+    /* Photo strip (rhonesaone) */
+    .photo-strip { position: relative; border-radius: 0.8rem; overflow: hidden; aspect-ratio: 21/9; margin-bottom: 5.5rem; }
+    .photo-strip img { width: 100%; height: 100%; object-fit: cover; object-position: center 55%; display: block; }
+    .photo-strip-caption { position: absolute; bottom: 1rem; right: 1.4rem; font-size: 0.68rem; color: rgba(255,255,255,0.75); font-style: italic; letter-spacing: 0.04em; background: rgba(0,0,0,0.3); padding: 0.25rem 0.7rem; border-radius: 2rem; }
+
+    /* Photo duo (doctors) */
+    .photo-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; border-radius: 0.8rem; overflow: hidden; margin-bottom: 5.5rem; }
+    .photo-duo img { width: 100%; aspect-ratio: 3/2; object-fit: cover; display: block; }
+
+    /* dl-card with photo bg */
+    .dl-card--photo { background-size: cover !important; background-position: center !important; border: none !important; padding: 0 !important; }
+    .dl-card--photo .dl-inner { background: rgba(8,16,52,0.78); padding: 1.8rem; height: 100%; border-radius: 0.6rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .dl-card--photo .dl-card-title { color: #fff; }
+    .dl-card--photo .dl-card-desc { color: rgba(255,255,255,0.72); }
+    .dl-card--photo .dl-card-icon { filter: brightness(1.4); }
+
+    /* Logo showcase (animated) */
+    .logo-section { margin-bottom: 4rem; }
+    .logo-showcase {
+      position: relative; height: 420px; border-radius: 1rem; overflow: hidden;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+    }
+    .logo-frame {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1.8rem; opacity: 0; transition: opacity 1s ease; pointer-events: none;
+    }
+    .logo-frame.active { opacity: 1; pointer-events: auto; }
+    .logo-frame img { max-width: 52%; max-height: 220px; object-fit: contain; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18)); }
+    .logo-frame-label {
+      font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
+    }
+    .logo-frame--couleur { background: #ffffff; }
+    .logo-frame--couleur .logo-frame-label { color: #bbb; }
+    .logo-frame--blanc { background: #0d1b4b; }
+    .logo-frame--blanc .logo-frame-label { color: rgba(255,255,255,0.35); }
+    .logo-frame--noir { background: #f0f0f0; }
+    .logo-frame--noir .logo-frame-label { color: #bbb; }
+    /* Indicator dots */
+    .logo-dots {
+      position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 0.5rem; z-index: 2;
+    }
+    .logo-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.18);
+      cursor: pointer; transition: all 0.3s; border: none; padding: 0;
+    }
+    .logo-dot.active { background: rgba(0,0,0,0.45); transform: scale(1.5); }
+    .logo-frame--blanc ~ .logo-dots .logo-dot { background: rgba(255,255,255,0.3); }
+
+    /* Livret mockup */
+    .livret-section { margin-bottom: 4rem; }
+    .livret-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
+    .livret-tab { padding: 0.4rem 1.1rem; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(0,0,0,0.12); border-radius: 2rem; background: none; cursor: pointer; transition: all 0.22s; color: var(--muted); font-family: var(--font-body); }
+    .livret-tab.active { background: #0d1b4b; color: #fff; border-color: #0d1b4b; }
+    .livret-view { display: none; justify-content: center; animation: lvFade 0.38s ease; }
+    .livret-view.active { display: flex; }
+    @keyframes lvFade { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform:none; } }
+    .livret-single { max-width: 300px; width: 100%; }
+    .livret-single img { width: 100%; border-radius: 0.5rem; display: block; box-shadow: 6px 10px 40px rgba(0,0,0,0.22), -2px -2px 10px rgba(0,0,0,0.06); }
+    .livret-spread { display: flex; max-width: 600px; width: 100%; }
+    .livret-spread-l { flex: 1; overflow: hidden; border-radius: 0.5rem 0 0 0.5rem; box-shadow: -4px 8px 32px rgba(0,0,0,0.2), inset -6px 0 18px rgba(0,0,0,0.18); }
+    .livret-spread-r { flex: 1; overflow: hidden; border-radius: 0 0.5rem 0.5rem 0; box-shadow: 4px 8px 32px rgba(0,0,0,0.14); }
+    .livret-spread-l img, .livret-spread-r img { width: 100%; display: block; }
+
+    /* Flip card */
+    .flip-section { margin-bottom: 4rem; }
+    .flip-section-label { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.4rem; }
+    .flip-card-wrap { perspective: 1200px; width: 340px; height: 213px; cursor: pointer; margin: 0 auto 0.9rem; }
+    .flip-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.72s cubic-bezier(0.4,0,0.2,1); }
+    .flip-card-wrap:hover .flip-card-inner,
+    .flip-card-wrap.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 0.7rem; overflow: hidden; box-shadow: 0 10px 36px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08); }
+    .flip-card-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .flip-card-face--back { transform: rotateY(180deg); }
+    .flip-card-hint { text-align: center; font-size: 0.82rem; color: var(--muted); font-family: 'Caveat', cursive; }
+    @media (hover: none) { .flip-card-wrap:hover .flip-card-inner { transform: none; } }
+
+    /* Blouse section */
+    .blouse-section { margin-bottom: 4rem; }
+    .blouse-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
+    .blouse-img { border-radius: 0.8rem; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    .blouse-img img { width: 100%; display: block; }
+    .blouse-title { font-family: var(--font-display); font-size: clamp(2rem,4vw,3rem); line-height: 1; margin-bottom: 1rem; }
+    .blouse-desc { font-size: 0.92rem; color: var(--muted); line-height: 1.85; }
+    .blouse-badge { display: inline-block; margin-top: 1rem; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.3rem 0.9rem; border: 1px solid rgba(0,0,0,0.1); border-radius: 2rem; color: var(--muted); }
+
+    /* Web section */
+    .web-section { margin-bottom: 4rem; }
+    .web-browser {
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+    .web-chrome { background: #1e1f2e; padding: 9px 14px; display: flex; align-items: center; gap: 8px; }
+    .web-dots { display: flex; gap: 5px; }
+    .web-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .web-dot--r { background: #ff5f56; }
+    .web-dot--y { background: #ffbd2e; }
+    .web-dot--g { background: #27c93f; }
+    .web-url { flex: 1; background: #2e2f42; border-radius: 4px; height: 18px; display: flex; align-items: center; padding: 0 10px; font-family: monospace; font-size: 0.6rem; color: rgba(255,255,255,0.3); margin: 0 8px; white-space: nowrap; overflow: hidden; }
+    .web-screen { width: 100%; overflow: hidden; }
+    .web-screen img { width: 100%; display: block; }
+    .web-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .web-tag { font-size: 0.73rem; padding: 0.3rem 1rem; border: 1px solid rgba(0,0,0,0.1); border-radius: 2rem; color: var(--muted); }
+
+    /* Print duo (livret + flip side by side) */
+    .print-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+      margin-bottom: 4rem;
+    }
+    .print-duo .flip-section { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .print-duo .flip-card-wrap { margin: 0 0 0.9rem; }
+
+    @media (max-width: 900px) {
+      .photo-duo { grid-template-columns: 1fr; }
+      .logo-grid { grid-template-columns: 1fr; }
+      .blouse-layout { grid-template-columns: 1fr; }
+      .livret-spread { max-width: 100%; }
+      .flip-card-wrap { width: 280px; height: 175px; }
+      .print-duo { grid-template-columns: 1fr; }
+      .logo-showcase { height: 320px; }
+      .logo-frame img { max-width: 70%; }
+    }
+
+
+    /* ============================================
+       DOSSIER D'AGENCE — Vasculyon
+    ============================================ */
+    .dos-progress {
+      position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 0.75rem; z-index: 500;
+    }
+    .dos-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.18); transition: all 0.3s ease; text-decoration: none; }
+    .dos-dot.active { background: var(--accent1); transform: scale(1.65); }
+    @media (max-width: 1100px) { .dos-progress { display: none; } }
+    .dos-label { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent1); margin-bottom: 1.6rem; display: flex; align-items: center; gap: 1rem; }
+    .dos-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.08); }
+    .dos-section { margin-bottom: 5.5rem; scroll-margin-top: 6rem; }
+    /* Brief */
+    .brief-wrap { display: flex; gap: 2rem; align-items: flex-start; }
+    .brief-paper { flex: 1; background: #fdf9f4; border: 1px solid rgba(0,0,0,0.07); border-radius: 0.6rem; padding: 2.8rem; position: relative; overflow: hidden; box-shadow: 0 3px 24px rgba(0,0,0,0.06); }
+    .brief-paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.028) 27px, rgba(0,0,0,0.028) 28px); }
+    .brief-paper-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid rgba(0,0,0,0.05); }
+    .bph-badge { display: inline-block; font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.12em; color: var(--accent1); border: 2px solid var(--accent1); padding: 0.3rem 0.9rem; border-radius: 3px; opacity: 0.8; margin-bottom: 0.4rem; }
+    .bph-sub { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
+    .bph-ref { font-family: monospace; font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 1.6; }
+    .brief-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; margin-bottom: 1rem; }
+    .bf { padding-bottom: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.15); }
+    .bf-full { grid-column: 1 / -1; }
+    .bf-label { display: block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .bf-val { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    .brief-validated { position: absolute; bottom: 2rem; right: 2rem; width: 78px; height: 78px; opacity: 0.55; transform: rotate(-8deg); }
+    .brief-validated svg { width: 100%; height: 100%; }
+    /* Post-its */
+    .postit { background: #fef9c3; padding: 1.4rem 1.6rem; border-radius: 2px; box-shadow: 2px 5px 18px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.08); transform: rotate(-2.5deg); font-family: 'Caveat', cursive; font-size: 1.15rem; line-height: 1.55; color: #5c4400; max-width: 220px; flex-shrink: 0; position: relative; margin-top: 1.5rem; }
+    .postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 26px; background: rgba(0,0,0,0.055); border-radius: 2px 2px 0 0; }
+    .postit-violet { background: rgba(123,59,160,0.09); color: #3a1a5c; border: 1px solid rgba(123,59,160,0.22); }
+    .postit-arrow { display: block; font-size: 0.9rem; margin-bottom: 0.25rem; opacity: 0.45; }
+    /* Insight */
+    .insight-block { background: #0d1b4b; color: #f0eef8; border-radius: 0.8rem; padding: 3.5rem 3.5rem 3rem; position: relative; overflow: hidden; }
+    .insight-block::before { content: '\201C'; position: absolute; top: -2rem; left: 1.5rem; font-family: Georgia, serif; font-size: 18rem; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+    .insight-lead { font-size: 1rem; color: rgba(240,238,248,0.6); line-height: 1.85; margin-bottom: 2rem; max-width: 560px; }
+    .insight-reveal { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
+    .ir-line { flex: 1; height: 1px; background: rgba(123,59,160,0.5); }
+    .insight-big { font-family: var(--font-display); font-size: clamp(2.2rem, 4.5vw, 3.8rem); color: #c87de8; margin: 0; line-height: 1.1; }
+    .insight-sub { font-size: 0.9rem; color: rgba(240,238,248,0.48); line-height: 1.85; max-width: 520px; }
+    /* Parti pris */
+    .partipris-concept { margin-bottom: 2.5rem; }
+    .pc-phrase { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; color: var(--text); margin-bottom: 1rem; }
+    .pc-desc { font-size: 0.93rem; color: var(--muted); line-height: 1.8; max-width: 580px; }
+    .partipris-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .pp-card { background: var(--surface); border: 1px solid rgba(0,0,0,0.06); border-radius: 0.6rem; padding: 1.8rem; }
+    .pp-card-full { grid-column: 1 / -1; }
+    .pp-card-label { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+    .pp-swatches { display: flex; gap: 0.8rem; align-items: flex-end; padding-bottom: 1.6rem; }
+    .pp-swatch { flex: 1; aspect-ratio: 1; border-radius: 0.4rem; position: relative; max-width: 54px; }
+    .pp-swatch span { position: absolute; bottom: -1.4rem; left: 50%; transform: translateX(-50%); font-size: 0.55rem; color: var(--muted); letter-spacing: 0.04em; white-space: nowrap; }
+    .pp-typo-display { font-family: var(--font-display); font-size: 2.2rem; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .pp-typo-body { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .pp-typo-note { font-size: 0.75rem; color: var(--accent2); font-style: italic; }
+    .pp-territory { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .pp-tag { font-size: 0.75rem; padding: 0.3rem 0.9rem; border: 1px solid rgba(0,0,0,0.1); border-radius: 2rem; color: var(--muted); transition: all 0.2s; cursor: default; }
+    .pp-tag:hover { border-color: var(--accent1); color: var(--accent1); }
+    /* Double lecture */
+    .double-lecture { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .dl-card { padding: 1.8rem; border-radius: 0.6rem; position: relative; overflow: hidden; }
+    .dl-card--med { background: linear-gradient(135deg, rgba(53,64,176,0.07), rgba(123,59,160,0.05)); border: 1px solid rgba(53,64,176,0.15); }
+    .dl-card--geo { background: linear-gradient(135deg, rgba(196,31,74,0.06), rgba(123,59,160,0.04)); border: 1px solid rgba(196,31,74,0.12); }
+    .dl-card-icon { font-size: 2rem; margin-bottom: 0.8rem; line-height: 1; }
+    .dl-card-title { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .dl-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+    /* Concept cards (digital) */
+    .concept-intro { font-size: 0.93rem; color: var(--muted); line-height: 1.75; margin-bottom: 2.5rem; max-width: 560px; }
+    .concept-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .concept-card { border-radius: 0.7rem; padding: 2rem 1.8rem; border: 1px solid rgba(0,0,0,0.06); background: var(--surface); position: relative; overflow: hidden; }
+    .concept-card::before { content: attr(data-num); position: absolute; bottom: -0.5rem; right: 0.8rem; font-family: var(--font-display); font-size: 6rem; line-height: 1; color: rgba(0,0,0,0.04); pointer-events: none; }
+    .concept-card-title { font-family: var(--font-display); font-size: 1.6rem; color: var(--text); margin-bottom: 0.6rem; line-height: 1.1; }
+    .concept-card-tag { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent1); margin-bottom: 0.8rem; display: block; }
+    .concept-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+    /* Résultats */
+    .resultats-intro { font-size: 0.93rem; color: var(--muted); line-height: 1.75; margin-bottom: 2rem; }
+    .proj-gallery .proj-gallery-main { aspect-ratio: 16/9; }
+
+    /* ── Flip card carte de visite ── */
+    .flip-section { margin-bottom: 3.5rem; }
+    .flip-section-label { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.4rem; }
+    .flip-card-wrap {
+      perspective: 1200px;
+      width: 340px; height: 213px;
+      cursor: pointer;
+      margin: 0 auto 0.9rem;
+    }
+    .flip-card-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.72s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .flip-card-wrap:hover .flip-card-inner,
+    .flip-card-wrap.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      border-radius: 0.7rem; overflow: hidden;
+      box-shadow: 0 10px 36px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .flip-card-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .flip-card-face--back { transform: rotateY(180deg); }
+    .flip-card-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem;
+      background: var(--surface); border: 2px dashed rgba(0,0,0,0.1); border-radius: 0.7rem;
+    }
+    .flip-card-placeholder svg { opacity: 0.25; }
+    .flip-card-placeholder span { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .flip-card-hint {
+      text-align: center; font-size: 0.82rem; color: var(--muted);
+      font-family: 'Caveat', cursive;
+    }
+    @media (hover: none) {
+      .flip-card-wrap:hover .flip-card-inner { transform: none; }
+    }
+
+    /* ── Mockup PC/navigateur ── */
+    .mockup-section { margin-bottom: 3.5rem; }
+    .mockup-section-label { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.4rem; }
+    .pc-wrap {
+      max-width: 100%;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.16));
+    }
+    .pc-frame {
+      background: #1a1b2e;
+      border-radius: 10px 10px 0 0;
+      padding: 10px 10px 0;
+    }
+    .pc-chrome {
+      background: #252636; border-radius: 6px 6px 0 0;
+      padding: 7px 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .pc-dots { display: flex; gap: 5px; }
+    .pc-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .pc-dot--r { background: #ff5f56; }
+    .pc-dot--y { background: #ffbd2e; }
+    .pc-dot--g { background: #27c93f; }
+    .pc-url {
+      flex: 1; background: #333447; border-radius: 3px;
+      height: 16px; display: flex; align-items: center;
+      padding: 0 8px; font-family: monospace;
+      font-size: 0.58rem; color: rgba(255,255,255,0.3);
+      margin: 0 8px; overflow: hidden; white-space: nowrap;
+    }
+    .pc-screen {
+      width: 100%; aspect-ratio: 16/9;
+      overflow: hidden; background: #f0f0f0;
+      position: relative;
+    }
+    .pc-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .pc-screen-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: #f8f8fc; font-size: 0.8rem; color: #bbb;
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .pc-base { background: #1a1b2e; height: 12px; border-radius: 0 0 3px 3px; }
+    .pc-neck { width: 24%; height: 14px; background: #161724; margin: 0 auto; }
+    .pc-foot-bar { width: 46%; height: 7px; background: #1a1b2e; margin: 0 auto; border-radius: 0 0 5px 5px; }
+
+    .proj-gallery-thumbs { grid-template-columns: repeat(5, 1fr) !important; }
+    @media (max-width: 900px) {
+      .brief-wrap { flex-direction: column; }
+      .postit { transform: rotate(-1.2deg) !important; max-width: 100%; margin-left: 0 !important; }
+      .concept-cards { grid-template-columns: 1fr; }
+      .partipris-grid { grid-template-columns: 1fr; }
+      .double-lecture { grid-template-columns: 1fr; }
+      .insight-block { padding: 2.5rem 2rem; }
+      .pp-swatches { padding-bottom: 2rem; }
+      .proj-gallery { position: static; }
+      .proj-gallery-thumbs { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+
+  </style>
+  <title>Vasculyon — On fait des bulles ?</title>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Jordan Join</a>
+        <ul class="nav-links">
+      <li><a href="parcours.html">CV interactif</a></li>
+      <li><a href="services.html">Mes comp&eacute;tences</a></li>
+      <li><a href="projets.html" class="active">Mes r&eacute;alisations</a></li>
+      <li><a href="apropos.html">Mieux me conna&icirc;tre</a></li>
+      <li><a href="contact.html">Me contacter</a></li>
+    </ul>
+  </nav>
+
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">&#x2715;</button>
+    <a href="index.html" onclick="toggleMenu()">Accueil</a>
+    <a href="parcours.html" onclick="toggleMenu()">CV interactif</a>
+    <a href="services.html" onclick="toggleMenu()">Mes comp&eacute;tences</a>
+    <a href="projets.html" onclick="toggleMenu()">Mes r&eacute;alisations</a>
+    <a href="apropos.html" onclick="toggleMenu()">Mieux me conna&icirc;tre</a>
+    <a href="contact.html" onclick="toggleMenu()">Me contacter</a>
+  </div>
+
+  <header class="proj-hero">
+    <div class="proj-hero-grad"></div>
+    <a href="projets.html" class="proj-back">&larr; Retour aux projets</a>
+    <span class="proj-badge">Direction Artistique &middot; Identit&eacute; &middot; Web Design</span>
+    <h1 class="proj-title">Vasculyon</h1>
+    <p class="proj-sub">Identit&eacute; visuelle &amp; site web &mdash; Cabinet de chirurgie vasculaire</p>
+  </header>
+
+  <!-- WHITE CONTENT -->
+  <div class="proj-content">
+    <div class="proj-layout">
+
+      <!-- TEXT -->
+      <div class="proj-text">
+
+        <div class="dos-progress">
+          <a href="#s-brief"     class="dos-dot active" title="Brief"></a>
+          <a href="#s-insight"   class="dos-dot" title="Insight"></a>
+          <a href="#s-identite"  class="dos-dot" title="Identité"></a>
+          <a href="#s-resultats" class="dos-dot" title="Réalisations"></a>
+        </div>
+
+        <!-- ── 01 BRIEF ───────────────────────────────── -->
+        <section class="dos-section" id="s-brief">
+          <div class="dos-label reveal">01 &mdash; Le brief</div>
+          <div class="brief-wrap">
+            <div class="brief-paper reveal">
+              <div class="brief-paper-header">
+                <div>
+                  <div class="bph-badge">Brief Créatif</div>
+                  <div class="bph-sub">Vasculyon &middot; Identité &amp; Web</div>
+                </div>
+                <div class="bph-ref">Réf. VASC-2024-001</div>
+              </div>
+              <div class="brief-fields">
+                <div class="bf"><span class="bf-label">Clients</span><span class="bf-val">Dr Montveneur &amp; Dr Bouchareine</span></div>
+                <div class="bf"><span class="bf-label">Cabinet</span><span class="bf-val">Vasculyon &mdash; Chirurgie vasculaire &amp; endovasculaire</span></div>
+                <div class="bf"><span class="bf-label">Sites</span><span class="bf-val">Lyon &middot; Vienne &middot; Vénissieux</span></div>
+                <div class="bf"><span class="bf-label">Périmètre</span><span class="bf-val">Identité visuelle complète + Site web</span></div>
+                <div class="bf bf-full">
+                  <span class="bf-label">Objectif</span>
+                  <span class="bf-val">Créer une marque médicale mémorable ancrée dans son territoire lyonnais, capable d&rsquo;inspirer confiance à trois profils distincts&nbsp;: patients, médecins adresseurs et nouveaux consultants.</span>
+                </div>
+              </div>
+              <div class="brief-validated">
+                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="40" cy="40" r="36" stroke="#D66A77" stroke-width="3" opacity="0.8"/>
+                  <circle cx="40" cy="40" r="31" stroke="#D66A77" stroke-width="1" opacity="0.5"/>
+                  <text x="40" y="37" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#D66A77" opacity="0.9">VALIDÉ</text>
+                  <text x="40" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="7.5" fill="#D66A77" opacity="0.7">VASC. 2024</text>
+                </svg>
+              </div>
+            </div>
+            <div class="postit reveal">
+              <span class="postit-arrow">&#x2191;</span>
+              Expertise médicale<br>+ ancrage lyonnais.
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 02 INSIGHT ──────────────────────────────── -->
+        <section class="dos-section" id="s-insight">
+          <div class="dos-label reveal">02 &mdash; L&rsquo;insight</div>
+          <div class="insight-block reveal">
+            <p class="insight-lead">La chirurgie vasculaire est une discipline invisible &mdash; les patients ne choisissent pas leur chirurgien comme on choisit un restaurant. Ils cherchent confiance, compétence, et un ancrage local rassurant.</p>
+            <div class="insight-reveal">
+              <div class="ir-line"></div>
+              <p class="insight-big">Un logo, deux lectures.</p>
+              <div class="ir-line"></div>
+            </div>
+            <p class="insight-sub">La réponse créative tient en une seule image&nbsp;: un symbole qui dit à la fois «&nbsp;spécialiste médical&nbsp;» et «&nbsp;lyonnais&nbsp;», sans avoir à choisir entre les deux.</p>
+          </div>
+          <div class="postit postit-violet reveal" style="margin-left:auto;transform:rotate(1.8deg);">
+            <span class="postit-arrow">&#x2192;</span>
+            Réseau vasculaire<br>= Rhône &amp; Saône
+          </div>
+        </section>
+
+
+
+        <!-- ── 03 IDENTITÉ ─────────────────────────────── -->
+        <section class="dos-section" id="s-identite">
+          <div class="dos-label reveal">03 &mdash; L&rsquo;identité visuelle</div>
+          <div class="partipris-concept reveal">
+            <p class="pc-phrase">La double lecture</p>
+            <p class="pc-desc">Le symbole s&rsquo;inspire simultanément du réseau vasculaire humain et des deux fleuves de Lyon. Leur confluence symbolise circulation, flux et équilibre &mdash; au c&oelig;ur de la mission du cabinet.</p>
+          </div>
+          <div class="double-lecture reveal">
+            <div class="dl-card dl-card--med">
+              <div class="dl-card-icon">&#x1FAC0;</div>
+              <div class="dl-card-title">Lecture médicale</div>
+              <p class="dl-card-desc">Les lignes organiques évoquent le réseau vasculaire humain. Le dégradé bleu &rarr; violet &rarr; rouge distingue visuellement veines et artères.</p>
+            </div>
+            <div class="dl-card dl-card--geo dl-card--photo" style="background-image:url('assets/rhonesaone.jpeg');">
+              <div class="dl-inner">
+                <div class="dl-card-icon">&#x1F5FA;</div>
+                <div class="dl-card-title">Lecture lyonnaise</div>
+                <p class="dl-card-desc">Les mêmes lignes fluides tracent la confluence du Rhône et de la Saône &mdash; identité géographique forte, signe d&rsquo;appartenance au territoire.</p>
+              </div>
+            </div>
+          </div>
+          <div class="partipris-grid reveal" style="margin-top:1.5rem;">
+            <div class="pp-card">
+              <div class="pp-card-label">Palette de marque</div>
+              <div class="pp-swatches">
+                <div class="pp-swatch" style="background:#3540b0;"><span>Veines</span></div>
+                <div class="pp-swatch" style="background:#7b3ba0;"><span>Transition</span></div>
+                <div class="pp-swatch" style="background:#c41f4a;"><span>Artères</span></div>
+                <div class="pp-swatch" style="background:#0d1b4b;"><span>Marine</span></div>
+              </div>
+            </div>
+            <div class="pp-card">
+              <div class="pp-card-label">Typographie du logo</div>
+              <div class="pp-typo">
+                <div class="pp-typo-display" style="font-family:Georgia,serif;letter-spacing:0.12em;">VASCULYON</div>
+                <div class="pp-typo-body">Trajan Pro &middot; Serif &middot; Capitales</div>
+                <div class="pp-typo-note">Élégance médicale, ancrage classique</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Photo strip médecins -->
+        <div class="photo-duo reveal">
+          <img src="assets/vascuphoto1.png" alt="Dr Vasculyon" />
+          <img src="assets/vascuphoto2.png" alt="Cabinet Vasculyon" />
+        </div>
+
+
+
+        <!-- ── 05 RÉSULTATS ────────────────────────────── -->
+        <section class="dos-section" id="s-resultats">
+          <div class="dos-label reveal">04 &mdash; Les réalisations</div>
+
+          <!-- Logos -->
+          <div class="logo-section reveal">
+            <div class="pp-card-label" style="margin-bottom:1.2rem;">Le logo &mdash; trois déclinaisons</div>
+            <div class="logo-showcase" id="logoShowcase">
+              <div class="logo-frame logo-frame--couleur active" data-logo="0">
+                <img src="assets/vasculogocolor.png" alt="Logo couleur" />
+                <span class="logo-frame-label">Couleur</span>
+              </div>
+              <div class="logo-frame logo-frame--blanc" data-logo="1">
+                <img src="assets/vasculogowhite.png" alt="Logo blanc" />
+                <span class="logo-frame-label">Blanc</span>
+              </div>
+              <div class="logo-frame logo-frame--noir" data-logo="2">
+                <img src="assets/vasculogoblack.png" alt="Logo noir" />
+                <span class="logo-frame-label">Noir</span>
+              </div>
+              <div class="logo-dots">
+                <button class="logo-dot active" onclick="goLogo(0)"></button>
+                <button class="logo-dot" onclick="goLogo(1)"></button>
+                <button class="logo-dot" onclick="goLogo(2)"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Livret + Carte de visite côte à côte -->
+          <div class="print-duo reveal">
+            <div class="livret-section">
+              <div class="pp-card-label" style="margin-bottom:1rem;">Plaquette médicale &mdash; mockup interactif</div>
+              <div class="livret-tabs">
+                <button class="livret-tab active" onclick="livret('cover',this)">Couverture</button>
+                <button class="livret-tab" onclick="livret('inside',this)">Intérieur</button>
+                <button class="livret-tab" onclick="livret('dos',this)">Dos</button>
+              </div>
+              <div class="livret-view active" id="lv-cover">
+                <div class="livret-single"><img src="assets/vasculivretface.png" alt="Couverture livret" /></div>
+              </div>
+              <div class="livret-view" id="lv-inside">
+                <div class="livret-spread">
+                  <div class="livret-spread-l"><img src="assets/vasculivretgauche.png" alt="Page gauche" /></div>
+                  <div class="livret-spread-r"><img src="assets/vasculivretdroit.png" alt="Page droite" /></div>
+                </div>
+              </div>
+              <div class="livret-view" id="lv-dos">
+                <div class="livret-single"><img src="assets/vasculivretdos.png" alt="Dos livret" /></div>
+              </div>
+            </div>
+
+            <div class="flip-section">
+              <div class="pp-card-label" style="margin-bottom:1.4rem;">Carte de visite &mdash; survolez ou cliquez pour retourner</div>
+              <div class="flip-card-wrap" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner">
+                  <div class="flip-card-face flip-card-face--front">
+                    <img src="assets/vascucdvrecto.png" alt="Recto carte de visite" />
+                  </div>
+                  <div class="flip-card-face flip-card-face--back">
+                    <img src="assets/vascucdvverso.png" alt="Verso carte de visite" />
+                  </div>
+                </div>
+              </div>
+              <p class="flip-card-hint">Cliquez sur la carte pour la retourner</p>
+            </div>
+          </div>
+
+          <!-- Blouses brodées -->
+          <div class="blouse-section reveal">
+            <div class="blouse-layout">
+              <div class="blouse-img">
+                <img src="assets/vascublouse.png" alt="Blouse brodée Vasculyon" />
+              </div>
+              <div>
+                <p class="pp-card-label" style="margin-bottom:0.6rem;">Textile</p>
+                <h3 class="blouse-title">Blouses<br>brodées</h3>
+                <p class="blouse-desc">L&rsquo;identité Vasculyon déclinée sur les tenues des praticiens &mdash; broderie fil de couleur sur fond sombre. La marque portée au quotidien, au bloc opératoire comme en consultation.</p>
+                <span class="blouse-badge">Déclinaison textile</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Jordan Join</span>
+    <span>Lyon, France</span>
+  </footer>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="follower"></div>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('follower');
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!hasHover) {
+      cursor.style.display = 'none';
+      follower.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    } else {
+      let mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove', e => {
+        mx=e.clientX; my=e.clientY;
+        cursor.style.left = mx-6+'px';
+        cursor.style.top = my-6+'px';
+      });
+      function animateFollower(){
+        fx+=(mx-fx)*0.18; fy+=(my-fy)*0.18;
+        follower.style.left=fx-18+'px'; follower.style.top=fy-18+'px';
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+    }
+
+    // Reveal
+    document.querySelectorAll('.reveal').forEach((r,i)=>{
+      new IntersectionObserver(([e])=>{
+        if(e.isIntersecting) setTimeout(()=>r.classList.add('visible'),i*80);
+      },{threshold:.1}).observe(r);
+    });
+
+    // Mobile menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    
+    function openLightbox() {
+      var src = document.getElementById('mainImgEl').src;
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+    function switchImg(thumb, src) {
+      document.getElementById('mainImgEl').src = src;
+      document.querySelectorAll('.proj-gallery-thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    }
+
+
+    // Wire up PC mockup with gallery web image
+    (function() {
+      var thumbs = document.querySelectorAll('.proj-gallery-thumb');
+      var pcImg = document.getElementById('pcScreenImg');
+      var pcPlaceholder = document.getElementById('pcPlaceholder');
+      // The web thumbs start at index 2 (after the 2 ID images)
+      if (thumbs[2] && pcImg) {
+        var src = thumbs[2].querySelector('img').src;
+        pcImg.src = src;
+        pcImg.style.display = 'block';
+        if (pcPlaceholder) pcPlaceholder.style.display = 'none';
+      }
+      // Hide placeholder on flip card when image is loaded
+      ['bizRecto','bizVerso'].forEach(function(id) {
+        var img = document.getElementById(id);
+        if (img && img.src) {
+          img.addEventListener('load', function() {
+            var ph = id === 'bizRecto' ? document.getElementById('rectoPlaceholder') : document.getElementById('versoPlaceholder');
+            if (ph) ph.style.display = 'none';
+          });
+        }
+      });
+    })();
+
+
+    // Livret tabs
+    function livret(state, btn) {
+      ['cover','inside','dos'].forEach(function(s) {
+        document.getElementById('lv-' + s).classList.toggle('active', s === state);
+      });
+      document.querySelectorAll('.livret-tab').forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+    }
+
+    // ── Logo showcase auto-cycle ──────────────────
+    (function() {
+      var frames = document.querySelectorAll('.logo-frame');
+      var dots   = document.querySelectorAll('.logo-dot');
+      var current = 0;
+      function goLogo(n) {
+        frames[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = (n + frames.length) % frames.length;
+        frames[current].classList.add('active');
+        dots[current].classList.add('active');
+      }
+      window.goLogo = goLogo;
+      setInterval(function() { goLogo(current + 1); }, 2800);
+    })();
+
+    // ── Scroll spy (Vasculyon)
+    (function() {
+      var ids = ['s-brief', 's-insight', 's-identite', 's-resultats'];
+      var dots = document.querySelectorAll('.dos-dot');
+      if (!dots.length) return;
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            var idx = ids.indexOf(e.target.id);
+            if (idx >= 0) dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
+          }
+        });
+      }, { threshold: 0.45, rootMargin: '-10% 0px -50% 0px' });
+      ids.forEach(function(id){ var el=document.getElementById(id); if(el) obs.observe(el); });
+    })();
+  </script>
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">&#x2715;</button>
+    <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()" />
+  </div>
+</body>
+</html>
