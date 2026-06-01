@@ -183,6 +183,16 @@
       transition: border-color 0.2s, color 0.2s; font-family: var(--font-body);
     }
     .swipe-reset:hover { border-color: var(--accent1); color: var(--accent1); }
+    .swipe-empty {
+      position: absolute; inset: 0; display: none; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.8rem;
+      border-radius: 1.2rem; border: 2px dashed rgba(0,0,0,0.09);
+      background: var(--surface); text-align: center; padding: 2rem;
+      animation: fadeUp 0.5s ease both;
+    }
+    .swipe-empty-emoji { font-size: 2.8rem; }
+    .swipe-empty-title { font-family: var(--font-syne); font-weight: 700; font-size: 1rem; color: var(--text); }
+    .swipe-empty-sub { font-size: 0.75rem; color: var(--muted); line-height: 1.6; }
 
     /* CTA */
     .cta-section { padding: 6rem 4rem; background: var(--surface); position: relative; z-index: 1; overflow: hidden; }
@@ -423,6 +433,11 @@
     </div>
     <div class="swipe-wrap reveal">
       <div class="swipe-stack" id="swipeStack">
+        <div class="swipe-empty" id="swipeEmpty">
+          <div class="swipe-empty-emoji">&#x1F468;</div>
+          <p class="swipe-empty-title">Vous avez tout vu&nbsp;!</p>
+          <p class="swipe-empty-sub">Pour en savoir plus sur moi,<br>n&rsquo;h&eacute;sitez pas &agrave; me contacter&nbsp;!</p>
+        </div>
 
         <!-- fond de pile → voyages -->
         <div class="swipe-card">
@@ -598,6 +613,7 @@
         });
         if (cards.length === 0) {
           hint.style.display = 'none';
+          document.getElementById('swipeEmpty').style.display = 'flex';
           setTimeout(() => showMatch(), 350);
         }
         bindTop();
@@ -679,6 +695,7 @@
       window.resetSwipe = function() {
         reset.style.display = 'none';
         hint.style.display  = 'block';
+        document.getElementById('swipeEmpty').style.display = 'none';
         stack.querySelectorAll('.swipe-card.gone').forEach(c => {
           c.classList.remove('gone');
           c.style.opacity = '1';
