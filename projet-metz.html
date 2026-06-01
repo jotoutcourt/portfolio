@@ -554,10 +554,10 @@
           headers: { 'Title': '👀 Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' }
         }).catch(function(){});
       }
-      fetch('https://ipapi.co/json/')
+      fetch('https://ipinfo.io/json')
         .then(function(r){ return r.json(); })
         .then(function(geo) {
-          send(['📄 ' + page, '📍 ' + (geo.city||'?') + ', ' + (geo.country_name||'?'), device + ' · ' + browser + ' · ' + os, source, '🕐 ' + time]);
+          send(['📄 ' + page, '📍 ' + (geo.city||'?') + ', ' + (geo.country||'?'), device + ' · ' + browser + ' · ' + os, source, '🕐 ' + time]);
         })
         .catch(function() {
           send(['📄 ' + page, device + ' · ' + browser + ' · ' + os, source, '🕐 ' + time]);
