@@ -359,15 +359,76 @@
     <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()" />
   </div>
 
+
   <script>
-    // Notification de visite
+    // Notification de visite enrichie
     (function() {
+      function getOS(ua) {
+        if (/Windows/.test(ua)) return 'Windows';
+        if (/Mac OS X/.test(ua)) return 'MacOS';
+        if (/Android/.test(ua)) return 'Android';
+        if (/iPhone|iPad/.test(ua)) return 'iOS';
+        if (/Linux/.test(ua)) return 'Linux';
+        return 'Inconnu';
+      }
+      function getBrowser(ua) {
+        if (/Edg\//.test(ua)) return 'Edge';
+        if (/OPR\/|Opera/.test(ua)) return 'Opera';
+        if (/Chrome/.test(ua)) return 'Chrome';
+        if (/Firefox/.test(ua)) return 'Firefox';
+        if (/Safari/.test(ua)) return 'Safari';
+        return 'Inconnu';
+      }
+      function getDevice(ua) {
+        return /Mobi|Android|iPhone|iPad/.test(ua) ? '📱 Mobile' : '💻 Desktop';
+      }
+      function getSource(ref) {
+        if (!ref) return '🔗 Accès direct';
+        if (/linkedin/.test(ref)) return '🔗 LinkedIn';
+        if (/google/.test(ref)) return '🔗 Google';
+        if (/facebook|instagram/.test(ref)) return '🔗 Réseaux sociaux';
+        return '🔗 ' + ref.split('/')[2];
+      }
+      function getTime() {
+        return new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      }
+
+      var ua = navigator.userAgent;
       var page = document.title || window.location.pathname;
-      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
-        method: 'POST',
-        body: '👀 Visite sur : ' + page,
-        headers: { 'Title': 'Portfolio consulté', 'Priority': 'default', 'Tags': 'eyes' }
-      }).catch(function(){});
+      var source = getSource(document.referrer);
+      var device = getDevice(ua);
+      var browser = getBrowser(ua);
+      var os = getOS(ua);
+      var time = getTime();
+
+      fetch('https://ipapi.co/json/')
+        .then(function(r){ return r.json(); })
+        .then(function(geo) {
+          var city = geo.city || '?';
+          var country = geo.country_name || '?';
+          var body = [
+            '📄 ' + page,
+            '📍 ' + city + ', ' + country,
+            device + ' · ' + browser + ' · ' + os,
+            source,
+            '🕐 ' + time
+          ].join('
+');
+          fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+            method: 'POST',
+            body: body,
+            headers: { 'Title': '👀 Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' }
+          }).catch(function(){});
+        })
+        .catch(function() {
+          var body = ['📄 ' + page, device + ' · ' + browser + ' · ' + os, source, '🕐 ' + time].join('
+');
+          fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+            method: 'POST',
+            body: body,
+            headers: { 'Title': '👀 Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' }
+          }).catch(function(){});
+        });
     })();
   </script>
 </body>
