@@ -105,10 +105,12 @@
       height: 420px;
       overflow: hidden;
       cursor: none;
-      transition: flex 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: flex 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       text-decoration: none;
       color: #fff;
       background: #111;
+      will-change: flex;
+      transform: translateZ(0);
     }
     .proj-card:hover { flex: 2.8 1 calc((100% - 5 * 3px) / 6); }
 
@@ -571,6 +573,18 @@
       document.body.classList.toggle('menu-open');
       document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
     }
+  </script>
+
+  <script>
+    // Notification de visite
+    (function() {
+      var page = document.title || window.location.pathname;
+      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+        method: 'POST',
+        body: '👀 Visite sur : ' + page,
+        headers: { 'Title': 'Portfolio consulté', 'Priority': 'default', 'Tags': 'eyes' }
+      }).catch(function(){});
+    })();
   </script>
 </body>
 </html>

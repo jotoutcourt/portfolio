@@ -370,5 +370,17 @@
     <button class="lightbox-close" onclick="closeLightbox()">&#x2715;</button>
     <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()" />
   </div>
+
+  <script>
+    // Notification de visite
+    (function() {
+      var page = document.title || window.location.pathname;
+      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+        method: 'POST',
+        body: '👀 Visite sur : ' + page,
+        headers: { 'Title': 'Portfolio consulté', 'Priority': 'default', 'Tags': 'eyes' }
+      }).catch(function(){});
+    })();
+  </script>
 </body>
 </html>

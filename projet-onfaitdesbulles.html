@@ -742,5 +742,17 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
   }, { threshold: 0.1 }).observe(el);
 });
 </script>
+
+  <script>
+    // Notification de visite
+    (function() {
+      var page = document.title || window.location.pathname;
+      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+        method: 'POST',
+        body: '👀 Visite sur : ' + page,
+        headers: { 'Title': 'Portfolio consulté', 'Priority': 'default', 'Tags': 'eyes' }
+      }).catch(function(){});
+    })();
+  </script>
 </body>
 </html>

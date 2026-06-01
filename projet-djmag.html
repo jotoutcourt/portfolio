@@ -329,5 +329,17 @@
       document.body.style.overflow=m.classList.contains('open')?'hidden':'';
     }
   </script>
+
+  <script>
+    // Notification de visite
+    (function() {
+      var page = document.title || window.location.pathname;
+      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+        method: 'POST',
+        body: '👀 Visite sur : ' + page,
+        headers: { 'Title': 'Portfolio consulté', 'Priority': 'default', 'Tags': 'eyes' }
+      }).catch(function(){});
+    })();
+  </script>
 </body>
 </html>
