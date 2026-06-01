@@ -267,38 +267,29 @@
         return 'Inconnu';
       }
       function getDevice(ua) {
-        return /Mobi|Android|iPhone|iPad/.test(ua) ? '📱 Mobile' : '💻 Desktop';
+        return /Mobi|Android|iPhone|iPad/.test(ua) ? 'Mobile' : 'Desktop';
       }
       function getSource(ref) {
-        if (!ref) return '🔗 Direct';
-        if (/linkedin/.test(ref)) return '🔗 LinkedIn';
-        if (/google/.test(ref)) return '🔗 Google';
-        if (/facebook|instagram/.test(ref)) return '🔗 Réseaux sociaux';
-        return '🔗 ' + ref.split('/')[2];
+        if (!ref) return 'Direct';
+        if (/linkedin/.test(ref)) return 'LinkedIn';
+        if (/google/.test(ref)) return 'Google';
+        if (/facebook|instagram/.test(ref)) return 'Reseaux sociaux';
+        return ref.split('/')[2];
       }
       var ua = navigator.userAgent;
-      var page = document.title || window.location.pathname;
-      var source = getSource(document.referrer);
-      var device = getDevice(ua);
-      var browser = getBrowser(ua);
-      var os = getOS(ua);
-      var time = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
       var sep = String.fromCharCode(10);
-      function send(lines) {
-        fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
-          method: 'POST',
-          body: lines.join(sep),
-          headers: { 'Title': '👀 Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' }
-        }).catch(function(){});
-      }
-      fetch('https://ipinfo.io/json')
-        .then(function(r){ return r.json(); })
-        .then(function(geo) {
-          send(['📄 ' + page, '📍 ' + (geo.city||'?') + ', ' + (geo.country||'?'), device + ' · ' + browser + ' · ' + os, source, '🕐 ' + time]);
-        })
-        .catch(function() {
-          send(['📄 ' + page, device + ' · ' + browser + ' · ' + os, source, '🕐 ' + time]);
-        });
+      var body = [
+        document.title || window.location.pathname,
+        getDevice(ua) + ' - ' + getBrowser(ua) + ' - ' + getOS(ua),
+        'Source : ' + getSource(document.referrer),
+        new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})
+      ].join(sep);
+      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+        method: 'POST',
+        body: body,
+        headers: { 'Title': 'Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' },
+        keepalive: true
+      }).catch(function(){});
     })();
   </script>
 </body>
