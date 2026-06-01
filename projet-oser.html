@@ -503,20 +503,27 @@
         if (/facebook|instagram/.test(ref)) return 'Reseaux sociaux';
         return ref.split('/')[2];
       }
+      function ntfy(body) {
+        fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
+          method: 'POST', body: body, keepalive: true,
+          headers: { 'Title': 'Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' }
+        }).catch(function(){});
+      }
       var ua = navigator.userAgent;
       var sep = String.fromCharCode(10);
-      var body = [
+      var base = [
         document.title || window.location.pathname,
         getDevice(ua) + ' - ' + getBrowser(ua) + ' - ' + getOS(ua),
         'Source : ' + getSource(document.referrer),
         new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})
-      ].join(sep);
-      fetch('https://ntfy.sh/jordan-portfolio-cv2026', {
-        method: 'POST',
-        body: body,
-        headers: { 'Title': 'Nouvelle visite portfolio', 'Priority': 'default', 'Tags': 'eyes' },
-        keepalive: true
-      }).catch(function(){});
+      ];
+      fetch('https://ipinfo.io/json')
+        .then(function(r){ return r.json(); })
+        .then(function(geo) {
+          if (geo.city) base.splice(1, 0, '📍 ' + geo.city + ', ' + geo.country);
+          ntfy(base.join(sep));
+        })
+        .catch(function() { ntfy(base.join(sep)); });
     })();
   </script>
 </body>
