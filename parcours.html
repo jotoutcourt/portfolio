@@ -208,19 +208,35 @@
     }
     .exp-skill-tag.popped { opacity: 1; transform: translateY(0) scale(1); }
 
-    .exp-chips-label { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); opacity: 0.6; display: block; margin-top: 1rem; margin-bottom: 0.35rem; }
-    .exp-projects { display: flex; flex-wrap: wrap; gap: 0.3rem; padding-top: 0.7rem; margin-top: 0.5rem; border-top: 1px dashed rgba(0,0,0,0.07); }
-    .exp-proj-tag {
-      font-size: 0.67rem; letter-spacing: 0.04em;
-      padding: 0.2rem 0.65rem 0.2rem 0.5rem; border-radius: 2rem;
-      border: 1px solid rgba(214,106,119,0.35);
-      color: var(--accent1); background: rgba(214,106,119,0.04);
-      text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;
-      opacity: 0; transform: translateY(6px) scale(0.9);
-      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+    .exp-chips-label {
+      font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent1); display: flex; align-items: center; gap: 0.8rem;
+      margin-top: 1.4rem; margin-bottom: 0.7rem;
     }
-    .exp-proj-tag::before { content: '\2192'; font-size: 0.58rem; opacity: 0.65; }
-    .exp-proj-tag:hover { background: rgba(214,106,119,0.11); }
+    .exp-chips-label::after { content: ''; flex: 1; height: 1px; background: rgba(214,106,119,0.18); }
+    .exp-projects {
+      display: flex; flex-wrap: wrap; gap: 0.55rem;
+      padding: 1rem 1.1rem; margin-top: 0;
+      background: linear-gradient(135deg, rgba(214,106,119,0.04), rgba(151,186,237,0.04));
+      border-radius: 0.6rem; border: 1px solid rgba(214,106,119,0.12);
+    }
+    .exp-proj-tag {
+      padding: 0.55rem 0.9rem; border-radius: 0.4rem;
+      border: 1px solid rgba(214,106,119,0.28);
+      color: var(--text); background: #fff;
+      text-decoration: none;
+      display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0.18rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      opacity: 0; transform: translateY(6px) scale(0.95);
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s, color 0.2s, box-shadow 0.2s;
+      max-width: 260px;
+    }
+    .proj-name { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem; }
+    .proj-name::after { content: '→'; font-size: 0.65rem; color: var(--accent1); display: inline-block; transition: transform 0.2s, color 0.2s; }
+    .proj-desc { font-size: 0.65rem; color: var(--muted); font-weight: 300; line-height: 1.4; transition: color 0.2s; }
+    .exp-proj-tag:hover { background: var(--accent1); color: #fff; border-color: var(--accent1); box-shadow: 0 4px 16px rgba(214,106,119,0.3); transform: translateY(-2px) scale(1) !important; }
+    .exp-proj-tag:hover .proj-name::after { color: #fff; transform: translateX(3px); }
+    .exp-proj-tag:hover .proj-desc { color: rgba(255,255,255,0.8); }
     .exp-proj-tag.popped { opacity: 1; transform: translateY(0) scale(1); }
 
     /* Formations */
@@ -451,13 +467,13 @@
                 <span class="exp-skill-tag">Illustrator</span>
                 <span class="exp-skill-tag">Management</span>
               </div>
-              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <span class="exp-chips-label">&#x1F4C2; Projets r&eacute;alis&eacute;s &mdash; d&eacute;couvrir</span>
               <div class="exp-projects">
-                <a href="projet-tenofort.html" class="exp-proj-tag">Tenofort</a>
-                <a href="projet-pandora.html" class="exp-proj-tag">Pandora</a>
-                <a href="projet-labrha-da.html" class="exp-proj-tag">Labrha Print</a>
-                <a href="projet-labrha-web.html" class="exp-proj-tag">Labrha.fr</a>
-                <a href="projet-labrha-social.html" class="exp-proj-tag">Labrha RS</a>
+                <a href="projet-tenofort.html" class="exp-proj-tag"><span class="proj-name">Tenofort</span><span class="proj-desc">Création d'affiches Print et campagne ADS</span></a>
+                <a href="projet-pandora.html" class="exp-proj-tag"><span class="proj-name">Pandora</span><span class="proj-desc">Direction artistique packagings d'un dispositif médical</span></a>
+                <a href="projet-labrha-da.html" class="exp-proj-tag"><span class="proj-name">Labrha Livrets</span><span class="proj-desc">Livrets d'informations sur les compléments alimentaires</span></a>
+                <a href="projet-labrha-web.html" class="exp-proj-tag"><span class="proj-name">Labrha.fr</span><span class="proj-desc">Refonte totale du site labrha.fr</span></a>
+                <a href="projet-labrha-social.html" class="exp-proj-tag"><span class="proj-name">Labrha RS</span><span class="proj-desc">Gestion des réseaux sociaux du Labrha</span></a>
               </div>
             </div>
           </div>
@@ -530,10 +546,10 @@
                 <span class="exp-skill-tag">Community Management</span>
                 <span class="exp-skill-tag">Brand Identity</span>
               </div>
-              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <span class="exp-chips-label">&#x1F4C2; Projets r&eacute;alis&eacute;s &mdash; d&eacute;couvrir</span>
               <div class="exp-projects">
-                <a href="projet-metz.html" class="exp-proj-tag">Play With Metz</a>
-                <a href="projet-sauvagesses.html" class="exp-proj-tag">Les Sauvagesses</a>
+                <a href="projet-metz.html" class="exp-proj-tag"><span class="proj-name">Play With Metz</span><span class="proj-desc">Campagne print estivale pour la ville de Metz</span></a>
+                <a href="projet-sauvagesses.html" class="exp-proj-tag"><span class="proj-name">Les Sauvagesses</span><span class="proj-desc">Création d'identité pour des bouteilles de Gin et Pastis</span></a>
               </div>
             </div>
           </div>
@@ -558,9 +574,9 @@
                 <span class="exp-skill-tag">Mailing</span>
                 <span class="exp-skill-tag">R&eacute;daction</span>
               </div>
-              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <span class="exp-chips-label">&#x1F4C2; Projets r&eacute;alis&eacute;s &mdash; d&eacute;couvrir</span>
               <div class="exp-projects">
-                <a href="projet-f3df.html" class="exp-proj-tag">F3DF RS</a>
+                <a href="projet-f3df.html" class="exp-proj-tag"><span class="proj-name">F3DF</span><span class="proj-desc">Gestion des réseaux sociaux de F3DF</span></a>
               </div>
             </div>
           </div>
@@ -585,18 +601,15 @@
                 <span class="exp-skill-tag">Illustrator</span>
                 <span class="exp-skill-tag">Photoshop</span>
               </div>
-              <span class="exp-chips-label">Projets li&eacute;s</span>
+              <span class="exp-chips-label">&#x1F4C2; Projets r&eacute;alis&eacute;s &mdash; d&eacute;couvrir</span>
               <div class="exp-projects">
-                <a href="projet-ames-soeur.html" class="exp-proj-tag">&Acirc;mes S&oelig;urs</a>
-                <a href="projet-festia-jeu.html" class="exp-proj-tag">Festia Jeu</a>
-                <a href="projet-oser.html" class="exp-proj-tag">Oser</a>
-                <a href="projet-la-scene.html" class="exp-proj-tag">La Sc&egrave;ne</a>
-                <a href="projet-vasculyon.html" class="exp-proj-tag">VascuLyon</a>
-                <a href="projet-levelup.html" class="exp-proj-tag">LevelUp</a>
-                <a href="projet-festia-id.html" class="exp-proj-tag">Festia ID</a>
-                <a href="projet-lerelais.html" class="exp-proj-tag">Le Relais</a>
-                <a href="projet-onfaitdesbulles.html" class="exp-proj-tag">On Fait des Bulles</a>
-                <a href="projet-festia-social.html" class="exp-proj-tag">Festia RS</a>
+                <a href="projet-ames-soeur.html" class="exp-proj-tag"><span class="proj-name">Âmes Sœurs</span><span class="proj-desc">Création d'une affiche de film</span></a>
+                <a href="projet-oser.html" class="exp-proj-tag"><span class="proj-name">Oser</span><span class="proj-desc">Création de la marque capsule d'un influenceur</span></a>
+                <a href="projet-la-scene.html" class="exp-proj-tag"><span class="proj-name">La Scène</span><span class="proj-desc">Création d'un logo pour une salle de mariage</span></a>
+                <a href="projet-vasculyon.html" class="exp-proj-tag"><span class="proj-name">VascuLyon</span><span class="proj-desc">Identité visuelle cabinet de chirurgiens cardio-vasculaire</span></a>
+                <a href="projet-levelup.html" class="exp-proj-tag"><span class="proj-name">LevelUp</span><span class="proj-desc">Identité pour une marque de booking d'activités sportives</span></a>
+                <a href="projet-festia-id.html" class="exp-proj-tag"><span class="proj-name">Festia</span><span class="proj-desc">Création d'une entreprise et sa direction artistique</span></a>
+                <a href="projet-lerelais.html" class="exp-proj-tag"><span class="proj-name">Le Relais</span><span class="proj-desc">Création d'identité pour un restaurant Corse</span></a>
               </div>
             </div>
           </div>
@@ -611,11 +624,10 @@
             <p class="edu-degree">Master Direction Artistique &mdash; Cr&eacute;ation publicitaire</p>
             <p class="edu-years">2021 &mdash; Septembre 2023</p>
             <p class="edu-note">Finaliste de la grande comp&eacute;tition nationale SUP DE PUB pour la campagne de l&rsquo;Institut Fran&ccedil;ais de Don du Sang (EFS).</p>
-            <span class="exp-chips-label" style="margin-top:0.9rem;">Projets li&eacute;s</span>
+            <span class="exp-chips-label" style="margin-top:0.9rem;">&#x1F4C2; Projets r&eacute;alis&eacute;s &mdash; d&eacute;couvrir</span>
             <div class="exp-projects" style="margin-top:0.2rem;">
-              <a href="projet-croquine.html" class="exp-proj-tag popped">Croquine</a>
-              <a href="projet-vogalib.html" class="exp-proj-tag popped">Vogalib</a>
-              <a href="projet-efs.html" class="exp-proj-tag popped">EFS</a>
+              <a href="projet-croquine.html" class="exp-proj-tag popped"><span class="proj-name">Croquine</span><span class="proj-desc">Création d'identité et storytelling pour une marque food</span></a>
+              <a href="projet-vogalib.html" class="exp-proj-tag popped"><span class="proj-name">Vogalib</span><span class="proj-desc">Affiche print pour une campagne estivale médicament</span></a>
             </div>
           </div>
 
