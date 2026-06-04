@@ -55,14 +55,46 @@
   <title>À propos — Jordan Join</title>
   <style>
     /* HERO */
-    .about-hero { min-height: 50vh; display: flex; align-items: center; padding: 10rem 4rem 5rem; position: relative; overflow: hidden; }
-    .about-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.07; filter: grayscale(100%) contrast(1.1); z-index: 0; pointer-events: none; }
-    .about-hero-bg { position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 60% 60% at 80% 50%, rgba(151,186,237,0.15) 0%, transparent 70%), radial-gradient(ellipse 40% 50% at 20% 60%, rgba(214,106,119,0.08) 0%, transparent 60%); }
+    .about-hero { min-height: 60vh; display: flex; align-items: center; padding: 10rem 4rem 5rem; position: relative; overflow: hidden; }
     .about-hero-content { position: relative; z-index: 2; max-width: 700px; }
     .about-hero-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent2); border: 1px solid rgba(151,186,237,0.4); padding: 0.4rem 1rem; border-radius: 2rem; margin-bottom: 2rem; }
     .about-hero-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.5rem, 6vw, 6rem); line-height: 1; letter-spacing: -0.02em; margin-bottom: 2rem; }
     .about-hero-text { font-size: 1.05rem; color: var(--muted); line-height: 1.8; max-width: 560px; }
     .about-hero-text em { color: var(--accent1); font-style: normal; }
+
+    /* ── AURORA ── */
+    .aurora {
+      position: absolute; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+    }
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(214,106,119,0.55), transparent 70%);
+      top: -150px; right: -100px;
+      animation: drift1 12s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(151,186,237,0.5), transparent 70%);
+      bottom: -100px; left: -80px;
+      animation: drift2 15s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(176,126,207,0.4), transparent 70%);
+      top: 30%; left: 40%;
+      animation: drift3 10s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 { from{transform:translate(0,0) scale(1)} to{transform:translate(-80px,60px) scale(1.15)} }
+    @keyframes drift2 { from{transform:translate(0,0) scale(1)} to{transform:translate(60px,-50px) scale(1.1)} }
+    @keyframes drift3 { from{transform:translate(0,0) scale(1)} to{transform:translate(-40px,40px) scale(0.9)} }
+    @media(max-width:860px){ .about-hero{ padding: 8rem 2rem 3rem; } }
 
     /* PROFIL 360 */
     .profile-section { padding: 5rem 4rem; background: var(--surface); position: relative; z-index: 1; }
@@ -268,11 +300,14 @@
 
   <!-- INTRO HERO -->
   <div class="about-hero reveal">
-    <video class="about-hero-video" src="assets/bulles.mp4" autoplay muted loop playsinline></video>
-    <div class="about-hero-bg"></div>
+    <div class="aurora">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
     <div class="about-hero-content">
       <span class="about-hero-tag">&Agrave; propos de moi</span>
-      <h1 class="about-hero-title">Jordan<br>Join</h1>
+      <h1 class="about-hero-title">Mieux me<br>conna&icirc;tre</h1>
       <p class="about-hero-text">
         Directeur Artistique &middot; Marketing &middot; Communication &mdash;
         <em>un profil 360&deg; au service de projets qui marquent les esprits.</em>
