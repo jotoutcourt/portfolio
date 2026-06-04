@@ -275,6 +275,7 @@
 
     /* Hint */
     .cv-hint { text-align: center; font-size: 0.75rem; color: var(--muted); margin-bottom: 1.5rem; letter-spacing: 0.05em; opacity: 0.8; }
+    @media(max-width:860px){ .cv-hint { display: none; } }
     .cv-hint span { display: inline-block; animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
 
