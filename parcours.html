@@ -287,6 +287,8 @@
       .cv-block-label { margin: 0 -1.5rem 1rem -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
       .cv-section-label { margin: 0 -1.5rem 1.2rem -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
       .cv-photo { max-width: 160px; margin-left: auto; margin-right: auto; }
+      .cv-photo-mobile { display: block; width: 120px; height: 120px; object-fit: cover; object-position: top; border-radius: 50%; margin: 0 auto 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+      .cv-photo-desktop { display: none; }
     }
   </style>
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
@@ -364,7 +366,7 @@
       <!-- ===== SIDEBAR ===== -->
       <aside class="cv-sidebar">
 
-        <img class="cv-photo" src="assets/jo.png" alt="Jordan Join" onclick="openLightbox(this)">
+        <img class="cv-photo cv-photo-desktop" src="assets/jo.png" alt="Jordan Join" onclick="openLightbox(this)">
 
         <div class="cv-block">
           <span class="cv-block-label">Contexte</span>
@@ -451,6 +453,8 @@
 
       <!-- ===== MAIN ===== -->
       <main class="cv-main">
+
+        <img class="cv-photo-mobile" src="assets/jo.png" alt="Jordan Join">
 
         <div class="cv-name-block">
           <h2 class="cv-name">JORDAN JOIN</h2>
