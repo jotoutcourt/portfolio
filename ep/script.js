@@ -27,31 +27,32 @@ function updateClouds() {
 window.addEventListener('scroll', updateClouds, { passive: true });
 updateClouds();
 
-// ---------- PAROLES (sections plein écran) : écriture / effacement au scroll ----------
+// ---------- PAROLES (sections plein écran) : écriture déclenchée une fois au passage ----------
 const lyricEls = document.querySelectorAll('.lyrics-section--single .lyric');
 lyricEls.forEach(el => { el.dataset.fullText = el.textContent; });
 
-const lyricMaxProgress = new Map();
-
-function updateScrollLyrics() {
-  const vh = window.innerHeight;
-  lyricEls.forEach(el => {
-    const section = el.closest('.lyrics-section--single');
-    const rect = section.getBoundingClientRect();
-    const center = rect.top + rect.height / 2;
-    const dist = Math.abs(center - vh / 2);
-    const progress = Math.max(0, 1 - dist / (vh * 0.3));
-    const maxProgress = Math.max(progress, lyricMaxProgress.get(el) || 0);
-    lyricMaxProgress.set(el, maxProgress);
-    const text = el.dataset.fullText;
-    const visibleChars = Math.round(text.length * maxProgress);
-    el.textContent = text.slice(0, visibleChars);
-    el.classList.toggle('visible', maxProgress > 0.05);
-  });
+function typeOnce(el) {
+  const text = el.dataset.fullText;
+  el.textContent = '';
+  el.classList.add('visible');
+  let i = 0;
+  const timer = setInterval(() => {
+    i++;
+    el.textContent = text.slice(0, i);
+    if (i >= text.length) clearInterval(timer);
+  }, 40);
 }
 
-window.addEventListener('scroll', updateScrollLyrics, { passive: true });
-updateScrollLyrics();
+const lyricObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      typeOnce(entry.target);
+      lyricObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.4 });
+
+lyricEls.forEach(el => lyricObserver.observe(el));
 
 // ---------- LECTEUR AUDIO ----------
 const audio = document.getElementById('audio');
