@@ -43,9 +43,28 @@ function typeOnce(el) {
   }, 40);
 }
 
+let userHasScrolled = false;
+
+function isInView(el, ratio) {
+  const rect = el.getBoundingClientRect();
+  const visible = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+  return visible / rect.height >= ratio;
+}
+
+window.addEventListener('scroll', () => {
+  if (userHasScrolled) return;
+  userHasScrolled = true;
+  lyricEls.forEach(el => {
+    if (isInView(el, 0.4)) {
+      typeOnce(el);
+      lyricObserver.unobserve(el);
+    }
+  });
+}, { passive: true, once: true });
+
 const lyricObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && userHasScrolled) {
       typeOnce(entry.target);
       lyricObserver.unobserve(entry.target);
     }
