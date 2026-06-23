@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ton Coup de Soleil — Jo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Jost:wght@300;400;500&family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="hero-content">
+    <h1 class="loading-title">ton coup de soleil</h1>
+    <p class="artist loading-ghost">Jo</p>
+    <div class="hero-nav loading-ghost">
+      <a class="hero-nav-btn">écouter le titre</a>
+      <a class="hero-nav-btn">télécharger</a>
+    </div>
+  </div>
+</div>
+
+<div class="grain"></div>
+
+<!-- SECTION 1 : CIEL + NUAGES -->
+<section class="sky-section" id="skySection">
+  <div class="sky-bg"></div>
+  <img src="assets/cloud-desktop.png" alt="" class="clouds clouds-desktop" id="cloudsDesktop">
+  <img src="assets/cloud-mobile.png" alt="" class="clouds clouds-mobile" id="cloudsMobile">
+  <div class="hero-content">
+    <h1>Ton Coup de Soleil</h1>
+    <p class="artist">Jo</p>
+    <div class="hero-nav">
+      <a href="#playerSection" class="hero-nav-btn">écouter le titre</a>
+      <a href="#playerSection" class="hero-nav-btn">télécharger</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 : PAROLE 1 -->
+<section class="lyrics-section lyrics-section--single lyrics-section--photo">
+  <img src="assets/parole1-pc.png" alt="" class="lyric-photo lyric-photo-desktop">
+  <img src="assets/parole1-mobile.png" alt="" class="lyric-photo lyric-photo-mobile">
+  <p class="lyric" data-line="0">T'oublier, c'était comme voir le soleil s'effacer sur ma peau</p>
+</section>
+
+<!-- SECTION 3 : LECTEUR -->
+<section class="player-section" id="playerSection">
+  <div class="cover-wrap">
+    <img src="assets/pochette.png" alt="Ton Coup de Soleil — Jo" class="cover">
+  </div>
+
+  <div class="cta-row">
+    <a href="#" class="cta-btn">Voir le clip sur YouTube</a>
+    <a href="assets/single.mp3" download="Ton Coup de Soleil - Jo.mp3" class="cta-btn">Télécharger le MP3</a>
+  </div>
+
+  <div class="player">
+    <button id="playBtn" class="play-btn" aria-label="Lecture">
+      <svg id="iconPlay" viewBox="0 0 24 24" width="20" height="20"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg>
+      <svg id="iconPause" viewBox="0 0 24 24" width="20" height="20" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor"/></svg>
+    </button>
+    <div class="track">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+  </div>
+  <p class="current-lyric" id="currentLyric"></p>
+  <audio id="audio" src="assets/single.mp3" preload="metadata"></audio>
+</section>
+
+
+<p class="footer">Disponible bientôt sur Spotify, Youtube Music et Deezer</p>
+
+<script src="script.js"></script>
+</body>
+</html>
