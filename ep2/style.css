@@ -361,6 +361,55 @@ body {
   overflow: hidden;
 }
 
+.countdown {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.countdown-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rust);
+  opacity: 0.75;
+}
+
+.countdown-timer {
+  display: flex;
+  gap: 10px;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  padding: 8px 0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 16px -8px rgba(58, 42, 29, 0.3);
+}
+
+.countdown-unit span {
+  font-family: 'Jost', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--pink-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-unit small {
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  color: var(--rust);
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
 .current-lyric {
   margin-top: 28px;
   min-height: 1.6em;
@@ -491,6 +540,14 @@ body {
   font-style: italic;
   color: var(--rust);
   max-width: 300px;
+}
+
+.donate-subtext {
+  font-size: 0.72rem;
+  color: var(--rust);
+  opacity: 0.65;
+  max-width: 280px;
+  margin-top: -4px;
 }
 
 .donate-btn {

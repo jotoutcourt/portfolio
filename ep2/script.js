@@ -115,6 +115,34 @@ function updateClouds() {
 window.addEventListener('scroll', updateClouds, { passive: true });
 updateClouds();
 
+// ---------- COMPTE À REBOURS : sortie le 31 juillet à minuit et une seconde ----------
+const cdDays = document.getElementById('cdDays');
+const cdHours = document.getElementById('cdHours');
+const cdMinutes = document.getElementById('cdMinutes');
+const cdSeconds = document.getElementById('cdSeconds');
+const countdownEl = document.getElementById('countdown');
+const RELEASE_DATE = new Date(2026, 6, 31, 0, 0, 1);
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateCountdown() {
+  const diff = RELEASE_DATE.getTime() - Date.now();
+  if (diff <= 0) {
+    countdownEl.querySelector('.countdown-label').textContent = 'disponible !';
+    cdDays.textContent = cdHours.textContent = cdMinutes.textContent = cdSeconds.textContent = '00';
+    clearInterval(countdownTimer);
+    return;
+  }
+  const totalSeconds = Math.floor(diff / 1000);
+  cdDays.textContent = pad(Math.floor(totalSeconds / 86400));
+  cdHours.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
+  cdMinutes.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
+  cdSeconds.textContent = pad(totalSeconds % 60);
+}
+
+updateCountdown();
+const countdownTimer = setInterval(updateCountdown, 1000);
+
 // ---------- POP-UP "SORTIE LE 31 JUILLET" (boutons Spotify / Apple Music) ----------
 const releaseToast = document.getElementById('releaseToast');
 let toastTimer = null;
@@ -138,6 +166,11 @@ const progressFill = document.getElementById('progressFill');
 const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 
+// L'audio ne joue que l'extrait 0:36 → 1:10 du morceau complet
+const EXCERPT_START = 36;
+const EXCERPT_END = 70;
+const EXCERPT_LENGTH = EXCERPT_END - EXCERPT_START;
+
 function formatTime(sec) {
   if (!isFinite(sec)) return '0:00';
   const m = Math.floor(sec / 60);
@@ -145,8 +178,20 @@ function formatTime(sec) {
   return `${m}:${s}`;
 }
 
+function stopAtExcerptEnd() {
+  audio.pause();
+  audio.currentTime = EXCERPT_START;
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+  progressFill.style.width = '0%';
+  currentTimeEl.textContent = formatTime(0);
+}
+
 playBtn.addEventListener('click', () => {
   if (audio.paused) {
+    if (audio.currentTime < EXCERPT_START || audio.currentTime >= EXCERPT_END) {
+      audio.currentTime = EXCERPT_START;
+    }
     audio.play();
     iconPlay.style.display = 'none';
     iconPause.style.display = 'block';
@@ -158,22 +203,24 @@ playBtn.addEventListener('click', () => {
 });
 
 audio.addEventListener('loadedmetadata', () => {
-  durationEl.textContent = formatTime(audio.duration);
+  durationEl.textContent = formatTime(EXCERPT_LENGTH);
+  audio.currentTime = EXCERPT_START;
 });
 
 audio.addEventListener('timeupdate', () => {
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-  progressFill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+  if (audio.currentTime >= EXCERPT_END) {
+    stopAtExcerptEnd();
+    return;
+  }
+  const elapsed = Math.max(0, audio.currentTime - EXCERPT_START);
+  currentTimeEl.textContent = formatTime(elapsed);
+  progressFill.style.width = `${(elapsed / EXCERPT_LENGTH) * 100}%`;
 });
 
-audio.addEventListener('ended', () => {
-  iconPlay.style.display = 'block';
-  iconPause.style.display = 'none';
-  progressFill.style.width = '0%';
-});
+audio.addEventListener('ended', stopAtExcerptEnd);
 
 progressBar.addEventListener('click', (e) => {
   const rect = progressBar.getBoundingClientRect();
   const ratio = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = ratio * audio.duration;
+  audio.currentTime = EXCERPT_START + ratio * EXCERPT_LENGTH;
 });

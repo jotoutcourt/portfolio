@@ -77,6 +77,16 @@
 
 <!-- SECTION 3 : LECTEUR -->
 <section class="player-section" id="playerSection">
+  <div class="countdown" id="countdown">
+    <p class="countdown-label">sortie dans</p>
+    <div class="countdown-timer">
+      <div class="countdown-unit"><span id="cdDays">00</span><small>j</small></div>
+      <div class="countdown-unit"><span id="cdHours">00</span><small>h</small></div>
+      <div class="countdown-unit"><span id="cdMinutes">00</span><small>m</small></div>
+      <div class="countdown-unit"><span id="cdSeconds">00</span><small>s</small></div>
+    </div>
+  </div>
+
   <div class="cover-wrap">
     <!-- Placeholder temporaire (pochette de "Ton Coup de Soleil") : remplacer par la vraie pochette d'Amoureux (assets/pochette.jpg) -->
     <img src="/ep2/assets/pochette.png" alt="Amoureux — Jo" class="cover">
@@ -104,11 +114,11 @@
     <!-- Remplacer les href="#" par les vrais liens Spotify / Apple Music -->
     <a href="#" class="cta-btn">Spotify</a>
     <a href="#" class="cta-btn">Apple Music</a>
-    <a href="/ep2/assets/extrait.mp3" download="Amoureux - Jo.mp3" class="cta-btn">Télécharger</a>
   </div>
 
   <div class="donate-block">
     <p class="donate-text">Aidez moi à sortir mes musiques sur les plateformes de musique comme Spotify, faites un don !</p>
+    <p class="donate-subtext">Pour couvrir les frais de la sortie sur la plateforme</p>
     <a href="https://www.buymeacoffee.com/jotoutcourt" target="_blank" rel="noopener" class="donate-btn">Faire un don</a>
     <!-- Barre manuelle : Buy Me a Coffee n'expose pas de progression en direct, mettre à jour width et les montants à la main -->
     <div class="donate-progress-bar">
