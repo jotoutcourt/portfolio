@@ -167,8 +167,8 @@ const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 
 // L'audio ne joue que l'extrait 0:36 → 1:10 du morceau complet
-const EXCERPT_START = 36;
-const EXCERPT_END = 72;
+const EXCERPT_START = 0;
+const EXCERPT_END = 16;
 const EXCERPT_LENGTH = EXCERPT_END - EXCERPT_START;
 
 function formatTime(sec) {
