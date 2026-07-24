@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amoureux — Jo</title>
+<meta property="og:title" content="Amoureux — Jo">
+<meta property="og:description" content="Devine le titre pour débloquer la page.">
+<meta property="og:image" content="https://jordan-join.fr/ep2/assets/preview-lock.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jordan-join.fr/ep2/assets/preview-lock.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Jost:wght@300;400;500&family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ep2/style.css">
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="hero-content">
+    <p class="lock-label">devine le titre pour débloquer la page</p>
+    <h1 class="loading-title" id="maskedTitle"></h1>
+    <div class="keyboard" id="keyboard" role="group" aria-label="Devine une lettre">
+      <div class="keyboard-row">
+        <button type="button" class="key" data-letter="a">a</button>
+        <button type="button" class="key" data-letter="z">z</button>
+        <button type="button" class="key" data-letter="e">e</button>
+        <button type="button" class="key" data-letter="r">r</button>
+        <button type="button" class="key" data-letter="t">t</button>
+        <button type="button" class="key" data-letter="y">y</button>
+        <button type="button" class="key" data-letter="u">u</button>
+        <button type="button" class="key" data-letter="i">i</button>
+        <button type="button" class="key" data-letter="o">o</button>
+        <button type="button" class="key" data-letter="p">p</button>
+      </div>
+      <div class="keyboard-row">
+        <button type="button" class="key" data-letter="q">q</button>
+        <button type="button" class="key" data-letter="s">s</button>
+        <button type="button" class="key" data-letter="d">d</button>
+        <button type="button" class="key" data-letter="f">f</button>
+        <button type="button" class="key" data-letter="g">g</button>
+        <button type="button" class="key" data-letter="h">h</button>
+        <button type="button" class="key" data-letter="j">j</button>
+        <button type="button" class="key" data-letter="k">k</button>
+        <button type="button" class="key" data-letter="l">l</button>
+        <button type="button" class="key" data-letter="m">m</button>
+      </div>
+      <div class="keyboard-row">
+        <button type="button" class="key" data-letter="w">w</button>
+        <button type="button" class="key" data-letter="x">x</button>
+        <button type="button" class="key" data-letter="c">c</button>
+        <button type="button" class="key" data-letter="v">v</button>
+        <button type="button" class="key" data-letter="b">b</button>
+        <button type="button" class="key" data-letter="n">n</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grain"></div>
+
+<!-- SECTION 1 : CIEL + NUAGES -->
+<section class="sky-section" id="skySection">
+  <div class="sky-bg"></div>
+  <img src="/ep2/assets/cloud-desktop.png" alt="" class="clouds clouds-desktop" id="cloudsDesktop">
+  <img src="/ep2/assets/cloud-mobile.png" alt="" class="clouds clouds-mobile" id="cloudsMobile">
+  <div class="hero-content">
+    <h1>Amoureux</h1>
+    <p class="artist">Jo</p>
+    <div class="hero-nav">
+      <a href="#playerSection" class="hero-nav-btn">écouter le titre</a>
+      <a href="#playerSection" class="hero-nav-btn">télécharger</a>
+    </div>
+    <p class="scroll-hint">glisse vers le bas ↓</p>
+  </div>
+</section>
+
+<!-- SECTION 2 : PAROLE 1 -->
+<section class="lyrics-section lyrics-section--single lyrics-section--photo">
+  <img src="/ep2/assets/parole1-pc.png" alt="" class="lyric-photo lyric-photo-desktop">
+  <img src="/ep2/assets/parole1-mobile.png" alt="" class="lyric-photo lyric-photo-mobile">
+</section>
+
+<!-- SECTION 3 : LECTEUR -->
+<section class="player-section" id="playerSection">
+  <div class="cover-wrap">
+    <!-- Placeholder temporaire (pochette de "Ton Coup de Soleil") : remplacer par la vraie pochette d'Amoureux (assets/pochette.jpg) -->
+    <img src="/ep2/assets/pochette.png" alt="Amoureux — Jo" class="cover">
+  </div>
+
+  <div class="cta-row">
+    <!-- Remplacer les href="#" par les vrais liens Spotify / Apple Music -->
+    <a href="#" class="cta-btn">Spotify</a>
+    <a href="#" class="cta-btn">Apple Music</a>
+  </div>
+
+  <div class="player">
+    <button id="playBtn" class="play-btn" aria-label="Lecture">
+      <svg id="iconPlay" viewBox="0 0 24 24" width="20" height="20"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg>
+      <svg id="iconPause" viewBox="0 0 24 24" width="20" height="20" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor"/></svg>
+    </button>
+    <div class="track">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+  </div>
+  <!-- Remplacer par l'extrait audio réel : assets/extrait.mp3 -->
+  <audio id="audio" src="/ep2/assets/extrait.mp3" preload="metadata"></audio>
+</section>
+
+<div class="release-toast" id="releaseToast">Sortie le 31 juillet sur les plateformes de streaming</div>
+
+
+<p class="footer">Disponible bientôt sur Spotify, Youtube Music et Deezer</p>
+
+<script src="/ep2/script.js"></script>
+</body>
+</html>
