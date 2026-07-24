@@ -16,6 +16,15 @@
 </head>
 <body>
 
+<script>
+  // Évite le flash de l'énigme au chargement si elle a déjà été résolue avant
+  try {
+    if (localStorage.getItem('amoureux-ep2-unlocked') === 'true') {
+      document.documentElement.classList.add('pre-unlocked');
+    }
+  } catch (e) {}
+</script>
+
 <div class="loading-screen" id="loadingScreen">
   <div class="hero-content">
     <p class="lock-label">devine le titre pour débloquer la page</p>
