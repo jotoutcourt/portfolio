@@ -82,22 +82,6 @@
     <img src="/ep2/assets/pochette.png" alt="Amoureux — Jo" class="cover">
   </div>
 
-  <div class="donate-block">
-    <p class="donate-text">aidez moi à faire sortir la chanson sur les plateformes de musique, faites un don !</p>
-    <a href="https://www.buymeacoffee.com/jotoutcourt" target="_blank" rel="noopener" class="donate-btn">Faire un don</a>
-    <!-- Barre manuelle : Buy Me a Coffee n'expose pas de progression en direct, mettre à jour width et les montants à la main -->
-    <div class="donate-progress-bar">
-      <div class="donate-progress-fill" style="width: 10%;"></div>
-    </div>
-    <p class="donate-progress-label">2,50 € récoltés sur 25 €</p>
-  </div>
-
-  <div class="cta-row">
-    <!-- Remplacer les href="#" par les vrais liens Spotify / Apple Music -->
-    <a href="#" class="cta-btn">Spotify</a>
-    <a href="#" class="cta-btn">Apple Music</a>
-  </div>
-
   <div class="player">
     <button id="playBtn" class="play-btn" aria-label="Lecture">
       <svg id="iconPlay" viewBox="0 0 24 24" width="20" height="20"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg>
@@ -115,6 +99,23 @@
   </div>
   <!-- Remplacer par l'extrait audio réel : assets/extrait.mp3 -->
   <audio id="audio" src="/ep2/assets/extrait.mp3" preload="metadata"></audio>
+
+  <div class="cta-row">
+    <!-- Remplacer les href="#" par les vrais liens Spotify / Apple Music -->
+    <a href="#" class="cta-btn">Spotify</a>
+    <a href="#" class="cta-btn">Apple Music</a>
+    <a href="/ep2/assets/extrait.mp3" download="Amoureux - Jo.mp3" class="cta-btn">Télécharger</a>
+  </div>
+
+  <div class="donate-block">
+    <p class="donate-text">Aidez moi à sortir mes musiques sur les plateformes de musique comme Spotify, faites un don !</p>
+    <a href="https://www.buymeacoffee.com/jotoutcourt" target="_blank" rel="noopener" class="donate-btn">Faire un don</a>
+    <!-- Barre manuelle : Buy Me a Coffee n'expose pas de progression en direct, mettre à jour width et les montants à la main -->
+    <div class="donate-progress-bar">
+      <div class="donate-progress-fill" style="width: 10%;"></div>
+    </div>
+    <p class="donate-progress-label">2,50 € récoltés sur 25 €</p>
+  </div>
 </section>
 
 <div class="release-toast" id="releaseToast">Sortie le 31 juillet sur les plateformes de streaming</div>

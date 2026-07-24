@@ -29,8 +29,12 @@ body {
   inset: 0;
   z-index: 9999;
   overflow: hidden;
-  background: var(--cmbyn-blue);
-  transition: opacity 0.7s ease;
+  background-color: var(--cmbyn-blue);
+  transition: opacity 0.7s ease, background-color 0.8s ease;
+}
+
+.loading-screen.bg-fade {
+  background-color: transparent;
 }
 
 .loading-screen.fade-out {
@@ -46,12 +50,14 @@ body {
 .loading-title {
   font-family: 'Annie Use Your Telescope', cursive;
   font-size: clamp(2.6rem, 9vw, 4.6rem);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.35em;
   color: var(--cmbyn-pink);
   transform: rotate(-2deg);
+  transition: letter-spacing 0.6s ease;
 }
 
 .loading-title.solved {
+  letter-spacing: 0.01em;
   animation: solvedPop 0.5s ease;
 }
 
@@ -59,6 +65,12 @@ body {
   0% { transform: rotate(-2deg) scale(1); }
   40% { transform: rotate(-2deg) scale(1.15); }
   100% { transform: rotate(-2deg) scale(1); }
+}
+
+.fade-hide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 .lock-label {

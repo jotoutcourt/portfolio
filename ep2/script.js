@@ -1,8 +1,10 @@
 // ---------- ÉCRAN DE VERROUILLAGE : devine le titre lettre par lettre via clavier virtuel (essais illimités) ----------
 const loadingScreen = document.getElementById('loadingScreen');
 const maskedTitleEl = document.getElementById('maskedTitle');
+const lockLabelEl = document.querySelector('.lock-label');
 const keyboardEl = document.getElementById('keyboard');
 const keyButtons = keyboardEl.querySelectorAll('.key');
+const heroTitleEl = document.querySelector('.sky-section h1');
 
 const SECRET_TITLE = 'amoureux';
 const UNLOCK_KEY = 'amoureux-ep2-unlocked';
@@ -24,30 +26,52 @@ function rememberUnlocked() {
   }
 }
 
-if (hasUnlockedBefore()) {
-  loadingScreen.remove();
-} else {
-  document.body.classList.add('locked');
+function renderMask() {
+  maskedTitleEl.textContent = SECRET_TITLE
+    .split('')
+    .map(ch => (foundLetters.has(ch) ? ch : '_'))
+    .join('');
+}
 
-  function renderMask() {
-    maskedTitleEl.textContent = SECRET_TITLE
-      .split('')
-      .map(ch => (foundLetters.has(ch) ? ch : '_'))
-      .join(' ');
-  }
-  renderMask();
+// Réécriture jolie (les lettres se resserrent) puis le titre glisse pile à la place du vrai
+// titre du hero pendant que le fond bleu s'efface pour révéler le ciel + les nuages.
+// Cette animation rejoue à chaque ouverture ; seule l'énigme (deviner via le clavier) ne revient qu'une fois.
+function playRevealAnimation() {
+  maskedTitleEl.textContent = SECRET_TITLE;
+  maskedTitleEl.classList.add('solved');
+  lockLabelEl.classList.add('fade-hide');
+  keyboardEl.classList.add('fade-hide');
 
-  function unlockPage() {
-    rememberUnlocked();
-    maskedTitleEl.textContent = SECRET_TITLE;
-    maskedTitleEl.classList.add('solved');
-    keyboardEl.style.display = 'none';
+  setTimeout(() => {
+    const fromRect = maskedTitleEl.getBoundingClientRect();
+    const toRect = heroTitleEl.getBoundingClientRect();
+    const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
+    const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
+    const scale = toRect.width / fromRect.width;
+
+    maskedTitleEl.style.transition = 'transform 0.9s cubic-bezier(.4,0,.2,1)';
+    maskedTitleEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+
+    loadingScreen.classList.add('bg-fade');
+
     setTimeout(() => {
       loadingScreen.classList.add('fade-out');
       document.body.classList.remove('locked');
-      setTimeout(() => loadingScreen.remove(), 700);
+      setTimeout(() => loadingScreen.remove(), 500);
     }, 900);
-  }
+  }, 650);
+}
+
+document.body.classList.add('locked');
+
+if (hasUnlockedBefore()) {
+  lockLabelEl.classList.add('fade-hide');
+  keyboardEl.classList.add('fade-hide');
+  SECRET_TITLE.split('').forEach(ch => foundLetters.add(ch));
+  renderMask();
+  setTimeout(playRevealAnimation, 500);
+} else {
+  renderMask();
 
   keyButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -59,7 +83,8 @@ if (hasUnlockedBefore()) {
         btn.classList.add('correct');
         renderMask();
         if (SECRET_TITLE.split('').every(ch => foundLetters.has(ch))) {
-          unlockPage();
+          rememberUnlocked();
+          playRevealAnimation();
         }
       } else {
         btn.classList.add('wrong');
