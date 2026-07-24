@@ -74,6 +74,7 @@ body {
 }
 
 .pre-unlocked .lock-label,
+.pre-unlocked .lock-hint,
 .pre-unlocked .keyboard {
   opacity: 0;
   pointer-events: none;
@@ -86,6 +87,14 @@ body {
   text-transform: uppercase;
   color: var(--cmbyn-pink);
   opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.lock-hint {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  color: var(--cmbyn-pink);
+  opacity: 0.55;
   margin-bottom: 18px;
 }
 

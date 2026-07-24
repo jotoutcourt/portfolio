@@ -2,6 +2,7 @@
 const loadingScreen = document.getElementById('loadingScreen');
 const maskedTitleEl = document.getElementById('maskedTitle');
 const lockLabelEl = document.querySelector('.lock-label');
+const lockHintEl = document.querySelector('.lock-hint');
 const keyboardEl = document.getElementById('keyboard');
 const keyButtons = keyboardEl.querySelectorAll('.key');
 const heroTitleEl = document.querySelector('.sky-section h1');
@@ -40,6 +41,7 @@ function playRevealAnimation() {
   maskedTitleEl.textContent = SECRET_TITLE;
   maskedTitleEl.classList.add('solved');
   lockLabelEl.classList.add('fade-hide');
+  lockHintEl.classList.add('fade-hide');
   keyboardEl.classList.add('fade-hide');
 
   setTimeout(() => {
@@ -66,6 +68,7 @@ document.body.classList.add('locked');
 
 if (hasUnlockedBefore()) {
   lockLabelEl.classList.add('fade-hide');
+  lockHintEl.classList.add('fade-hide');
   keyboardEl.classList.add('fade-hide');
   SECRET_TITLE.split('').forEach(ch => foundLetters.add(ch));
   renderMask();
