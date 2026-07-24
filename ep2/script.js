@@ -5,46 +5,68 @@ const keyboardEl = document.getElementById('keyboard');
 const keyButtons = keyboardEl.querySelectorAll('.key');
 
 const SECRET_TITLE = 'amoureux';
+const UNLOCK_KEY = 'amoureux-ep2-unlocked';
 const foundLetters = new Set();
 
-document.body.classList.add('locked');
-
-function renderMask() {
-  maskedTitleEl.textContent = SECRET_TITLE
-    .split('')
-    .map(ch => (foundLetters.has(ch) ? ch : '_'))
-    .join(' ');
-}
-renderMask();
-
-function unlockPage() {
-  maskedTitleEl.textContent = SECRET_TITLE;
-  maskedTitleEl.classList.add('solved');
-  keyboardEl.style.display = 'none';
-  setTimeout(() => {
-    loadingScreen.classList.add('fade-out');
-    document.body.classList.remove('locked');
-    setTimeout(() => loadingScreen.remove(), 700);
-  }, 900);
+function hasUnlockedBefore() {
+  try {
+    return localStorage.getItem(UNLOCK_KEY) === 'true';
+  } catch (e) {
+    return false;
+  }
 }
 
-keyButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const letter = btn.dataset.letter;
-    if (btn.classList.contains('correct') || btn.classList.contains('wrong')) return;
+function rememberUnlocked() {
+  try {
+    localStorage.setItem(UNLOCK_KEY, 'true');
+  } catch (e) {
+    // localStorage indisponible (navigation privée, etc.) : tant pis, on redemandera la prochaine fois
+  }
+}
 
-    if (SECRET_TITLE.includes(letter)) {
-      foundLetters.add(letter);
-      btn.classList.add('correct');
-      renderMask();
-      if (SECRET_TITLE.split('').every(ch => foundLetters.has(ch))) {
-        unlockPage();
+if (hasUnlockedBefore()) {
+  loadingScreen.remove();
+} else {
+  document.body.classList.add('locked');
+
+  function renderMask() {
+    maskedTitleEl.textContent = SECRET_TITLE
+      .split('')
+      .map(ch => (foundLetters.has(ch) ? ch : '_'))
+      .join(' ');
+  }
+  renderMask();
+
+  function unlockPage() {
+    rememberUnlocked();
+    maskedTitleEl.textContent = SECRET_TITLE;
+    maskedTitleEl.classList.add('solved');
+    keyboardEl.style.display = 'none';
+    setTimeout(() => {
+      loadingScreen.classList.add('fade-out');
+      document.body.classList.remove('locked');
+      setTimeout(() => loadingScreen.remove(), 700);
+    }, 900);
+  }
+
+  keyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const letter = btn.dataset.letter;
+      if (btn.classList.contains('correct') || btn.classList.contains('wrong')) return;
+
+      if (SECRET_TITLE.includes(letter)) {
+        foundLetters.add(letter);
+        btn.classList.add('correct');
+        renderMask();
+        if (SECRET_TITLE.split('').every(ch => foundLetters.has(ch))) {
+          unlockPage();
+        }
+      } else {
+        btn.classList.add('wrong');
       }
-    } else {
-      btn.classList.add('wrong');
-    }
+    });
   });
-});
+}
 
 // ---------- NUAGES : dissipation au scroll ----------
 const skySection = document.getElementById('skySection');
