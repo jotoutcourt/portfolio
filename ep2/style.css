@@ -461,6 +461,15 @@ body {
   opacity: 0.75;
 }
 
+.listeners-counter {
+  margin-top: 18px;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--rust);
+  opacity: 0.7;
+  min-height: 1.2em;
+}
+
 .player {
   display: flex;
   align-items: center;

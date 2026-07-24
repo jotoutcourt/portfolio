@@ -187,6 +187,31 @@ function stopAtExcerptEnd() {
   currentTimeEl.textContent = formatTime(0);
 }
 
+// ---------- COMPTEUR D'ÉCOUTES (partagé entre jordan-join.fr et faisonsdesbulles.com) ----------
+const listenersCounterEl = document.getElementById('listenersCounter');
+const LISTENS_NAMESPACE = 'amoureux-jo';
+const LISTENS_KEY = 'ep2-listens';
+
+function renderListenersCount(value) {
+  const n = Number(value).toLocaleString('fr-FR');
+  listenersCounterEl.textContent = `${n} personne${value > 1 ? 's ont' : ' a'} déjà écouté l'extrait`;
+}
+
+fetch(`https://abacus.jasoncameron.dev/get/${LISTENS_NAMESPACE}/${LISTENS_KEY}`)
+  .then(r => r.json())
+  .then(data => renderListenersCount(data.value))
+  .catch(() => {});
+
+let hasCountedListen = false;
+function registerListen() {
+  if (hasCountedListen) return;
+  hasCountedListen = true;
+  fetch(`https://abacus.jasoncameron.dev/hit/${LISTENS_NAMESPACE}/${LISTENS_KEY}`)
+    .then(r => r.json())
+    .then(data => renderListenersCount(data.value))
+    .catch(() => {});
+}
+
 playBtn.addEventListener('click', () => {
   if (audio.paused) {
     if (audio.currentTime < EXCERPT_START || audio.currentTime >= EXCERPT_END) {
@@ -195,6 +220,7 @@ playBtn.addEventListener('click', () => {
     audio.play();
     iconPlay.style.display = 'none';
     iconPause.style.display = 'block';
+    registerListen();
   } else {
     audio.pause();
     iconPlay.style.display = 'block';
