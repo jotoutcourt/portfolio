@@ -368,7 +368,7 @@ body {
 }
 
 .countdown {
-  margin-bottom: 32px;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -379,8 +379,8 @@ body {
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--rust);
-  opacity: 0.75;
+  color: var(--cmbyn-pink);
+  opacity: 0.85;
 }
 
 .countdown-timer {
@@ -452,13 +452,22 @@ body {
 
 .cover { display: block; width: 100%; height: auto; }
 
+.player-label {
+  margin-top: 28px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rust);
+  opacity: 0.75;
+}
+
 .player {
   display: flex;
   align-items: center;
   gap: 16px;
   width: 100%;
   max-width: 360px;
-  margin-top: 40px;
+  margin-top: 14px;
 }
 
 .play-btn {

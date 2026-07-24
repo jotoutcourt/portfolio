@@ -75,10 +75,18 @@
   <img src="/ep2/assets/cloud-mobile.png" alt="" class="clouds clouds-mobile" id="cloudsMobile">
   <div class="hero-content">
     <h1>Amoureux</h1>
+    <div class="countdown" id="countdown">
+      <p class="countdown-label">sortie dans</p>
+      <div class="countdown-timer">
+        <div class="countdown-unit"><span id="cdDays">00</span><small>j</small></div>
+        <div class="countdown-unit"><span id="cdHours">00</span><small>h</small></div>
+        <div class="countdown-unit"><span id="cdMinutes">00</span><small>m</small></div>
+        <div class="countdown-unit"><span id="cdSeconds">00</span><small>s</small></div>
+      </div>
+    </div>
     <p class="artist">Jo</p>
     <div class="hero-nav">
-      <a href="#playerSection" class="hero-nav-btn">écouter le titre</a>
-      <a href="#playerSection" class="hero-nav-btn">télécharger</a>
+      <a href="#playerSection" class="hero-nav-btn">écouter l'extrait</a>
     </div>
     <p class="scroll-hint">glisse vers le bas ↓</p>
   </div>
@@ -86,21 +94,12 @@
 
 <!-- SECTION 3 : LECTEUR -->
 <section class="player-section" id="playerSection">
-  <div class="countdown" id="countdown">
-    <p class="countdown-label">sortie dans</p>
-    <div class="countdown-timer">
-      <div class="countdown-unit"><span id="cdDays">00</span><small>j</small></div>
-      <div class="countdown-unit"><span id="cdHours">00</span><small>h</small></div>
-      <div class="countdown-unit"><span id="cdMinutes">00</span><small>m</small></div>
-      <div class="countdown-unit"><span id="cdSeconds">00</span><small>s</small></div>
-    </div>
-  </div>
-
   <div class="cover-wrap">
     <!-- Placeholder temporaire (pochette de "Ton Coup de Soleil") : remplacer par la vraie pochette d'Amoureux (assets/pochette.jpg) -->
     <img src="/ep2/assets/pochette.png" alt="Amoureux — Jo" class="cover">
   </div>
 
+  <p class="player-label">Découvrir l'extrait</p>
   <div class="player">
     <button id="playBtn" class="play-btn" aria-label="Lecture">
       <svg id="iconPlay" viewBox="0 0 24 24" width="20" height="20"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg>
