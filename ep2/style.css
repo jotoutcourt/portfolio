@@ -458,21 +458,23 @@ body {
   transform: rotate(-0.6deg);
 }
 
-.easter-egg {
+.easter-egg-card {
   position: absolute;
   inset: 0;
   z-index: 1;
-  margin: 0;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
   padding: 22px;
   background: var(--cream);
-  color: var(--pink-deep);
-  font-family: 'Annie Use Your Telescope', cursive;
-  font-size: 2.6rem;
   border-radius: 4px;
   box-shadow: 0 20px 50px -10px rgba(58, 42, 29, 0.4), 0 4px 12px rgba(58, 42, 29, 0.2);
+}
+
+.easter-egg-icon {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
 }
 
 .cover {
