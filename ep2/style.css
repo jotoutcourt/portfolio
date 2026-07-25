@@ -451,15 +451,52 @@ body {
 }
 
 .cover-wrap {
+  position: relative;
   width: 100%;
   max-width: 460px;
   border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px -10px rgba(58, 42, 29, 0.4), 0 4px 12px rgba(58, 42, 29, 0.2);
   transform: rotate(-0.6deg);
 }
 
-.cover { display: block; width: 100%; height: auto; }
+.easter-egg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  color: var(--pink-deep);
+  font-family: 'Annie Use Your Telescope', cursive;
+  font-size: 2.6rem;
+  border-radius: 4px;
+  box-shadow: 0 20px 50px -10px rgba(58, 42, 29, 0.4), 0 4px 12px rgba(58, 42, 29, 0.2);
+}
+
+.cover {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  cursor: grab;
+  box-shadow: 0 20px 50px -10px rgba(58, 42, 29, 0.4), 0 4px 12px rgba(58, 42, 29, 0.2);
+  transition: transform 0.5s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease;
+}
+
+.cover-wrap.lifted .cover {
+  transform: translate(20px, -34px) rotate(-9deg);
+  box-shadow: 0 30px 45px -10px rgba(58, 42, 29, 0.5);
+  cursor: grabbing;
+}
+
+@media (max-width: 480px) {
+  .cover-wrap.lifted .cover {
+    transform: translate(10px, -20px) rotate(-6deg);
+  }
+}
 
 .player-label {
   margin-top: 28px;

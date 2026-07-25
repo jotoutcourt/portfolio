@@ -159,6 +159,14 @@ document.querySelectorAll('.cta-btn').forEach(btn => {
   });
 });
 
+// ---------- EASTER EGG : soulever la pochette ----------
+const coverWrap = document.getElementById('coverWrap');
+const coverImg = document.getElementById('coverImg');
+
+coverImg.addEventListener('click', () => {
+  coverWrap.classList.toggle('lifted');
+});
+
 // ---------- LECTEUR AUDIO ----------
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
