@@ -159,20 +159,12 @@ document.querySelectorAll('.cta-btn').forEach(btn => {
   });
 });
 
-// ---------- EASTER EGG : soulever la pochette (indices sur les titres de l'EP) ----------
+// ---------- EASTER EGG : soulever la pochette ----------
 const coverWrap = document.getElementById('coverWrap');
 const coverImg = document.getElementById('coverImg');
-const easterEggImg = document.getElementById('easterEggImg');
-const HINT_COUNT = 5;
-let hintIndex = 0;
 
 coverImg.addEventListener('click', () => {
-  const isLifting = !coverWrap.classList.contains('lifted');
   coverWrap.classList.toggle('lifted');
-  if (isLifting) {
-    hintIndex = (hintIndex % HINT_COUNT) + 1;
-    easterEggImg.src = `/ep2/assets/hint-${hintIndex}.png`;
-  }
 });
 
 // ---------- LECTEUR AUDIO ----------
