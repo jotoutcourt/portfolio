@@ -172,9 +172,6 @@ coverImg.addEventListener('click', () => {
 const datingOverlay = document.getElementById('datingOverlay');
 const datingStack = document.getElementById('datingStack');
 const datingCards = Array.from(datingStack.querySelectorAll('.dating-card'));
-const datingActions = document.getElementById('datingActions');
-const nopeBtn = document.getElementById('nopeBtn');
-const likeBtn = document.getElementById('likeBtn');
 const datingMatch = document.getElementById('datingMatch');
 const datingCloseBtn = document.getElementById('datingCloseBtn');
 const matchPlayBtn = document.getElementById('matchPlayBtn');
@@ -216,7 +213,6 @@ function swipeActiveCard(direction) {
   datingIndex++;
   setTimeout(() => {
     if (datingIndex >= datingCards.length) {
-      datingActions.style.display = 'none';
       datingMatch.classList.add('show');
     } else {
       layoutDatingStack();
@@ -224,14 +220,21 @@ function swipeActiveCard(direction) {
   }, 200);
 }
 
-nopeBtn.addEventListener('click', () => swipeActiveCard(-1));
-likeBtn.addEventListener('click', () => swipeActiveCard(1));
+datingCards.forEach(card => {
+  card.querySelectorAll('.dating-answer').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (card !== datingCards[datingIndex]) return;
+      swipeActiveCard(Number(btn.dataset.dir));
+    });
+  });
+});
 
 // Glisser la carte à la souris/au doigt
 let dragStartX = 0;
 let dragging = false;
 
-function onDragStart(x, card) {
+function onDragStart(x, card, target) {
+  if (target.closest('.dating-answer')) return;
   dragging = true;
   dragStartX = x;
   card.classList.add('dragging');
@@ -256,18 +259,17 @@ function onDragEnd(x, card) {
 }
 
 datingCards.forEach(card => {
-  card.addEventListener('mousedown', (e) => onDragStart(e.clientX, card));
+  card.addEventListener('mousedown', (e) => onDragStart(e.clientX, card, e.target));
   card.addEventListener('mousemove', (e) => onDragMove(e.clientX, card));
   window.addEventListener('mouseup', (e) => onDragEnd(e.clientX, card));
 
-  card.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX, card), { passive: true });
+  card.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX, card, e.target), { passive: true });
   card.addEventListener('touchmove', (e) => onDragMove(e.touches[0].clientX, card), { passive: true });
   card.addEventListener('touchend', (e) => onDragEnd(e.changedTouches[0].clientX, card));
 });
 
 function openDatingApp() {
   datingIndex = 0;
-  datingActions.style.display = 'flex';
   datingMatch.classList.remove('show');
   datingCards.forEach(card => { card.style.transform = ''; card.style.opacity = ''; });
   layoutDatingStack();

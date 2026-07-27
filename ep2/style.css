@@ -750,8 +750,10 @@ body {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 28px;
   text-align: center;
   padding: 32px;
   background: linear-gradient(160deg, var(--baby-blue), #fff 70%);
@@ -772,31 +774,31 @@ body {
   line-height: 1.35;
 }
 
-.dating-actions {
+.dating-answers {
   display: flex;
-  gap: 28px;
-  margin-top: 24px;
-}
-
-.dating-btn {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  border: none;
-  font-size: 1.6rem;
-  cursor: pointer;
-  box-shadow: 0 10px 24px -8px rgba(58, 42, 29, 0.4);
-  transition: transform 0.15s ease;
-  display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 12px;
 }
 
-.dating-btn:hover { transform: scale(1.08); }
-.dating-btn:active { transform: scale(0.92); }
+.dating-answer {
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 2px solid var(--cmbyn-pink);
+  background: #fff;
+  color: var(--pink-deep);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -10px rgba(58, 42, 29, 0.35);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
 
-.dating-btn--nope { background: #fff; color: var(--rust); border: 2px solid var(--rust); }
-.dating-btn--like { background: var(--cmbyn-pink); color: #fff; }
+.dating-answer:hover {
+  background: var(--cmbyn-pink);
+  color: #fff;
+  transform: translateY(-2px);
+}
 
 .dating-match {
   display: none;
