@@ -166,6 +166,7 @@ const easterEggImg = document.getElementById('easterEggImg');
 
 coverImg.addEventListener('click', () => {
   coverWrap.classList.toggle('lifted');
+  coverImg.classList.remove('hint-shake');
 });
 
 // ---------- EASTER EGG 2 : mini appli de rencontre (clic sur la flamme) ----------
@@ -349,6 +350,14 @@ function stopAtExcerptEnd() {
   iconPause.style.display = 'none';
   progressFill.style.width = '0%';
   currentTimeEl.textContent = formatTime(0);
+  triggerCoverHint();
+}
+
+// Petit indice visuel : la pochette tremble légèrement pour inviter à cliquer dessus
+function triggerCoverHint() {
+  coverImg.classList.remove('hint-shake');
+  void coverImg.offsetWidth; // force le redémarrage de l'animation
+  coverImg.classList.add('hint-shake');
 }
 
 // ---------- COMPTEUR D'ÉCOUTES (partagé entre jordan-join.fr et faisonsdesbulles.com) ----------
