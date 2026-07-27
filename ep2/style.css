@@ -735,15 +735,9 @@ body {
 }
 
 .dating-logo {
-  font-family: 'Jost', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 2rem;
   margin-bottom: 24px;
-  background: var(--tinder-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  filter: drop-shadow(0 6px 14px rgba(253, 41, 123, 0.4));
 }
 
 .dating-stack {
@@ -823,18 +817,107 @@ body {
 
 .dating-match.show { display: flex; }
 
+.match-visual {
+  position: relative;
+  width: 100%;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-circle {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  box-shadow: 0 10px 26px -8px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+}
+
+.match-circle--a {
+  animation: slideInLeft 0.6s cubic-bezier(.34,1.56,.64,1) forwards;
+  transform: translateX(-140px) rotate(-12deg);
+  margin-right: -22px;
+}
+
+.match-circle--b {
+  animation: slideInRight 0.6s cubic-bezier(.34,1.56,.64,1) forwards;
+  transform: translateX(140px) rotate(12deg);
+  margin-left: -22px;
+}
+
+@keyframes slideInLeft {
+  0% { transform: translateX(-140px) rotate(-12deg); opacity: 0; }
+  70% { transform: translateX(6px) rotate(-6deg); opacity: 1; }
+  100% { transform: translateX(-14px) rotate(-8deg); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  0% { transform: translateX(140px) rotate(12deg); opacity: 0; }
+  70% { transform: translateX(-6px) rotate(6deg); opacity: 1; }
+  100% { transform: translateX(14px) rotate(8deg); opacity: 1; }
+}
+
+.sparkle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  animation: sparkleBurst 0.9s ease-out forwards;
+  animation-delay: 0.35s;
+}
+
+.sparkle-1 { --tx: -70px; --ty: -50px; }
+.sparkle-2 { --tx: 70px; --ty: -50px; }
+.sparkle-3 { --tx: -90px; --ty: 20px; }
+.sparkle-4 { --tx: 90px; --ty: 20px; }
+.sparkle-5 { --tx: -30px; --ty: -70px; }
+.sparkle-6 { --tx: 30px; --ty: -70px; }
+
+@keyframes sparkleBurst {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1); opacity: 0; }
+}
+
 .match-title {
   font-family: 'Annie Use Your Telescope', cursive;
   font-size: 3rem;
   color: #fff;
   text-shadow: 0 4px 18px rgba(0,0,0,0.2);
-  animation: matchPulse 0.6s ease;
+  animation: matchPulse 0.6s ease 0.25s backwards;
 }
 
 @keyframes matchPulse {
   0% { transform: scale(0.7); opacity: 0; }
   60% { transform: scale(1.1); opacity: 1; }
   100% { transform: scale(1); }
+}
+
+.match-subtext {
+  color: #fff;
+  opacity: 0.95;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+.match-friday {
+  color: #fff;
+  font-family: 'Annie Use Your Telescope', cursive;
+  font-size: 1.3rem;
+  opacity: 0.95;
 }
 
 .match-btn {

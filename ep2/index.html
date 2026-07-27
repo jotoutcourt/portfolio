@@ -141,7 +141,7 @@
 <!-- EASTER EGG : mini appli de rencontre cachée derrière la flamme -->
 <div class="dating-overlay" id="datingOverlay">
   <div class="dating-app" id="datingApp">
-    <p class="dating-logo">amoureux</p>
+    <p class="dating-logo" aria-hidden="true">🔥</p>
 
     <div class="dating-stack" id="datingStack">
       <div class="dating-card" data-index="0">
@@ -168,10 +168,22 @@
     </div>
 
     <div class="dating-match" id="datingMatch">
+      <div class="match-visual" aria-hidden="true">
+        <span class="match-circle match-circle--a">🔥</span>
+        <span class="match-circle match-circle--b">🎵</span>
+        <span class="sparkle sparkle-1"></span>
+        <span class="sparkle sparkle-2"></span>
+        <span class="sparkle sparkle-3"></span>
+        <span class="sparkle sparkle-4"></span>
+        <span class="sparkle sparkle-5"></span>
+        <span class="sparkle sparkle-6"></span>
+      </div>
       <p class="match-title">C'est un match !</p>
+      <p class="match-subtext">Car 2 c'est toujours mieux que 1, un deuxième titre surprise ;)</p>
       <!-- Remplacer assets/extrait2.mp3 par le vrai extrait du deuxième titre -->
       <audio id="audioSurprise" src="/ep2/assets/extrait2.mp3" preload="none"></audio>
-      <button class="match-btn" id="matchPlayBtn">Écouter un extrait de mon deuxième titre surprise !</button>
+      <button class="match-btn" id="matchPlayBtn">Écouter l'extrait</button>
+      <p class="match-friday">rendez-vous vendredi</p>
       <button class="dating-close" id="datingCloseBtn">Fermer</button>
     </div>
   </div>

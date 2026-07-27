@@ -279,7 +279,7 @@ function openDatingApp() {
 // L'extrait surprise ne joue que de 0:26 à 0:39
 const SURPRISE_START = 26;
 const SURPRISE_END = 39;
-const MATCH_BTN_LABEL = "Écouter un extrait de mon deuxième titre surprise !";
+const MATCH_BTN_LABEL = "Écouter l'extrait";
 
 function resetSurpriseAudio() {
   audioSurprise.pause();
