@@ -274,29 +274,49 @@ function openDatingApp() {
   datingOverlay.classList.add('open');
 }
 
+// L'extrait surprise ne joue que de 0:26 à 0:39
+const SURPRISE_START = 26;
+const SURPRISE_END = 39;
+const MATCH_BTN_LABEL = "Écouter un extrait de mon deuxième titre surprise !";
+
+function resetSurpriseAudio() {
+  audioSurprise.pause();
+  audioSurprise.currentTime = SURPRISE_START;
+  matchPlayBtn.textContent = MATCH_BTN_LABEL;
+}
+
 function closeDatingApp() {
   datingOverlay.classList.remove('open');
-  audioSurprise.pause();
-  audioSurprise.currentTime = 0;
-  matchPlayBtn.textContent = "Écouter un extrait de mon deuxième titre surprise !";
+  resetSurpriseAudio();
 }
 
 easterEggImg.addEventListener('click', openDatingApp);
 datingCloseBtn.addEventListener('click', closeDatingApp);
 
+audioSurprise.addEventListener('loadedmetadata', () => {
+  audioSurprise.currentTime = SURPRISE_START;
+});
+
 matchPlayBtn.addEventListener('click', () => {
   if (audioSurprise.paused) {
+    if (audioSurprise.currentTime < SURPRISE_START || audioSurprise.currentTime >= SURPRISE_END) {
+      audioSurprise.currentTime = SURPRISE_START;
+    }
     audioSurprise.play().catch(() => {});
     matchPlayBtn.textContent = '⏸ En lecture...';
   } else {
     audioSurprise.pause();
-    matchPlayBtn.textContent = "Écouter un extrait de mon deuxième titre surprise !";
+    matchPlayBtn.textContent = MATCH_BTN_LABEL;
   }
 });
 
-audioSurprise.addEventListener('ended', () => {
-  matchPlayBtn.textContent = "Écouter un extrait de mon deuxième titre surprise !";
+audioSurprise.addEventListener('timeupdate', () => {
+  if (audioSurprise.currentTime >= SURPRISE_END) {
+    resetSurpriseAudio();
+  }
 });
+
+audioSurprise.addEventListener('ended', resetSurpriseAudio);
 
 // ---------- LECTEUR AUDIO ----------
 const audio = document.getElementById('audio');
