@@ -138,6 +138,38 @@
 
 <p class="footer">Disponible bientôt sur Spotify, Youtube Music et Deezer</p>
 
+<!-- EASTER EGG : mini appli de rencontre cachée derrière la flamme -->
+<div class="dating-overlay" id="datingOverlay">
+  <div class="dating-app" id="datingApp">
+    <p class="dating-logo">amoureux</p>
+
+    <div class="dating-stack" id="datingStack">
+      <div class="dating-card" data-index="0">
+        <p class="dating-question">Tu regardes encore ses stories ?</p>
+      </div>
+      <div class="dating-card" data-index="1">
+        <p class="dating-question">Tu swipes pour l'oublier ?</p>
+      </div>
+      <div class="dating-card" data-index="2">
+        <p class="dating-question">Prêt à retomber amoureux ?</p>
+      </div>
+    </div>
+
+    <div class="dating-actions" id="datingActions">
+      <button class="dating-btn dating-btn--nope" id="nopeBtn" aria-label="Non">✕</button>
+      <button class="dating-btn dating-btn--like" id="likeBtn" aria-label="Oui">♥</button>
+    </div>
+
+    <div class="dating-match" id="datingMatch">
+      <p class="match-title">C'est un match !</p>
+      <!-- Remplacer assets/extrait2.mp3 par le vrai extrait du deuxième titre -->
+      <audio id="audioSurprise" src="/ep2/assets/extrait2.mp3" preload="none"></audio>
+      <button class="match-btn" id="matchPlayBtn">Écouter un extrait de mon deuxième titre surprise !</button>
+      <button class="dating-close" id="datingCloseBtn">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <script src="/ep2/script.js"></script>
 </body>
 </html>

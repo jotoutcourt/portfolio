@@ -162,9 +162,140 @@ document.querySelectorAll('.cta-btn').forEach(btn => {
 // ---------- EASTER EGG : soulever la pochette ----------
 const coverWrap = document.getElementById('coverWrap');
 const coverImg = document.getElementById('coverImg');
+const easterEggImg = document.getElementById('easterEggImg');
 
 coverImg.addEventListener('click', () => {
   coverWrap.classList.toggle('lifted');
+});
+
+// ---------- EASTER EGG 2 : mini appli de rencontre (clic sur la flamme) ----------
+const datingOverlay = document.getElementById('datingOverlay');
+const datingStack = document.getElementById('datingStack');
+const datingCards = Array.from(datingStack.querySelectorAll('.dating-card'));
+const datingActions = document.getElementById('datingActions');
+const nopeBtn = document.getElementById('nopeBtn');
+const likeBtn = document.getElementById('likeBtn');
+const datingMatch = document.getElementById('datingMatch');
+const datingCloseBtn = document.getElementById('datingCloseBtn');
+const matchPlayBtn = document.getElementById('matchPlayBtn');
+const audioSurprise = document.getElementById('audioSurprise');
+
+let datingIndex = 0;
+
+function layoutDatingStack() {
+  datingCards.forEach((card, i) => {
+    const rel = i - datingIndex;
+    card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+    if (rel < 0) return; // déjà swipée, on la laisse hors champ
+    if (rel === 0) {
+      card.style.zIndex = 10;
+      card.style.opacity = '1';
+      card.style.transform = 'translate(0, 0) rotate(0deg)';
+      card.style.pointerEvents = 'auto';
+    } else if (rel === 1) {
+      card.style.zIndex = 5;
+      card.style.opacity = '0.7';
+      card.style.transform = 'scale(0.95) translateY(14px)';
+      card.style.pointerEvents = 'none';
+    } else {
+      card.style.zIndex = 1;
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.9) translateY(28px)';
+      card.style.pointerEvents = 'none';
+    }
+  });
+}
+
+function swipeActiveCard(direction) {
+  const card = datingCards[datingIndex];
+  if (!card) return;
+  card.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+  card.style.transform = `translate(${direction * 500}px, -30px) rotate(${direction * 22}deg)`;
+  card.style.opacity = '0';
+  card.style.pointerEvents = 'none';
+  datingIndex++;
+  setTimeout(() => {
+    if (datingIndex >= datingCards.length) {
+      datingActions.style.display = 'none';
+      datingMatch.classList.add('show');
+    } else {
+      layoutDatingStack();
+    }
+  }, 200);
+}
+
+nopeBtn.addEventListener('click', () => swipeActiveCard(-1));
+likeBtn.addEventListener('click', () => swipeActiveCard(1));
+
+// Glisser la carte à la souris/au doigt
+let dragStartX = 0;
+let dragging = false;
+
+function onDragStart(x, card) {
+  dragging = true;
+  dragStartX = x;
+  card.classList.add('dragging');
+}
+
+function onDragMove(x, card) {
+  if (!dragging) return;
+  const dx = x - dragStartX;
+  card.style.transform = `translate(${dx}px, 0) rotate(${dx / 18}deg)`;
+}
+
+function onDragEnd(x, card) {
+  if (!dragging) return;
+  dragging = false;
+  card.classList.remove('dragging');
+  const dx = x - dragStartX;
+  if (Math.abs(dx) > 80) {
+    swipeActiveCard(dx > 0 ? 1 : -1);
+  } else {
+    layoutDatingStack();
+  }
+}
+
+datingCards.forEach(card => {
+  card.addEventListener('mousedown', (e) => onDragStart(e.clientX, card));
+  card.addEventListener('mousemove', (e) => onDragMove(e.clientX, card));
+  window.addEventListener('mouseup', (e) => onDragEnd(e.clientX, card));
+
+  card.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX, card), { passive: true });
+  card.addEventListener('touchmove', (e) => onDragMove(e.touches[0].clientX, card), { passive: true });
+  card.addEventListener('touchend', (e) => onDragEnd(e.changedTouches[0].clientX, card));
+});
+
+function openDatingApp() {
+  datingIndex = 0;
+  datingActions.style.display = 'flex';
+  datingMatch.classList.remove('show');
+  datingCards.forEach(card => { card.style.transform = ''; card.style.opacity = ''; });
+  layoutDatingStack();
+  datingOverlay.classList.add('open');
+}
+
+function closeDatingApp() {
+  datingOverlay.classList.remove('open');
+  audioSurprise.pause();
+  audioSurprise.currentTime = 0;
+  matchPlayBtn.textContent = "Écouter un extrait de mon deuxième titre surprise !";
+}
+
+easterEggImg.addEventListener('click', openDatingApp);
+datingCloseBtn.addEventListener('click', closeDatingApp);
+
+matchPlayBtn.addEventListener('click', () => {
+  if (audioSurprise.paused) {
+    audioSurprise.play().catch(() => {});
+    matchPlayBtn.textContent = '⏸ En lecture...';
+  } else {
+    audioSurprise.pause();
+    matchPlayBtn.textContent = "Écouter un extrait de mon deuxième titre surprise !";
+  }
+});
+
+audioSurprise.addEventListener('ended', () => {
+  matchPlayBtn.textContent = "Écouter un extrait de mon deuxième titre surprise !";
 });
 
 // ---------- LECTEUR AUDIO ----------
