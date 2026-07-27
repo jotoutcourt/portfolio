@@ -706,7 +706,7 @@ body {
   .cover-wrap { max-width: 340px; }
 }
 
-/* ---------- EASTER EGG : mini appli de rencontre ---------- */
+/* ---------- EASTER EGG : mini appli de rencontre (DA façon Tinder) ---------- */
 .dating-overlay {
   display: none;
   position: fixed;
@@ -714,6 +714,10 @@ body {
   z-index: 10000;
   background: #fff;
   overflow: hidden;
+  --tinder-red: #fd297b;
+  --tinder-orange: #ff655b;
+  --tinder-purple: #a60cd4;
+  --tinder-gradient: linear-gradient(45deg, var(--tinder-red), var(--tinder-orange));
 }
 
 .dating-overlay.open { display: flex; }
@@ -732,11 +736,14 @@ body {
 
 .dating-logo {
   font-family: 'Jost', sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--pink-deep);
   margin-bottom: 24px;
+  background: var(--tinder-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .dating-stack {
@@ -756,9 +763,9 @@ body {
   gap: 28px;
   text-align: center;
   padding: 32px;
-  background: linear-gradient(160deg, var(--baby-blue), #fff 70%);
+  background: linear-gradient(160deg, #fff, #ffece8 75%);
   border-radius: 20px;
-  box-shadow: 0 16px 40px -12px rgba(58, 42, 29, 0.35);
+  box-shadow: 0 16px 40px -12px rgba(253, 41, 123, 0.25), 0 4px 14px -6px rgba(58, 42, 29, 0.3);
   cursor: grab;
   touch-action: none;
   transition: transform 0.35s ease, opacity 0.35s ease;
@@ -784,20 +791,20 @@ body {
 .dating-answer {
   padding: 12px 20px;
   border-radius: 999px;
-  border: 2px solid var(--cmbyn-pink);
-  background: #fff;
-  color: var(--pink-deep);
+  border: none;
+  background: var(--tinder-gradient);
+  color: #fff;
   font-family: 'Jost', sans-serif;
+  font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
-  box-shadow: 0 10px 24px -10px rgba(58, 42, 29, 0.35);
-  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 10px 24px -10px rgba(253, 41, 123, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .dating-answer:hover {
-  background: var(--cmbyn-pink);
-  color: #fff;
   transform: translateY(-2px);
+  box-shadow: 0 14px 28px -8px rgba(253, 41, 123, 0.6);
 }
 
 .dating-match {
@@ -807,7 +814,11 @@ body {
   justify-content: center;
   gap: 20px;
   flex: 1;
+  width: 100%;
   text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--tinder-purple), var(--tinder-red) 55%, var(--tinder-orange));
+  padding: 32px;
 }
 
 .dating-match.show { display: flex; }
@@ -815,7 +826,8 @@ body {
 .match-title {
   font-family: 'Annie Use Your Telescope', cursive;
   font-size: 3rem;
-  color: var(--cmbyn-pink);
+  color: #fff;
+  text-shadow: 0 4px 18px rgba(0,0,0,0.2);
   animation: matchPulse 0.6s ease;
 }
 
@@ -829,17 +841,18 @@ body {
   padding: 16px 26px;
   border: none;
   border-radius: 999px;
-  background: var(--cmbyn-pink);
-  color: #fff;
+  background: #fff;
+  color: var(--tinder-red);
   font-family: 'Jost', sans-serif;
+  font-weight: 500;
   font-size: 0.95rem;
   cursor: pointer;
-  box-shadow: 0 14px 30px -10px rgba(58, 42, 29, 0.4);
-  transition: background 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease;
   max-width: 300px;
 }
 
-.match-btn:hover { background: var(--pink-deep); transform: translateY(-2px); }
+.match-btn:hover { transform: translateY(-2px); }
 
 .dating-close {
   border: none;
@@ -850,4 +863,9 @@ body {
   font-size: 0.85rem;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.dating-match .dating-close {
+  color: #fff;
+  opacity: 0.85;
 }
