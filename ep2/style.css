@@ -852,6 +852,17 @@ body {
   margin-left: -22px;
 }
 
+.match-circle--photo {
+  overflow: hidden;
+  padding: 0;
+}
+
+.match-circle--photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 @keyframes slideInLeft {
   0% { transform: translateX(-140px) rotate(-12deg); opacity: 0; }
   70% { transform: translateX(-20px) rotate(-6deg); opacity: 1; }
