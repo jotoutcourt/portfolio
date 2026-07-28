@@ -54,7 +54,7 @@ img { max-width: 100%; display: block; }
 }
 
 .bg-photo--hero { object-position: 60% 35%; }
-.bg-photo--tracklist { object-position: 30% 75%; }
+.bg-photo--tracklist { object-position: 65% 45%; }
 
 .scrim {
   position: absolute;
