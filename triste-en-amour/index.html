@@ -26,6 +26,25 @@
     <p class="hero-kicker">nouvel EP</p>
     <h1 class="hero-title">Triste en amour</h1>
     <p class="hero-artist">Jo</p>
+
+    <div class="hero-countdown" aria-label="Sortie le 4 septembre">
+      <span id="cdDays">00</span><small>j</small>
+      <span class="cd-sep">·</span>
+      <span id="cdHours">00</span><small>h</small>
+      <span class="cd-sep">·</span>
+      <span id="cdMinutes">00</span><small>m</small>
+      <span class="cd-sep">·</span>
+      <span id="cdSeconds">00</span><small>s</small>
+    </div>
+
+    <form action="https://formsubmit.co/jordan.join@icloud.com" method="POST" class="notify-form" id="notifyForm">
+      <input type="hidden" name="_subject" value="Nouvelle inscription — Triste en amour">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://jordan-join.fr/triste-en-amour?merci=1">
+      <input type="email" name="email" placeholder="ton email" required class="notify-input">
+      <button type="submit" class="notify-btn">être prévenu·e</button>
+    </form>
+    <p class="notify-success" id="notifySuccess">merci, on te préviendra ✓</p>
   </div>
 </section>
 
@@ -52,5 +71,6 @@
   <span class="footer-copy">© 2026 Jo</span>
 </footer>
 
+<script src="/triste-en-amour/script.js"></script>
 </body>
 </html>
