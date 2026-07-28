@@ -1,10 +1,10 @@
 :root {
-  --bg: #0d0d0d;
-  --bg-soft: #171412;
-  --cream: #f2ede4;
-  --amber: #e8a35c;
-  --amber-deep: #b5652e;
-  --muted: #9a9088;
+  --bg: #f5ede4;
+  --bg-soft: #ede1d0;
+  --ink: #2e2620;
+  --ink-soft: #6b5d4f;
+  --amber: #c4703f;
+  --amber-deep: #9c552c;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,7 +14,7 @@ html { scroll-behavior: smooth; }
 body {
   font-family: 'Jost', sans-serif;
   font-weight: 300;
-  color: var(--cream);
+  color: var(--ink);
   background: var(--bg);
   overflow-x: hidden;
 }
@@ -27,7 +27,7 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
   z-index: 50;
   opacity: 0.05;
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -49,7 +49,7 @@ img { max-width: 100%; display: block; }
   width: 100%;
   max-width: 480px;
   margin: 0 auto 40px;
-  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 24px 50px rgba(46, 38, 32, 0.25));
 }
 
 .hero-content { position: relative; z-index: 1; }
@@ -58,7 +58,7 @@ img { max-width: 100%; display: block; }
   font-size: 0.78rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--amber-deep);
   opacity: 0.9;
   margin-bottom: 14px;
 }
@@ -68,7 +68,7 @@ img { max-width: 100%; display: block; }
   font-weight: 400;
   font-size: clamp(2.6rem, 8vw, 4.6rem);
   line-height: 1.1;
-  color: var(--cream);
+  color: var(--ink);
 }
 
 .hero-artist {
@@ -76,13 +76,6 @@ img { max-width: 100%; display: block; }
   font-size: clamp(1.2rem, 3vw, 1.6rem);
   color: var(--amber);
   margin-top: 10px;
-}
-
-.hero-sub {
-  margin-top: 18px;
-  font-size: 0.9rem;
-  color: var(--muted);
-  letter-spacing: 0.02em;
 }
 
 /* ---------- SECTION 2 : POCHETTE ---------- */
@@ -97,7 +90,7 @@ img { max-width: 100%; display: block; }
   max-width: 420px;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 30px 70px -20px rgba(0,0,0,0.7);
+  box-shadow: 0 30px 70px -20px rgba(46, 38, 32, 0.35);
   transform: rotate(-0.6deg);
 }
 
@@ -106,84 +99,58 @@ img { max-width: 100%; display: block; }
   padding: 40px 24px 100px;
   text-align: center;
   background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .section-kicker {
   font-family: 'Annie Use Your Telescope', cursive;
   font-size: 1.4rem;
-  color: var(--amber);
+  color: var(--amber-deep);
   margin-bottom: 36px;
 }
 
-.tracklist-wrap {
-  max-width: 480px;
-  margin: 0 auto;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 24px 60px -18px rgba(0,0,0,0.6);
+.tracklist-plain {
+  list-style: none;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 32px;
 }
 
-.tracklist-caption {
-  margin-top: 24px;
+.tracklist-plain li {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(46, 38, 32, 0.12);
+}
+
+.track-num {
   font-size: 0.85rem;
-  color: var(--muted);
-  max-width: 380px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  flex-shrink: 0;
 }
 
-/* ---------- SECTION 4 : COMPTE À REBOURS ---------- */
-.countdown-section {
-  padding: 90px 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+.track-title {
+  font-family: 'Annie Use Your Telescope', cursive;
+  font-size: 1.3rem;
+  color: var(--ink);
+  flex: 1;
+  text-align: left;
 }
 
-.countdown-label {
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.countdown-timer {
-  display: flex;
-  gap: 10px;
-}
-
-.countdown-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  padding: 10px 0;
-  border-radius: 10px;
-  background: var(--bg-soft);
-  border: 1px solid rgba(232, 163, 92, 0.25);
-}
-
-.countdown-unit span {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--amber);
-  font-variant-numeric: tabular-nums;
-}
-
-.countdown-unit small {
-  font-size: 0.65rem;
-  letter-spacing: 0.05em;
-  color: var(--muted);
-  text-transform: uppercase;
+.track-title--unknown {
+  min-height: 1.3em;
+  border-bottom: 1px dashed rgba(46, 38, 32, 0.35);
 }
 
 .cta-link {
-  margin-top: 10px;
-  color: var(--cream);
+  color: var(--ink);
   text-decoration: none;
   font-size: 0.9rem;
   border-bottom: 1px solid var(--amber-deep);
@@ -192,7 +159,7 @@ img { max-width: 100%; display: block; }
 }
 
 .cta-link:hover {
-  color: var(--amber);
+  color: var(--amber-deep);
   border-color: var(--amber);
 }
 
@@ -200,19 +167,19 @@ img { max-width: 100%; display: block; }
 .footer {
   text-align: center;
   padding: 50px 24px;
-  background: var(--bg-soft);
+  background: var(--bg);
 }
 
 .footer-signature {
   font-family: 'Annie Use Your Telescope', cursive;
   font-size: 1.6rem;
-  color: var(--amber);
+  color: var(--amber-deep);
   margin-bottom: 10px;
 }
 
 .footer-copy {
   font-size: 0.72rem;
-  color: var(--muted);
+  color: var(--ink-soft);
 }
 
 @media (max-width: 640px) {
