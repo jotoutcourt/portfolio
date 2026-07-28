@@ -186,4 +186,5 @@ img { max-width: 100%; display: block; }
 
 @media (max-width: 640px) {
   .photo-section { padding: 50px 20px; }
+  .bg-photo--hero { object-position: 60% 15%; }
 }
