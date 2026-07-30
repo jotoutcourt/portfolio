@@ -56,6 +56,15 @@ img { max-width: 100%; display: block; }
 .bg-photo--hero { object-position: 60% 35%; }
 .bg-photo--tracklist { object-position: 65% 45%; }
 
+.bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
 .scrim {
   position: absolute;
   inset: 0;
@@ -282,5 +291,6 @@ img { max-width: 100%; display: block; }
 
 @media (max-width: 640px) {
   .photo-section { padding: 50px 20px; }
-  .bg-photo--hero { object-position: 60% 15%; }
+  .bg-photo--hero { display: none; }
+  .bg-video--hero { display: block; }
 }
