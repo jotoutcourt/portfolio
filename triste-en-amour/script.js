@@ -25,6 +25,10 @@ listenModal.addEventListener('click', (e) => {
 document.querySelectorAll('[data-platform-link]').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
+    const isSpotify = link.dataset.platformLink === 'spotify';
+    listenModalToast.textContent = isSpotify
+      ? '🔔 pas encore dispo, on te préviendra !'
+      : 'patience, le titre sera dispo dans quelques heures sur cette plateforme';
     listenModalToast.classList.add('show');
     clearTimeout(listenToastTimer);
     listenToastTimer = setTimeout(() => listenModalToast.classList.remove('show'), 2600);
