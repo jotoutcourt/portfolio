@@ -1,44 +1,14 @@
-// ---------- ÉCRAN DE CHARGEMENT : annonce de l'EP, puis glisse vers le hero réel ----------
+// ---------- ÉCRAN DE CHARGEMENT : annonce de l'EP, puis fondu simple vers le hero réel ----------
 (function revealLoadingScreen() {
   const loadingScreen = document.getElementById('loadingScreen');
+  const discoverBtn = document.getElementById('loadingDiscoverBtn');
 
   document.body.style.overflow = 'hidden';
 
-  // Fait glisser chaque ligne (kicker / titre / artiste) exactement à la place
-  // de son équivalent dans le vrai hero, en un seul mouvement synchronisé.
-  function flip(fromEl, toEl, extraStyle) {
-    const fromRect = fromEl.getBoundingClientRect();
-    const toRect = toEl.getBoundingClientRect();
-    const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
-    const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
-    const scale = toRect.width / fromRect.width;
-    fromEl.style.transition = 'transform 1s cubic-bezier(.4,0,.2,1), color 0.7s ease';
-    fromEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
-    if (extraStyle) Object.assign(fromEl.style, extraStyle);
-  }
-
-  const discoverBtn = document.getElementById('loadingDiscoverBtn');
-  const soonEl = loadingScreen.querySelector('.loading-soon');
-
   discoverBtn.addEventListener('click', () => {
-    discoverBtn.disabled = true;
-    discoverBtn.style.transition = 'opacity 0.4s ease';
-    discoverBtn.style.opacity = '0';
-    soonEl.style.transition = 'opacity 0.4s ease';
-    soonEl.style.opacity = '0';
-
-    flip(loadingScreen.querySelector('.loading-kicker'), document.querySelector('.hero-kicker'), { color: 'var(--amber)' });
-    flip(loadingScreen.querySelector('.loading-title'), document.querySelector('.hero-title'), { color: 'var(--cream-text)' });
-    flip(loadingScreen.querySelector('.loading-artist'), document.querySelector('.hero-artist'), { color: 'var(--amber)' });
-    loadingScreen.querySelector('.loading-mockup').style.opacity = '0';
-
-    loadingScreen.classList.add('bg-fade');
-
-    setTimeout(() => {
-      loadingScreen.classList.add('fade-out');
-      document.body.style.overflow = '';
-      setTimeout(() => loadingScreen.remove(), 600);
-    }, 1100);
+    loadingScreen.classList.add('fade-out');
+    document.body.style.overflow = '';
+    setTimeout(() => loadingScreen.remove(), 800);
   });
 })();
 
