@@ -20,15 +20,17 @@ const listenModalToast = document.getElementById('listenModalToast');
 const listenModalLinks = document.querySelectorAll('.listen-modal-links [data-platform-link]');
 let listenToastTimer = null;
 
-// Liens réels par titre (Apple Music / Deezer / Amazon Music arrivent dans quelques heures)
+// Liens réels par titre (Apple Music / Deezer arrivent dans quelques heures)
 const TRACK_LINKS = {
   'Amoureux': {
     spotify: 'https://open.spotify.com/intl-fr/track/7pf77N1UBuvL91NOo2jC3M?si=609c0c873bdc49f1',
     youtube: 'https://music.youtube.com/playlist?list=OLAK5uy_kmf7w70wk0miD0MhYKLoxCTce93TY3Djc&si=PFJsVx72eJm1ZuTV',
+    amazon: 'https://music.amazon.fr/albums/B0HC3FYWXP',
   },
   'Tinder': {
     spotify: 'https://open.spotify.com/intl-fr/track/6DSK1SpPeDvUnkaDDF0Mgj?si=c22cb11f7c054eb3',
     youtube: 'https://music.youtube.com/playlist?list=OLAK5uy_nnYyVUM17yU-FYye7K--ftTLKyrUEUaQk&si=_7wKXfGQIODkaauH',
+    amazon: 'https://music.amazon.fr/tracks/B0HC49N1KD?marketplaceId=A13V1IB3VIYZZH&musicTerritory=FR&ref=dm_sh_srFuTwS3sJ6lCVbBh8G7fgD6m',
   },
 };
 
@@ -42,6 +44,8 @@ document.querySelectorAll('.track-listen').forEach(btn => {
     listenModalLinks.forEach(link => {
       const url = links[link.dataset.platformLink];
       link.href = url || '#';
+      const badge = link.querySelector('.soon-badge');
+      if (badge) badge.style.display = url ? 'none' : '';
     });
 
     listenModal.classList.add('open');
