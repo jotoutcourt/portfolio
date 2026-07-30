@@ -118,34 +118,6 @@ function updateClouds() {
 window.addEventListener('scroll', updateClouds, { passive: true });
 updateClouds();
 
-// ---------- COMPTE À REBOURS : sortie le 31 juillet à minuit et une seconde ----------
-const cdDays = document.getElementById('cdDays');
-const cdHours = document.getElementById('cdHours');
-const cdMinutes = document.getElementById('cdMinutes');
-const cdSeconds = document.getElementById('cdSeconds');
-const countdownEl = document.getElementById('countdown');
-const RELEASE_DATE = new Date(2026, 6, 31, 10, 0, 0);
-
-function pad(n) { return String(n).padStart(2, '0'); }
-
-function updateCountdown() {
-  const diff = RELEASE_DATE.getTime() - Date.now();
-  if (diff <= 0) {
-    countdownEl.querySelector('.countdown-label').textContent = 'disponible !';
-    cdDays.textContent = cdHours.textContent = cdMinutes.textContent = cdSeconds.textContent = '00';
-    clearInterval(countdownTimer);
-    return;
-  }
-  const totalSeconds = Math.floor(diff / 1000);
-  cdDays.textContent = pad(Math.floor(totalSeconds / 86400));
-  cdHours.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
-  cdMinutes.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
-  cdSeconds.textContent = pad(totalSeconds % 60);
-}
-
-updateCountdown();
-const countdownTimer = setInterval(updateCountdown, 1000);
-
 // ---------- POP-UP "SORTIE LE 31 JUILLET" (boutons Spotify / Apple Music) ----------
 const releaseToast = document.getElementById('releaseToast');
 let toastTimer = null;
@@ -168,6 +140,14 @@ coverImg.addEventListener('click', () => {
   coverWrap.classList.toggle('lifted');
   coverImg.classList.remove('hint-shake');
 });
+
+// Petit indice visuel : la pochette tremble légèrement pour inviter à cliquer dessus
+function triggerCoverHint() {
+  coverImg.classList.remove('hint-shake');
+  void coverImg.offsetWidth; // force le redémarrage de l'animation
+  coverImg.classList.add('hint-shake');
+}
+setTimeout(triggerCoverHint, 5000);
 
 // ---------- EASTER EGG 2 : mini appli de rencontre (clic sur la flamme) ----------
 const datingOverlay = document.getElementById('datingOverlay');
@@ -320,106 +300,3 @@ audioSurprise.addEventListener('timeupdate', () => {
 });
 
 audioSurprise.addEventListener('ended', resetSurpriseAudio);
-
-// ---------- LECTEUR AUDIO ----------
-const audio = document.getElementById('audio');
-const playBtn = document.getElementById('playBtn');
-const iconPlay = document.getElementById('iconPlay');
-const iconPause = document.getElementById('iconPause');
-const progressBar = document.getElementById('progressBar');
-const progressFill = document.getElementById('progressFill');
-const currentTimeEl = document.getElementById('currentTime');
-const durationEl = document.getElementById('duration');
-
-// L'audio ne joue que l'extrait 0:36 → 1:10 du morceau complet
-const EXCERPT_START = 0;
-const EXCERPT_END = 16;
-const EXCERPT_LENGTH = EXCERPT_END - EXCERPT_START;
-
-function formatTime(sec) {
-  if (!isFinite(sec)) return '0:00';
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
-}
-
-function stopAtExcerptEnd() {
-  audio.pause();
-  audio.currentTime = EXCERPT_START;
-  iconPlay.style.display = 'block';
-  iconPause.style.display = 'none';
-  progressFill.style.width = '0%';
-  currentTimeEl.textContent = formatTime(0);
-  triggerCoverHint();
-}
-
-// Petit indice visuel : la pochette tremble légèrement pour inviter à cliquer dessus
-function triggerCoverHint() {
-  coverImg.classList.remove('hint-shake');
-  void coverImg.offsetWidth; // force le redémarrage de l'animation
-  coverImg.classList.add('hint-shake');
-}
-
-// ---------- COMPTEUR D'ÉCOUTES (partagé entre jordan-join.fr et faisonsdesbulles.com) ----------
-const listenersCounterEl = document.getElementById('listenersCounter');
-const LISTENS_NAMESPACE = 'amoureux-jo';
-const LISTENS_KEY = 'ep2-listens';
-
-function renderListenersCount(value) {
-  const n = Number(value).toLocaleString('fr-FR');
-  listenersCounterEl.textContent = `${n} personne${value > 1 ? 's ont' : ' a'} déjà écouté l'extrait`;
-}
-
-fetch(`https://abacus.jasoncameron.dev/get/${LISTENS_NAMESPACE}/${LISTENS_KEY}`)
-  .then(r => r.json())
-  .then(data => renderListenersCount(data.value))
-  .catch(() => {});
-
-let hasCountedListen = false;
-function registerListen() {
-  if (hasCountedListen) return;
-  hasCountedListen = true;
-  fetch(`https://abacus.jasoncameron.dev/hit/${LISTENS_NAMESPACE}/${LISTENS_KEY}`)
-    .then(r => r.json())
-    .then(data => renderListenersCount(data.value))
-    .catch(() => {});
-}
-
-playBtn.addEventListener('click', () => {
-  if (audio.paused) {
-    if (audio.currentTime < EXCERPT_START || audio.currentTime >= EXCERPT_END) {
-      audio.currentTime = EXCERPT_START;
-    }
-    audio.play();
-    iconPlay.style.display = 'none';
-    iconPause.style.display = 'block';
-    registerListen();
-  } else {
-    audio.pause();
-    iconPlay.style.display = 'block';
-    iconPause.style.display = 'none';
-  }
-});
-
-audio.addEventListener('loadedmetadata', () => {
-  durationEl.textContent = formatTime(EXCERPT_LENGTH);
-  audio.currentTime = EXCERPT_START;
-});
-
-audio.addEventListener('timeupdate', () => {
-  if (audio.currentTime >= EXCERPT_END) {
-    stopAtExcerptEnd();
-    return;
-  }
-  const elapsed = Math.max(0, audio.currentTime - EXCERPT_START);
-  currentTimeEl.textContent = formatTime(elapsed);
-  progressFill.style.width = `${(elapsed / EXCERPT_LENGTH) * 100}%`;
-});
-
-audio.addEventListener('ended', stopAtExcerptEnd);
-
-progressBar.addEventListener('click', (e) => {
-  const rect = progressBar.getBoundingClientRect();
-  const ratio = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = EXCERPT_START + ratio * EXCERPT_LENGTH;
-});
