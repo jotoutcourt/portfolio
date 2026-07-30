@@ -1,3 +1,32 @@
+// ---------- ÉCRAN DE CHARGEMENT : le titre glisse à la place du vrai titre du hero ----------
+(function revealLoadingScreen() {
+  const loadingScreen = document.getElementById('loadingScreen');
+  const loadingTitleEl = loadingScreen.querySelector('.loading-title');
+  const heroTitleEl = document.querySelector('.hero-title');
+
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    const fromRect = loadingTitleEl.getBoundingClientRect();
+    const toRect = heroTitleEl.getBoundingClientRect();
+    const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
+    const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
+    const scale = toRect.width / fromRect.width;
+
+    loadingTitleEl.style.transition = 'transform 0.9s cubic-bezier(.4,0,.2,1), color 0.6s ease';
+    loadingTitleEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+    loadingTitleEl.style.color = 'var(--cream-text)';
+
+    loadingScreen.classList.add('bg-fade');
+
+    setTimeout(() => {
+      loadingScreen.classList.add('fade-out');
+      document.body.style.overflow = '';
+      setTimeout(() => loadingScreen.remove(), 500);
+    }, 900);
+  }, 700);
+})();
+
 // ---------- POP-UP "ÉCOUTEZ" (liens plateformes par titre) ----------
 const listenModal = document.getElementById('listenModal');
 const listenModalTitle = document.getElementById('listenModalTitle');
