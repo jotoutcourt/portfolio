@@ -1,6 +1,14 @@
 // ---------- ÉCRAN DE CHARGEMENT : annonce de l'EP, puis fondu simple vers le hero réel ----------
 (function revealLoadingScreen() {
   const loadingScreen = document.getElementById('loadingScreen');
+
+  // Retour depuis le formulaire "être prévenu·e" (FormSubmit redirige ici) :
+  // on a déjà vu l'annonce il y a quelques secondes, pas besoin de la rejouer.
+  if (new URLSearchParams(location.search).get('merci') === '1') {
+    loadingScreen.remove();
+    return;
+  }
+
   const discoverBtn = document.getElementById('loadingDiscoverBtn');
   const loadingTitleEl = loadingScreen.querySelector('.loading-title');
   const heroTitleEl = document.querySelector('.hero-title');
