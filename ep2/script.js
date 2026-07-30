@@ -124,7 +124,7 @@ const cdHours = document.getElementById('cdHours');
 const cdMinutes = document.getElementById('cdMinutes');
 const cdSeconds = document.getElementById('cdSeconds');
 const countdownEl = document.getElementById('countdown');
-const RELEASE_DATE = new Date(2026, 6, 31, 0, 0, 1);
+const RELEASE_DATE = new Date(2026, 6, 31, 10, 0, 0);
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
