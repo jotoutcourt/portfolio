@@ -98,31 +98,44 @@ img { max-width: 100%; display: block; }
   margin-top: 10px;
 }
 
-.hero-countdown {
+.hero-buttons {
   margin-top: 32px;
-  font-family: 'Jost', sans-serif;
-  font-weight: 300;
-  font-size: 1rem;
-  letter-spacing: 0.04em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.hero-btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--cream-text);
   color: var(--cream-text);
-  text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
-.hero-countdown span {
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
+.hero-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--amber);
+  color: var(--amber);
 }
 
-.hero-countdown small {
-  font-size: 0.68em;
-  margin-right: 2px;
-  opacity: 0.8;
+.hero-btn--solid {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--ink);
+  text-shadow: none;
 }
 
-.hero-countdown .cd-sep {
-  margin: 0 8px;
-  opacity: 0.4;
-  font-weight: 300;
+.hero-btn--solid:hover {
+  background: var(--amber-deep);
+  border-color: var(--amber-deep);
+  color: var(--ink);
 }
 
 .notify-form {
@@ -201,7 +214,7 @@ img { max-width: 100%; display: block; }
 
 .tracklist-plain li {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(245, 237, 228, 0.25);
@@ -228,19 +241,22 @@ img { max-width: 100%; display: block; }
   border-bottom: 1px dashed rgba(245, 237, 228, 0.4);
 }
 
-.cta-link {
-  color: var(--cream-text);
+.track-listen {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--amber);
+  color: var(--amber);
   text-decoration: none;
-  font-size: 0.9rem;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  border-bottom: 1px solid var(--amber);
-  padding-bottom: 3px;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.cta-link:hover {
-  color: var(--amber);
-  border-color: var(--amber-deep);
+.track-listen:hover {
+  background: var(--amber);
+  color: var(--ink);
 }
 
 /* ---------- FOOTER ---------- */

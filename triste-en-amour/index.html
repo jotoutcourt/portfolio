@@ -27,33 +27,35 @@
     <h1 class="hero-title">Triste en amour</h1>
     <p class="hero-artist">Jo</p>
 
-    <div class="hero-countdown" aria-label="Sortie le 4 septembre">
-      <span id="cdDays">00</span><small>j</small>
-      <span class="cd-sep">·</span>
-      <span id="cdHours">00</span><small>h</small>
-      <span class="cd-sep">·</span>
-      <span id="cdMinutes">00</span><small>m</small>
-      <span class="cd-sep">·</span>
-      <span id="cdSeconds">00</span><small>s</small>
+    <div class="hero-buttons">
+      <a href="#tracklistSection" class="hero-btn hero-btn--solid">écoutez les titres disponibles</a>
+      <a href="#notifyForm" class="hero-btn">être prévenu·e</a>
     </div>
   </div>
 </section>
 
 <!-- SECTION 2 : TRACKLIST — écrite sur la photo du verso -->
-<section class="photo-section tracklist-section">
+<section class="photo-section tracklist-section" id="tracklistSection">
   <img src="/triste-en-amour/assets/verso.png" alt="" class="bg-photo bg-photo--tracklist">
   <div class="scrim scrim--tracklist"></div>
   <div class="tracklist-content">
     <p class="section-kicker">la tracklist</p>
     <ol class="tracklist-plain">
-      <li><span class="track-num">01</span><span class="track-title">Amoureux</span></li>
-      <li><span class="track-num">02</span><span class="track-title">Tinder</span></li>
+      <li>
+        <span class="track-num">01</span>
+        <span class="track-title">Amoureux</span>
+        <a href="/ep2" class="track-listen">écoutez</a>
+      </li>
+      <li>
+        <span class="track-num">02</span>
+        <span class="track-title">Tinder</span>
+        <a href="/ep2" class="track-listen">écoutez</a>
+      </li>
       <li><span class="track-num">03</span><span class="track-title track-title--unknown"></span></li>
       <li><span class="track-num">04</span><span class="track-title track-title--unknown"></span></li>
       <li><span class="track-num">05</span><span class="track-title track-title--unknown"></span></li>
       <li><span class="track-num">06</span><span class="track-title track-title--unknown"></span></li>
     </ol>
-    <a href="/ep2" class="cta-link">écouter Amoureux →</a>
 
     <form action="https://formsubmit.co/jordan.join@icloud.com" method="POST" class="notify-form" id="notifyForm">
       <input type="hidden" name="_subject" value="Nouvelle inscription — Triste en amour">
