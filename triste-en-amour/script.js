@@ -8,7 +8,7 @@
   discoverBtn.addEventListener('click', () => {
     loadingScreen.classList.add('fade-out');
     document.body.style.overflow = '';
-    setTimeout(() => loadingScreen.remove(), 800);
+    setTimeout(() => loadingScreen.remove(), 2200);
   });
 })();
 

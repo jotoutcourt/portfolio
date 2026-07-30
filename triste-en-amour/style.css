@@ -43,7 +43,7 @@ img { max-width: 100%; display: block; }
   padding: 24px;
   overflow: hidden;
   background-color: var(--ink);
-  transition: opacity 0.8s ease;
+  transition: opacity 2.2s ease-in-out;
 }
 
 .loading-screen.fade-out {
