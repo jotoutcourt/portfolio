@@ -19,7 +19,6 @@
 
   const discoverBtn = document.getElementById('loadingDiscoverBtn');
   const soonEl = loadingScreen.querySelector('.loading-soon');
-  const lightSweep = document.getElementById('lightSweep');
 
   discoverBtn.addEventListener('click', () => {
     discoverBtn.disabled = true;
@@ -34,7 +33,6 @@
     loadingScreen.querySelector('.loading-mockup').style.opacity = '0';
 
     loadingScreen.classList.add('bg-fade');
-    lightSweep.classList.add('sweep');
 
     setTimeout(() => {
       loadingScreen.classList.add('fade-out');
