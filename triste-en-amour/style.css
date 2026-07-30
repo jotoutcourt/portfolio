@@ -32,7 +32,7 @@ img { max-width: 100%; display: block; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ---------- ÉCRAN DE CHARGEMENT : reveal du titre ---------- */
+/* ---------- ÉCRAN DE CHARGEMENT : annonce de l'EP ---------- */
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -41,8 +41,9 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background-color: var(--bg);
-  transition: background-color 0.8s ease, opacity 0.7s ease;
+  overflow: hidden;
+  background-color: var(--ink);
+  transition: background-color 0.9s ease, opacity 0.7s ease;
 }
 
 .loading-screen.bg-fade { background-color: transparent; }
@@ -52,13 +53,64 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
 }
 
+.loading-mockup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 420px);
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0;
+  filter: blur(2px);
+  animation: mockupIn 1.4s ease forwards 0.15s;
+}
+
+@keyframes mockupIn {
+  to { opacity: 0.35; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+}
+
+.loading-stage {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.loading-kicker,
+.loading-title,
+.loading-artist {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: stageIn 0.7s ease forwards;
+}
+
+.loading-kicker {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 16px;
+  animation-delay: 0.5s;
+}
+
 .loading-title {
   font-family: 'Annie Use Your Telescope', cursive;
   font-weight: 400;
   font-size: clamp(2.8rem, 9vw, 5rem);
   line-height: 1.1;
-  color: var(--ink);
-  text-align: center;
+  color: var(--cream-text);
+  animation-delay: 1s;
+}
+
+.loading-artist {
+  font-family: 'Annie Use Your Telescope', cursive;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  color: var(--amber);
+  margin-top: 10px;
+  animation-delay: 1.7s;
+}
+
+@keyframes stageIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ---------- PHOTO PLEINE PAGE (commune aux 2 sections) ---------- */
@@ -369,6 +421,24 @@ img { max-width: 100%; display: block; }
 .listen-modal-links .cta-btn:hover {
   background: var(--amber-deep);
   color: #fff;
+}
+
+.soon-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream-text);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.listen-modal-links .cta-btn:hover .soon-badge {
+  background: #fff;
+  color: var(--amber-deep);
 }
 
 .listen-modal-toast {
