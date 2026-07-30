@@ -17,20 +17,31 @@
     if (extraStyle) Object.assign(fromEl.style, extraStyle);
   }
 
-  setTimeout(() => {
+  const discoverBtn = document.getElementById('loadingDiscoverBtn');
+  const soonEl = loadingScreen.querySelector('.loading-soon');
+  const lightSweep = document.getElementById('lightSweep');
+
+  discoverBtn.addEventListener('click', () => {
+    discoverBtn.disabled = true;
+    discoverBtn.style.transition = 'opacity 0.4s ease';
+    discoverBtn.style.opacity = '0';
+    soonEl.style.transition = 'opacity 0.4s ease';
+    soonEl.style.opacity = '0';
+
     flip(loadingScreen.querySelector('.loading-kicker'), document.querySelector('.hero-kicker'), { color: 'var(--amber)' });
     flip(loadingScreen.querySelector('.loading-title'), document.querySelector('.hero-title'), { color: 'var(--cream-text)' });
     flip(loadingScreen.querySelector('.loading-artist'), document.querySelector('.hero-artist'), { color: 'var(--amber)' });
     loadingScreen.querySelector('.loading-mockup').style.opacity = '0';
 
     loadingScreen.classList.add('bg-fade');
+    lightSweep.classList.add('sweep');
 
     setTimeout(() => {
       loadingScreen.classList.add('fade-out');
       document.body.style.overflow = '';
       setTimeout(() => loadingScreen.remove(), 600);
     }, 1100);
-  }, 2500);
+  });
 })();
 
 // ---------- POP-UP "ÉCOUTEZ" (liens plateformes par titre) ----------
