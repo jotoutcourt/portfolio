@@ -47,12 +47,12 @@
       <li>
         <span class="track-num">01</span>
         <span class="track-title">Amoureux</span>
-        <a href="/ep2" class="track-listen">écoutez</a>
+        <button type="button" class="track-listen" data-track="Amoureux">écoutez</button>
       </li>
       <li>
         <span class="track-num">02</span>
         <span class="track-title">Tinder</span>
-        <a href="/ep2" class="track-listen">écoutez</a>
+        <button type="button" class="track-listen" data-track="Tinder">écoutez</button>
       </li>
       <li><span class="track-num">03</span><span class="track-title track-title--unknown"></span></li>
       <li><span class="track-num">04</span><span class="track-title track-title--unknown"></span></li>
@@ -70,6 +70,22 @@
     <p class="notify-success" id="notifySuccess">merci, on te préviendra ✓</p>
   </div>
 </section>
+
+  <div class="listen-modal" id="listenModal">
+    <div class="listen-modal-content">
+      <button type="button" class="listen-modal-close" id="listenModalClose" aria-label="Fermer">✕</button>
+      <p class="listen-modal-title" id="listenModalTitle">Amoureux</p>
+      <p class="listen-modal-sub">écoutez sur :</p>
+      <div class="listen-modal-links">
+        <a href="#" class="cta-btn" data-platform-link>Spotify</a>
+        <a href="#" class="cta-btn" data-platform-link>Apple Music</a>
+        <a href="#" class="cta-btn" data-platform-link>Deezer</a>
+        <a href="#" class="cta-btn" data-platform-link>Amazon Music</a>
+        <a href="#" class="cta-btn" data-platform-link>YouTube Music</a>
+      </div>
+      <p class="listen-modal-toast" id="listenModalToast">🔔 pas encore dispo, on te préviendra !</p>
+    </div>
+  </div>
 
 <footer class="footer">
   <p class="footer-signature">Triste en amour</p>

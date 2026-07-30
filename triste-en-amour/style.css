@@ -255,11 +255,13 @@ img { max-width: 100%; display: block; }
   padding: 5px 14px;
   border-radius: 999px;
   border: 1px solid var(--amber);
+  background: transparent;
   color: var(--amber);
   text-decoration: none;
   font-family: 'Jost', sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.02em;
+  cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -267,6 +269,87 @@ img { max-width: 100%; display: block; }
   background: var(--amber);
   color: var(--ink);
 }
+
+/* ---------- POP-UP : plateformes d'écoute ---------- */
+.listen-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(46, 38, 32, 0.6);
+}
+
+.listen-modal.open { display: flex; }
+
+.listen-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  padding: 36px 28px 28px;
+  border-radius: 16px;
+  background: var(--bg);
+  text-align: center;
+  box-shadow: 0 30px 70px -20px rgba(0,0,0,0.5);
+}
+
+.listen-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.listen-modal-title {
+  font-family: 'Annie Use Your Telescope', cursive;
+  font-size: 2rem;
+  color: var(--ink);
+}
+
+.listen-modal-sub {
+  margin-top: 4px;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.listen-modal-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listen-modal-links .cta-btn {
+  display: block;
+  padding: 11px;
+  border-radius: 999px;
+  border: 1px solid var(--amber-deep);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.listen-modal-links .cta-btn:hover {
+  background: var(--amber-deep);
+  color: #fff;
+}
+
+.listen-modal-toast {
+  display: none;
+  margin-top: 18px;
+  font-size: 0.78rem;
+  color: var(--amber-deep);
+}
+
+.listen-modal-toast.show { display: block; }
 
 /* ---------- FOOTER ---------- */
 .footer {
