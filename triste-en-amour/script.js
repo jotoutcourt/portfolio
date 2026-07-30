@@ -2,8 +2,23 @@
 (function revealLoadingScreen() {
   const loadingScreen = document.getElementById('loadingScreen');
   const discoverBtn = document.getElementById('loadingDiscoverBtn');
+  const loadingTitleEl = loadingScreen.querySelector('.loading-title');
+  const heroTitleEl = document.querySelector('.hero-title');
 
   document.body.style.overflow = 'hidden';
+
+  // Calcule où le titre du hero se trouve réellement, pour que le titre de
+  // l'écran de chargement tombe pile au même endroit (les deux blocs n'ont
+  // pas la même hauteur totale, donc leurs centres ne coïncident pas par défaut).
+  const fromRect = loadingTitleEl.getBoundingClientRect();
+  const toRect = heroTitleEl.getBoundingClientRect();
+  const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
+  const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
+  const scale = toRect.width / fromRect.width;
+  loadingTitleEl.style.setProperty('--tx', `${dx}px`);
+  loadingTitleEl.style.setProperty('--ty', `${dy}px`);
+  loadingTitleEl.style.setProperty('--ts', scale);
+  loadingTitleEl.classList.add('loading-title--aligned');
 
   discoverBtn.addEventListener('click', () => {
     loadingScreen.classList.add('fade-out');

@@ -73,7 +73,6 @@ img { max-width: 100%; display: block; }
 }
 
 .loading-kicker,
-.loading-title,
 .loading-artist {
   opacity: 0;
   transform: translateY(16px);
@@ -96,7 +95,24 @@ img { max-width: 100%; display: block; }
   font-size: clamp(2.8rem, 9vw, 5rem);
   line-height: 1.1;
   color: var(--cream-text);
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* La position d'arrivée (--tx/--ty/--ts) est calculée en JS pour tomber
+   pile sur la vraie position du titre du hero, quelle que soit la hauteur
+   du bloc (kicker/artiste/bouton n'ont pas le même total que dans le hero). */
+.loading-title--aligned {
+  animation: titleInAligned 0.7s ease forwards;
   animation-delay: 1s;
+}
+
+@keyframes titleInAligned {
+  from { opacity: 0; transform: translateY(16px); }
+  to {
+    opacity: 1;
+    transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--ts, 1));
+  }
 }
 
 .loading-artist {
