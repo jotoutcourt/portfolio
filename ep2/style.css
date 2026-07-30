@@ -193,6 +193,16 @@ body {
   text-align: center;
 }
 
+.hero-plus {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cmbyn-pink);
+  opacity: 0.85;
+  margin-bottom: 6px;
+}
+
 .hero-content h1 {
   font-family: 'Annie Use Your Telescope', cursive;
   font-weight: 400;
