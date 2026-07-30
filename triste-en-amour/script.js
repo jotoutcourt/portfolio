@@ -98,11 +98,28 @@ listenModalLinks.forEach(link => {
   });
 });
 
-// ---------- FORMULAIRE "ÊTRE PRÉVENU·E" ----------
+// ---------- FORMULAIRE "ÊTRE PRÉVENU·E" (envoi en AJAX, pas de rechargement de page) ----------
 const notifyForm = document.getElementById('notifyForm');
 const notifySuccess = document.getElementById('notifySuccess');
+const notifyBtn = notifyForm.querySelector('.notify-btn');
 
-if (new URLSearchParams(location.search).get('merci') === '1') {
-  notifyForm.style.display = 'none';
-  notifySuccess.classList.add('show');
-}
+notifyForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  notifyBtn.disabled = true;
+  notifyBtn.textContent = 'envoi...';
+
+  fetch(notifyForm.action, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(notifyForm),
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('submit failed');
+      notifyForm.style.display = 'none';
+      notifySuccess.classList.add('show');
+    })
+    .catch(() => {
+      notifyBtn.disabled = false;
+      notifyBtn.textContent = 'réessayer';
+    });
+});
