@@ -55,6 +55,9 @@ const TRACK_LINKS = {
     youtube: 'https://music.youtube.com/playlist?list=OLAK5uy_nnYyVUM17yU-FYye7K--ftTLKyrUEUaQk&si=_7wKXfGQIODkaauH',
     amazon: 'https://music.amazon.fr/tracks/B0HC49N1KD?marketplaceId=A13V1IB3VIYZZH&musicTerritory=FR&ref=dm_sh_srFuTwS3sJ6lCVbBh8G7fgD6m',
   },
+  "L'amour (le vrai)": {
+    spotify: 'https://open.spotify.com/intl-fr/track/2JQDPbsNCqDr4BjflVjoEP?si=d36ed6aab8e045c8',
+  },
 };
 
 document.querySelectorAll('.track-listen').forEach(btn => {
