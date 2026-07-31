@@ -35,6 +35,42 @@
   });
 })();
 
+// ---------- COMPTE À REBOURS : sortie le vendredi 4 septembre ----------
+(function initCountdown() {
+  const target = new Date('2026-09-04T00:00:00+02:00').getTime();
+  const daysEl = document.getElementById('cdDays');
+  const hoursEl = document.getElementById('cdHours');
+  const minutesEl = document.getElementById('cdMinutes');
+  const secondsEl = document.getElementById('cdSeconds');
+  if (!daysEl) return;
+
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function tick() {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      daysEl.textContent = '00';
+      hoursEl.textContent = '00';
+      minutesEl.textContent = '00';
+      secondsEl.textContent = '00';
+      document.querySelector('.countdown-label').textContent = 'disponible maintenant !';
+      clearInterval(timer);
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    daysEl.textContent = pad(days);
+    hoursEl.textContent = pad(hours);
+    minutesEl.textContent = pad(minutes);
+    secondsEl.textContent = pad(seconds);
+  }
+
+  tick();
+  const timer = setInterval(tick, 1000);
+})();
+
 // ---------- POP-UP "ÉCOUTEZ" (liens plateformes par titre) ----------
 const listenModal = document.getElementById('listenModal');
 const listenModalTitle = document.getElementById('listenModalTitle');
