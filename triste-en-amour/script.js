@@ -57,6 +57,7 @@ const TRACK_LINKS = {
   },
   "L'amour (le vrai)": {
     spotify: 'https://open.spotify.com/intl-fr/track/2JQDPbsNCqDr4BjflVjoEP?si=d36ed6aab8e045c8',
+    amazon: 'https://music.amazon.fr/albums/B0HCC9STT1',
   },
 };
 
