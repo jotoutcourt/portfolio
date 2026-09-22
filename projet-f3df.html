@@ -77,6 +77,13 @@
     .f3-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.07); }
     .f3-section-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.7; }
 
+    /* ── VIDÉOS "LA 3D C'EST PAS SORCIER" ── */
+    .f3-video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6rem; margin-bottom: 4rem; }
+    .f3-video-frame { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 0.6rem; overflow: hidden; box-shadow: 0 6px 28px rgba(0,0,0,0.12); background: var(--f3-noir); }
+    .f3-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .f3-video-label { margin-top: 0.7rem; font-family: var(--font-syne); font-weight: 700; font-size: 0.85rem; color: var(--text); }
+    @media(max-width:700px){ .f3-video-grid{grid-template-columns:1fr;} }
+
     /* ── PROFIL ── */
     .insta-profile { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.07); flex-wrap: wrap; }
     .insta-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #FF6B2B, #ffaa80); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.1rem; color: #fff; flex-shrink: 0; outline: 3px solid rgba(255,107,43,0.25); outline-offset: 3px; }
@@ -171,6 +178,33 @@
         <div class="f3-intro-icon">&#x1F4D0;</div>
         <p class="f3-intro-title">Format carr&eacute;</p>
         <p class="f3-intro-desc">Posts au format carr&eacute; historique d&rsquo;Instagram &mdash; l&rsquo;&egrave;re avant le format portrait 9:16.</p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="f3-section-label">La 3D c&rsquo;est pas sorcier</p>
+      <p class="f3-section-sub">Une s&eacute;rie de vid&eacute;os reprenant les codes de la c&eacute;l&egrave;bre &eacute;mission C&rsquo;est pas sorcier, appliqu&eacute;s cette fois &agrave; l&rsquo;impression 3D.</p>
+      <div class="f3-video-grid">
+        <div class="f3-video-item">
+          <div class="f3-video-frame"><iframe src="https://www.youtube.com/embed/gmpNNYtjunM?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO" title="La 3D c'est pas sorcier &mdash; &Eacute;pisode 01" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>
+          <p class="f3-video-label">&Eacute;pisode 01</p>
+        </div>
+        <div class="f3-video-item">
+          <div class="f3-video-frame"><iframe src="https://www.youtube.com/embed/Omq4LrraDss?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO" title="La 3D c'est pas sorcier &mdash; &Eacute;pisode 02" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>
+          <p class="f3-video-label">&Eacute;pisode 02</p>
+        </div>
+        <div class="f3-video-item">
+          <div class="f3-video-frame"><iframe src="https://www.youtube.com/embed/U6ovv0A8LQ0?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO" title="La 3D c'est pas sorcier &mdash; &Eacute;pisode 03" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>
+          <p class="f3-video-label">&Eacute;pisode 03</p>
+        </div>
+        <div class="f3-video-item">
+          <div class="f3-video-frame"><iframe src="https://www.youtube.com/embed/thBUCku6jG8?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO" title="La 3D c'est pas sorcier &mdash; &Eacute;pisode 04" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>
+          <p class="f3-video-label">&Eacute;pisode 04</p>
+        </div>
+        <div class="f3-video-item">
+          <div class="f3-video-frame"><iframe src="https://www.youtube.com/embed/oUNlAR8AEvY?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO" title="La 3D c'est pas sorcier &mdash; &Eacute;pisode 05" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>
+          <p class="f3-video-label">&Eacute;pisode 05</p>
+        </div>
       </div>
     </div>
 
