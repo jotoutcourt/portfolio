@@ -66,7 +66,6 @@
   function buildMedia(p) {
     var m = p.media || { type: 'placeholder' };
     var box = h('div', { class: 'media media--' + m.type });
-    if (m.ratio) box.style.aspectRatio = m.ratio;
 
     if (m.type === 'image') {
       if (!m.alt) console.warn('[ch-dreux] alt manquant pour : ' + p.title);
@@ -141,6 +140,51 @@
     return h('article', { class: 'card', 'aria-labelledby': titleId }, [buildMedia(p), body]);
   }
 
+  /* ───────── défilement horizontal (une seule ligne par section) ───────── */
+  function chevron(dir) {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = doc.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    var p = doc.createElementNS(ns, 'path');
+    p.setAttribute('d', dir === 'prev' ? 'M15 5 L8 12 L15 19' : 'M9 5 L16 12 L9 19');
+    svg.appendChild(p);
+    return svg;
+  }
+
+  function buildArrows(track, title) {
+    var prev = h('button', { type: 'button', class: 'arrow', 'data-dir': '-1', 'aria-controls': track.id, 'aria-label': 'Projets précédents : ' + title }, [chevron('prev')]);
+    var next = h('button', { type: 'button', class: 'arrow', 'data-dir': '1', 'aria-controls': track.id, 'aria-label': 'Projets suivants : ' + title }, [chevron('next')]);
+    return h('div', { class: 'arrows' }, [prev, next]);
+  }
+
+  function wireTrack(track, arrows) {
+    var buttons = arrows.querySelectorAll('.arrow');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function update() {
+      var max = track.scrollWidth - track.clientWidth;
+      arrows.hidden = max <= 2;                       /* tout tient à l'écran : pas de flèches */
+      buttons[0].disabled = track.scrollLeft <= 2;
+      buttons[1].disabled = track.scrollLeft >= max - 2;
+    }
+
+    Array.prototype.forEach.call(buttons, function (b) {
+      b.addEventListener('click', function () {
+        var first = track.querySelector('.card');
+        var step = first ? first.offsetWidth + parseFloat(getComputedStyle(track).columnGap || 24) : track.clientWidth * 0.85;
+        var visible = Math.max(1, Math.floor(track.clientWidth / step));
+        track.scrollBy({ left: Number(b.getAttribute('data-dir')) * visible * step, behavior: reduce ? 'auto' : 'smooth' });
+      });
+    });
+
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(track);
+    update();
+  }
+
   /* ───────── rendu ───────── */
   var introEl = doc.getElementById('intro');
   var il = D.introLink;
@@ -161,13 +205,20 @@
     var items = D.projects.filter(function (p) { return p.section === s.id; });
     if (!items.length) return;
     var hid = 'sec-' + s.id;
-    var grid = h('div', { class: 'grid' });
-    items.forEach(function (p, i) { grid.appendChild(buildCard(p, s.id + '-' + (i + 1))); });
+    var track = h('div', { class: 'track', id: s.id + '-track', tabindex: '0', role: 'region', 'aria-label': s.title + ' : projets' });
+    items.forEach(function (p, i) { track.appendChild(buildCard(p, s.id + '-' + (i + 1))); });
+    var arrows = buildArrows(track, s.title);
     sectionsRoot.appendChild(h('section', { class: 'block', id: s.id, 'aria-labelledby': hid }, [
-      h('h2', { id: hid, text: s.title }),
-      s.lead ? h('p', { class: 'lead', text: s.lead }) : null,
-      grid
+      h('div', { class: 'block-head' }, [
+        h('div', null, [
+          h('h2', { id: hid, text: s.title }),
+          s.lead ? h('p', { class: 'lead', text: s.lead }) : null
+        ]),
+        arrows
+      ]),
+      track
     ]));
+    wireTrack(track, arrows);
     toc.appendChild(h('li', null, [h('a', { href: '#' + s.id, text: s.title })]));
   });
   toc.appendChild(h('li', null, [h('a', { href: '#presse', text: D.press.title })]));

@@ -7,10 +7,10 @@
  *   L'ordre d'affichage dans une section suit l'ordre du tableau.
  * - section : 'print' | 'video' | 'digital' | 'events'
  * - media.type :
- *     'image'        { src, alt, fit: 'cover' | 'contain', ratio: '4/3' }
- *     'youtube'      { youtubeId, list (optionnel), poster, alt (de la vignette), ratio }
- *     'vimeo'        { vimeoId, poster, ratio }
- *     'video'        { src, poster, ratio }      (fichier hébergé, mp4)
+ *     'image'        { src, alt, fit: 'cover' | 'contain' }
+ *     'youtube'      { youtubeId, list (optionnel), poster, alt (de la vignette) }
+ *     'vimeo'        { vimeoId, poster }
+ *     'video'        { src, poster }             (fichier hébergé, mp4)
  *     'placeholder'  { label }                   (aucun visuel pour l'instant)
  * - page (optionnel) : chemin de la page dédiée au projet (copie sans menus dans /ch-dreux/...). Sans `page`, la carte n'est pas cliquable.
  * - Chaque image DOIT avoir un alt (texte alternatif) : décris ce que l'on voit.
@@ -71,7 +71,7 @@ window.CH_DREUX = {
       role: '[MON RÔLE]',
       result: '[RÉSULTAT]',
       media: {
-        type: 'image', src: '/assets/metz-lumieres-1.webp', fit: 'contain', ratio: '4/3',
+        type: 'image', src: '/assets/metz-lumieres-1.webp', fit: 'contain',
         alt: "Affiche Visit Metz : « À Metz, même la lumière nous joue des tours », projection lumineuse colorée sur la façade de la cathédrale de Metz, de nuit."
       }
     },
@@ -100,7 +100,7 @@ window.CH_DREUX = {
       context: "Distributeurs de plats faits maison, cuisinés frais chaque matin, destinés aux étudiants des écoles lyonnaises : spot vidéo de présentation d'un produit.",
       role: '[MON RÔLE]',
       result: '[RÉSULTAT]',
-      media: { type: 'video', src: '/assets/pubchoco.mp4', poster: '/ch-dreux/posters/graille-produit.jpg', ratio: '1/1' }
+      media: { type: 'video', src: '/assets/pubchoco.mp4', poster: '/ch-dreux/posters/graille-produit.jpg' }
     },
     {
       section: 'video',
@@ -181,7 +181,7 @@ window.CH_DREUX = {
       context: "Spot vidéo pour l'inauguration d'un distributeur de plats frais dans un établissement d'enseignement supérieur lyonnais (UCLY).",
       role: '[MON RÔLE]',
       result: '[RÉSULTAT]',
-      media: { type: 'video', src: '/assets/vide%CC%81opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg', ratio: '1/1' }
+      media: { type: 'video', src: '/assets/vide%CC%81opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg' }
     },
 
     /* ───────────── COMMUNICATION INTERNE ───────────── */
