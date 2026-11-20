@@ -253,7 +253,7 @@
     }
     var box = h("div", { class: "hero-docs" });
     pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV', D.downloads.cvPage).concat(
-      pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation')
+      pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation', D.downloads.letterPage)
     ).forEach(function (b) { box.appendChild(b); });
     return box;
   }

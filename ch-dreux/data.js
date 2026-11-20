@@ -296,7 +296,9 @@ window.CH_DREUX = {
     cvPage: '/parcours.html',
     // Lettre de motivation : dépose le PDF dans /assets/ puis renseigne son chemin (ex : '/assets/lettre-motivation-jordan-join.pdf').
     // Tant que ce champ est vide, les boutons « Voir / Télécharger ma lettre de motivation » s'affichent désactivés.
-    letter: '',
+    letter: '/assets/lettre-motivation-jordan-join.pdf',
+    // Page animée de la lettre : cible du bouton « Voir ma lettre de motivation » (le PDF reste pour « Télécharger »).
+    letterPage: '/ch-dreux/lettre-de-motivation/',
     // Dépose le PDF du portfolio dans /assets/ puis renseigne son chemin ici (ex : '/assets/portfolio-jordan-join.pdf').
     // Tant que ce champ est vide, le bouton s'affiche désactivé.
     portfolio: ''
