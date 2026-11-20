@@ -215,7 +215,7 @@ window.CH_DREUX = {
       tag: "Entreprise d'impression 3D",
       context: "Stratégie et création de contenus pour les réseaux sociaux d'une entreprise d'impression 3D.",
       role: "Community management : animation du compte Instagram, définition de la ligne éditoriale et création des visuels produits.",
-      result: "Un compte Instagram () animé avec une identité visuelle homogène.",
+      result: "Un compte Instagram (@f3dfr) animé avec une identité visuelle homogène.",
       media: {
         type: 'image', src: '/assets/f3dfrs1.png', fit: 'contain',
         alt: "Publication Instagram de l'entreprise F3DF, spécialisée dans l'impression 3D."
