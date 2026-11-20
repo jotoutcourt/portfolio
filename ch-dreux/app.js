@@ -199,6 +199,45 @@
     fill(introEl, D.intro);
   }
 
+  /* Boutons « Voir / Télécharger » (CV et lettre de motivation) */
+  function docButtons() {
+    function pair(file, viewLabel, dlLabel) {
+      if (!file) {
+        return [viewLabel, dlLabel].map(function (t) {
+          return h('button', { class: 'pbtn', type: 'button', disabled: true, title: 'Bientôt disponible', text: t });
+        });
+      }
+      return [
+        h('a', { class: 'pbtn pbtn--view', href: file, target: '_blank', rel: 'noopener noreferrer', text: viewLabel }),
+        h('a', { class: 'pbtn', href: file, download: true, text: dlLabel })
+      ];
+    }
+    var box = h('div', { class: 'profile-docs' });
+    pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV').concat(
+      pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation')
+    ).forEach(function (b) { box.appendChild(b); });
+    return box;
+  }
+
+  /* Fiche d'identité (infos du CV) */
+  var pr = D.profile, profileEl = doc.getElementById('profile');
+  if (pr && profileEl) {
+    var dl = h('dl', { class: 'profile-list' });
+    pr.lines.forEach(function (l) {
+      dl.appendChild(h('div', null, [
+        h('dt', { text: l.label }),
+        h('dd', null, [l.href ? h('a', { href: l.href, text: l.value }) : l.value])
+      ]));
+    });
+    profileEl.appendChild(h('img', { class: 'profile-photo', src: pr.photo, alt: pr.alt, width: '520', height: '650', decoding: 'async' }));
+    profileEl.appendChild(h('div', { class: 'profile-body' }, [
+      h('p', { class: 'profile-name', text: pr.name }),
+      h('p', { class: 'profile-role', text: pr.role }),
+      dl,
+      docButtons()
+    ]));
+  } else if (profileEl) { profileEl.remove(); }
+
   var sectionsRoot = doc.getElementById('sections');
   var toc = h('ul');
   D.sections.forEach(function (s) {

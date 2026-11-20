@@ -25,6 +25,22 @@ window.CH_DREUX = {
   // Le libellé ci-dessus (identique, mot pour mot) devient un lien cliquable vers href.
   introLink: { label: 'jordan-join.fr/projets', href: 'https://jordan-join.fr/projets.html' },
 
+  // Fiche d'identité affichée à droite du titre (infos du CV). Lignes : { label, value } ; value peut être un lien via href.
+  profile: {
+    photo: '/ch-dreux/jordan.jpg',
+    alt: 'Portrait de Jordan Join, en chemise blanche.',
+    name: 'Jordan Join',
+    role: 'Création publicitaire · Direction artistique · Marketing · Communication',
+    lines: [
+      { label: 'Âge',        value: '29 ans' },
+      { label: 'Ville',      value: 'Lyon · Permis B' },
+      { label: 'Poste actuel', value: 'Responsable marketing et communication, laboratoire Labrha (depuis mars 2024)' },
+      { label: 'Formation',  value: 'Master 2 Direction artistique — Sup de Pub, INSEEC Lyon (2023)' },
+      { label: 'Téléphone',  value: '06 19 84 27 99', href: 'tel:+33619842799' },
+      { label: 'Email',      value: 'jordan.join@icloud.com', href: 'mailto:jordan.join@icloud.com' }
+    ]
+  },
+
   sections: [
     // all (optionnel) : ligne « Retrouvez tous mes projets… » sous la section, vers l'ancre de jordan-join.fr/projets
     { id: 'print',    title: 'Print et identité visuelle', lead: "Identité visuelle, packagings, livrets et supports d'information.", all: { anchor: 'cat-print', label: 'print' } },
@@ -272,6 +288,9 @@ window.CH_DREUX = {
 
   downloads: {
     cv: '/assets/cv-jordan-join.pdf',
+    // Lettre de motivation : dépose le PDF dans /assets/ puis renseigne son chemin (ex : '/assets/lettre-motivation-jordan-join.pdf').
+    // Tant que ce champ est vide, les boutons « Voir / Télécharger ma lettre de motivation » s'affichent désactivés.
+    letter: '',
     // Dépose le PDF du portfolio dans /assets/ puis renseigne son chemin ici (ex : '/assets/portfolio-jordan-join.pdf').
     // Tant que ce champ est vide, le bouton s'affiche désactivé.
     portfolio: ''
