@@ -59,9 +59,9 @@ window.CH_DREUX = {
       title: 'Tenofort — complément alimentaire',
       page: '/ch-dreux/tenofort/',
       tag: 'Laboratoire Labrha',
-      context: "Direction artistique complète d'un complément alimentaire destiné aux sportifs : identité, packaging et supports print.",
-      role: "Direction artistique de la campagne : concept « La force derrière chaque geste », affiches et déclinaisons print et digitales.",
-      result: "Concept validé par le laboratoire en 2024.",
+      context: "Campagne d'affiches pour promouvoir Tenofort, un complément alimentaire destiné aux sportifs.",
+      role: "Réalisation des affiches pour promouvoir le produit : concept « La force derrière chaque geste » et déclinaisons print et digitales.",
+      result: "Une série d'affiches qui met le produit en valeur, déclinée en print et en digital.",
       media: {
         type: 'loop', src: '/ch-dreux/tuiles/tenofort.mp4', poster: '/ch-dreux/tuiles/tenofort.jpg',
         alt: "Animation Tenofort : une affiche de la campagne, un coureur de trail dans la brume."
@@ -73,7 +73,7 @@ window.CH_DREUX = {
       page: '/ch-dreux/gamme-complements/',
       tag: 'Laboratoire Labrha',
       context: "Compléments alimentaires articulaires (Tenofort, Cuivramine) : des supports destinés à la fois aux professionnels de santé et aux patients.",
-      role: "Refonte de la charte graphique de la gamme et conception des supports (livrets, affiches) ; mise à jour et digitalisation des supports commerciaux de terrain destinés aux professionnels de santé.",
+      role: "Refonte de la charte graphique et des documents de la gamme (livrets, affiches), avec une contrainte : conserver des étiquettes produit assez anciennes. Mise à jour et digitalisation des supports commerciaux destinés aux professionnels de santé.",
       result: "Une gamme homogène, dont les livrets sont utilisés auprès des professionnels de santé comme des patients.",
       media: {
         type: 'loop', src: '/ch-dreux/tuiles/livrets.mp4', poster: '/ch-dreux/tuiles/livrets.jpg',
@@ -110,10 +110,10 @@ window.CH_DREUX = {
       section: 'print',
       title: 'Vogalib — supports de communication',
       page: '/ch-dreux/vogalib/',
-      tag: "Sanofi Consumer Healthcare",
-      context: "Direction artistique et supports print pour un médicament : brochures, PLV et communication institutionnelle.",
+      tag: "Projet d'école",
+      context: "Projet d'école : imaginer une campagne print estivale pour un produit peu glamour, le Vogalib.",
       role: "Conception de la campagne estivale « Good Vagues Only » : concept, direction artistique, affiche et déclinaisons.",
-      result: "Concept validé par le client en 2024.",
+      result: "Une campagne qui donne un ton léger et estival à un produit qui ne s'y prête pas.",
       media: {
         type: 'loop', src: '/ch-dreux/tuiles/vogalib.mp4', poster: '/ch-dreux/tuiles/vogalib.jpg',
         alt: "Animation Vogalib : un estomac stylisé sur lequel surfe un petit personnage."
@@ -126,7 +126,7 @@ window.CH_DREUX = {
       tag: 'Eurométropole de Metz',
       context: "Série d'affiches pour la promotion touristique de Metz autour des festivals de lumière.",
       role: "Direction artistique de la campagne estivale : identité visuelle, affiches et dispositifs d'affichage urbain.",
-      result: "Campagne validée pour l'été 2024.",
+      result: "Campagne estivale de 2022.",
       media: {
         type: 'loop', src: '/ch-dreux/tuiles/play-with-metz.mp4', poster: '/ch-dreux/tuiles/play-with-metz.jpg',
         alt: "Animation Play With Metz : la façade de la cathédrale de Metz illuminée de nuit."
@@ -154,7 +154,7 @@ window.CH_DREUX = {
       page: '/ch-dreux/metz/#s-real',
       tag: 'Eurométropole de Metz',
       context: "Film de la campagne de promotion touristique de Metz.",
-      role: "Réalisation et montage du film de la campagne.",
+      role: "Écriture des textes, choix des lieux de tournage, brief du motion design et coordination.",
       result: "Un film diffusé en ligne en complément de l'affichage urbain.",
       media: {
         type: 'loop', src: '/ch-dreux/tuiles/play-with-metz-film.mp4', poster: '/ch-dreux/tuiles/play-with-metz-film.jpg',
