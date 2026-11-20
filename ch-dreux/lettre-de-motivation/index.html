@@ -77,13 +77,27 @@
     html.js .signature.sign { animation: sign 2.8s cubic-bezier(.45,.05,.2,1) forwards; }
     @keyframes sign { 0% { clip-path: inset(0 100% 0 0); } 100% { clip-path: inset(0 0 0 0); } }
   }
+  /* —— Téléphone : l'en-tête se range en une colonne, rien ne dépasse de la feuille —— */
+  @media (max-width: 640px) {
+    .bar { padding: 0.9rem 0 0.6rem; gap: 0.5rem; }
+    .bar .btn { min-height: 40px; padding: 0.4rem 0.8rem; font-size: 0.76rem; gap: 0.35rem; }
+    .bar-right { gap: 0.5rem; flex-wrap: nowrap; }
+    .head { grid-template-columns: minmax(0, 1fr); gap: 1.1rem; }
+    .role { letter-spacing: 0.22em; }
+    .coords { gap: 0.45rem; font-size: 0.8rem; }
+    .coords h2 { margin-bottom: 0.4rem; letter-spacing: 0.22em; }
+    .coords li { min-width: 0; gap: 0.6rem; }
+    .coords a, .coords span { overflow-wrap: anywhere; }
+    .date { margin-top: 1.2rem; }
+    .subject { margin-top: 1rem; }
+  }
+
 </style>
 </head>
 <body>
 <div class="bar">
   <a class="btn" href="/ch-dreux/">&larr; Retour &agrave; la candidature</a>
   <div class="bar-right">
-    <button class="btn" type="button" id="replay" hidden>&#8635; Rejouer l'animation</button>
     <a class="btn btn--solid" href="/assets/lettre-motivation-jordan-join.pdf" download>T&eacute;l&eacute;charger la lettre (PDF)</a>
   </div>
 </div>
@@ -167,7 +181,6 @@
   var post = document.getElementById('post');
   var sig = document.getElementById('signature');
   var sigwrap = document.getElementById('sigwrap');
-  var replay = document.getElementById('replay');
   var caret = document.createElement('span'); caret.className = 'caret'; caret.setAttribute('aria-hidden', 'true');
   els.forEach(function (el) { el._html = el.innerHTML; });     /* texte d'origine, restauré à la fin */
 
@@ -258,8 +271,6 @@
   window.addEventListener('scroll', checkSig, { passive: true });
   setInterval(function () { if (typedDone && !sig.classList.contains('sign')) checkSig(); }, 300);   /* filet si les évènements de défilement sont retardés */
 
-  replay.hidden = false;
-  replay.addEventListener('click', run);
   run();
 })();
 </script>
