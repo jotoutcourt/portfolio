@@ -201,19 +201,19 @@
 
   /* Boutons « Voir / Télécharger » (CV et lettre de motivation) */
   function docButtons() {
-    function pair(file, viewLabel, dlLabel) {
+    function pair(file, viewLabel, dlLabel, viewHref) {
       if (!file) {
         return [viewLabel, dlLabel].map(function (t) {
           return h('button', { class: 'pbtn', type: 'button', disabled: true, title: 'Bientôt disponible', text: t });
         });
       }
       return [
-        h('a', { class: 'pbtn pbtn--view', href: file, target: '_blank', rel: 'noopener noreferrer', text: viewLabel }),
+        h('a', { class: 'pbtn pbtn--view', href: viewHref || file, target: '_blank', rel: 'noopener noreferrer', text: viewLabel }),
         h('a', { class: 'pbtn', href: file, download: true, text: dlLabel })
       ];
     }
     var box = h("div", { class: "hero-docs" });
-    pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV').concat(
+    pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV', D.downloads.cvPage).concat(
       pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation')
     ).forEach(function (b) { box.appendChild(b); });
     return box;

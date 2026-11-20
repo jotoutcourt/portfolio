@@ -288,6 +288,8 @@ window.CH_DREUX = {
 
   downloads: {
     cv: '/assets/cv-jordan-join.pdf',
+    // Page du CV interactif sur le site : cible du bouton « Voir mon CV » (le PDF reste pour « Télécharger »).
+    cvPage: '/parcours.html',
     // Lettre de motivation : dépose le PDF dans /assets/ puis renseigne son chemin (ex : '/assets/lettre-motivation-jordan-join.pdf').
     // Tant que ce champ est vide, les boutons « Voir / Télécharger ma lettre de motivation » s'affichent désactivés.
     letter: '',
