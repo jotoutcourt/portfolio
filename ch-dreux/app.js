@@ -229,10 +229,26 @@
 
     Array.prototype.forEach.call(buttons, function (b) {
       b.addEventListener('click', function () {
-        var first = track.querySelector('.card');
-        var step = first ? first.offsetWidth + parseFloat(getComputedStyle(track).columnGap || 24) : track.clientWidth * 0.85;
-        var visible = Math.max(1, Math.floor(track.clientWidth / step));
-        track.scrollBy({ left: Number(b.getAttribute('data-dir')) * visible * step, behavior: reduce ? 'auto' : 'smooth' });
+        /* On vise toujours le début d'une carte (point d'accroche), jamais « un pas » arbitraire :
+           sinon, au retour depuis la fin du carrousel, la carte s'arrête entre deux positions. */
+        var dir = Number(b.getAttribute('data-dir'));
+        var cards = track.querySelectorAll('.card');
+        if (!cards.length) return;
+        var tl = track.getBoundingClientRect(), pad = parseFloat(getComputedStyle(track).scrollPaddingLeft) || 0;
+        var max = track.scrollWidth - track.clientWidth, cur = track.scrollLeft;
+        var snaps = Array.prototype.map.call(cards, function (c) {
+          return Math.max(0, Math.min(max, c.getBoundingClientRect().left - tl.left + cur - pad));
+        });
+        var step = cards[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || 24);
+        var visible = Math.max(1, Math.floor(track.clientWidth / step)), i, j;
+        if (dir > 0) {
+          for (i = 0; i < snaps.length && snaps[i] <= cur + 4; i++) {}
+          j = Math.min(i + visible - 1, snaps.length - 1);
+        } else {
+          for (i = snaps.length - 1; i >= 0 && snaps[i] >= cur - 4; i--) {}
+          j = Math.max(i - visible + 1, 0);
+        }
+        track.scrollTo({ left: dir > 0 ? snaps[j] : snaps[Math.max(j, 0)], behavior: reduce ? 'auto' : 'smooth' });
       });
     });
 
