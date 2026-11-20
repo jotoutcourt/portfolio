@@ -273,11 +273,15 @@ window.CH_DREUX = {
     {
       section: 'internal',
       title: 'Formation à la photographie',
+      page: '/ch-dreux/formation-photo/',
       tag: 'Brasserie 1755 · Bourgoin',
-      context: "Formation et guide de photographie destinés aux équipes de la brasserie 1755, à Bourgoin.",
-      role: "Rédaction du guide et animation de la formation : cadrage, lumière et bonnes pratiques pour des photos exploitables.",
-      result: "Des équipes capables de produire elles-mêmes des photos pour leur communication.",
-      media: { type: 'placeholder', label: '[APERÇU DU GUIDE À AJOUTER]' }
+      context: "Former les équipes à photographier elles-mêmes leurs créations, leurs plats et leurs lieux, pour alimenter chaque semaine les réseaux sociaux de la brasserie.",
+      role: "Conception du plan de communication et du guide de prise de vue (lumière, angles, plans, profondeur), puis animation de la formation auprès des équipes.",
+      result: "Des équipes autonomes pour produire le contenu hebdomadaire des réseaux sociaux de la brasserie.",
+      media: {
+        type: 'image', src: '/ch-dreux/posters/formation-photo-1755.jpg', fit: 'cover',
+        alt: "Première page du plan de communication de la brasserie 1755 : une cuisine professionnelle avec des suspensions en cuivre, et le titre « Plan de communication »."
+      }
     }
   ],
 
