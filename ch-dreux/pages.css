@@ -7,3 +7,17 @@
 
 /* Évite le défilement horizontal causé par des décors qui dépassent (ex. taches de la page livrets) */
 @media (max-width: 900px) { html, body { overflow-x: clip; max-width: 100%; } }
+
+/* Pages Labrha site / Vasculyon site (fond clair) : en-tête compact sur téléphone */
+@media (max-width: 900px) {
+  .proj-cat { margin-bottom: 0.5rem; }
+  .proj-meta { gap: 0.4rem 0.7rem; margin-top: 0.9rem; }
+  .proj-theme-tag { padding: 0.2rem 0.65rem; font-size: 0.68rem; border-color: rgba(26, 26, 46, 0.22); }
+  .proj-visit { margin-top: 1rem; padding: 0.7rem 1.3rem; }
+  /* Le sommaire garde ses 3 entrées côte à côte au lieu de 3 lignes empilées */
+  .proj-summary { flex-direction: row !important; margin-top: 1.4rem; max-width: none; }
+  .proj-summary-item { min-width: 0; padding: 0.8rem 0.7rem !important; border-bottom: none !important; border-right: 1px solid rgba(26, 26, 46, 0.14) !important; }
+  .proj-summary-item:first-child { padding-left: 0 !important; }
+  .proj-summary-item:last-child { border-right: none !important; }
+  .proj-summary-label { font-size: 0.95rem; }
+}
