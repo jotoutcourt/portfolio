@@ -32,8 +32,8 @@ window.CH_DREUX = {
     name: 'Jordan Join',
     role: 'Création publicitaire · Direction artistique · Marketing · Communication',
     lines: [
-      { label: 'Âge',        value: '29 ans' },
-      { label: 'Ville',      value: 'Lyon · Permis B' },
+      { label: 'Âge',        value: '30 ans' },
+      { label: 'Ville',      value: 'Lyon · Déménagement à Chartres bientôt · Permis B' },
       { label: 'Poste actuel', value: 'Responsable marketing et communication, laboratoire Labrha (depuis mars 2024)' },
       { label: 'Formation',  value: 'Master 2 Direction artistique — Sup de Pub, INSEEC Lyon (2023)' },
       { label: 'Téléphone',  value: '06 19 84 27 99', href: 'tel:+33619842799' },
