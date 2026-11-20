@@ -114,6 +114,11 @@ a:hover { color: var(--accent); }
 .btn:hover { background: var(--blue); border-color: var(--blue); color: var(--navy); }
 .btn--ghost { background: transparent; color: #fff; }
 .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); border-color: #fff; color: #fff; }
+/* Dans le pied de page, « .foot a » rendait le texte du bouton blanc sur blanc : on rétablit les couleurs des boutons */
+.foot a.btn { color: var(--navy); }
+.foot a.btn:hover { color: var(--navy); }
+.foot a.btn--ghost { color: #fff; }
+.foot a.btn--ghost:hover { color: #fff; }
 .btn[disabled] { opacity: 0.65; cursor: not-allowed; }
 .btn[disabled]:hover { background: transparent; }
 
