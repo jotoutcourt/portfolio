@@ -158,6 +158,7 @@ a:hover { color: var(--accent); }
 .profile-list a:hover { border-bottom-color: var(--accent); }
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .scroll-cue { display: none; } /* en une colonne la fiche suit directement */
   .profile { max-width: 420px; }
   .profile-photo { aspect-ratio: 16 / 11; object-position: center 20%; }
 }
