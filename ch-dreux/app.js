@@ -212,7 +212,7 @@
         h('a', { class: 'pbtn', href: file, download: true, text: dlLabel })
       ];
     }
-    var box = h('div', { class: 'profile-docs' });
+    var box = h("div", { class: "hero-docs" });
     pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV').concat(
       pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation')
     ).forEach(function (b) { box.appendChild(b); });
@@ -233,9 +233,16 @@
     profileEl.appendChild(h('div', { class: 'profile-body' }, [
       h('p', { class: 'profile-name', text: pr.name }),
       h('p', { class: 'profile-role', text: pr.role }),
-      dl,
-      docButtons()
+      dl
     ]));
+    var heroText = doc.querySelector(".hero-text");
+    if (heroText) {
+      heroText.appendChild(docButtons());
+      heroText.appendChild(h("a", { class: "scroll-cue", href: "#realisations" }, [
+        "Découvrir mes réalisations ",
+        h("span", { "aria-hidden": "true", text: "↓" })
+      ]));
+    }
   } else if (profileEl) { profileEl.remove(); }
 
   var sectionsRoot = doc.getElementById('sections');
