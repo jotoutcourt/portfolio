@@ -162,7 +162,9 @@
       /* Lien étiré : toute la carte est cliquable, mais un seul lien est annoncé aux lecteurs d'écran. */
       var label = heading.textContent;
       heading.textContent = '';
-      heading.appendChild(h('a', { class: 'card-title-link', href: p.page }, [label]));
+      heading.appendChild(h('a', { class: 'card-title-link', href: p.page, target: '_blank', rel: 'noopener' }, [
+        label, h('span', { class: 'sr-only', text: ' (nouvel onglet)' })
+      ]));
     }
     var body = h('div', { class: 'card-body' }, [
       p.tag ? fill(h('p', { class: 'tag' }), p.tag) : null,
