@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1a1a2e">
+<title>Formation cybersécurité — Laboratoire Labrha — Jordan Join</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ch-dreux/style.css">
+<style>
+  .sub-hero { padding: 2.4rem 0 2rem; border-bottom: 1px solid var(--line); background: linear-gradient(180deg, var(--surface), var(--bg)); }
+  .back { display: inline-flex; align-items: center; min-height: 44px; padding: 0.5rem 1.1rem; margin-bottom: 1.4rem; border: 2px solid var(--navy); border-radius: 999px; font-size: 0.9rem; font-weight: 500; text-decoration: none; }
+  .back:hover { background: var(--navy); color: #fff; }
+  .sub-hero h1 { margin: 0 0 0.6rem; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1.02; }
+  .sub-hero .tag { margin: 0 0 1rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+  .about { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6rem; margin: 1.6rem 0 0; }
+  .letters { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.4rem; padding: 2.6rem 0 4rem; }
+  main .wrap { width: min(1360px, 100% - 2.5rem); }
+  .letter h2 { margin: 0 0 0.3rem; font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; line-height: 1.1; }
+  .letter .hint { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
+  .letter .media { aspect-ratio: 16 / 9; border: 1px solid var(--line); border-radius: var(--radius); }
+  .letter .open { display: inline-flex; align-items: center; min-height: 44px; margin-top: 0.4rem; font-weight: 500; }
+  @media (max-width: 900px) { .about, .letters { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="sub-hero">
+  <div class="wrap">
+    <a class="back" href="/ch-dreux/#internal">&larr; Retour &agrave; la candidature</a>
+    <p class="tag">Communication interne · Laboratoire Labrha</p>
+    <h1>Formation à la cybersécurité</h1>
+    <dl class="facts about">
+      <div class="fact"><dt>Contexte</dt><dd>Formation obligatoire « Vigilance sur le web et cybersécurité » (2025) à destination des équipes : origines des cybermenaces, menaces principales, reconnaissance des courriels frauduleux, mots de passe et bons réflexes du quotidien.</dd></div>
+      <div class="fact"><dt>Mon rôle</dt><dd>Conception et réalisation de A à Z : contexte, exemples concrets, exercices de détection de faux courriels et quiz d'évaluation final.</dd></div>
+      <div class="fact"><dt>Résultat</dt><dd>Un parcours complet de 47 pages, du contexte jusqu'à l'évaluation, pour sensibiliser l'ensemble des équipes.</dd></div>
+    </dl>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="letters" id="letters"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  /* Présentation Canva intégrée. embedUrl = adresse d'intégration Canva (…/view?embed) ; openUrl = page de partage publique.
+     Un exemple sans embedUrl s'affiche comme un emplacement à compléter. */
+  var LETTERS = [
+    {
+      title: 'La formation en ligne',
+      poster: '/ch-dreux/posters/formation-cyber.jpg',
+      alt: "Première page de la formation : « Formation — Vigilance sur le web et cybersécurité (2025) — Formation obligatoire », sur fond bleu nuit, avec un ordinateur portable, un bouclier et des courriels.",
+      embedUrl: 'https://www.canva.com/design/DAHbc2mpnkg/t-UjsAqt_soe24CuG4r07g/view?embed',
+      openUrl: 'https://www.canva.com/design/DAHbc2mpnkg/t-UjsAqt_soe24CuG4r07g/view'
+    }
+  ];
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (attrs[k] === false || attrs[k] == null) return;
+      if (k === 'text') n.textContent = attrs[k]; else n.setAttribute(k, attrs[k] === true ? '' : attrs[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function playIcon() {
+    var ns = 'http://www.w3.org/2000/svg', s = document.createElementNS(ns, 'svg');
+    s.setAttribute('viewBox', '0 0 72 72'); s.setAttribute('class', 'play-icon'); s.setAttribute('aria-hidden', 'true');
+    var c = document.createElementNS(ns, 'circle'); c.setAttribute('cx', 36); c.setAttribute('cy', 36); c.setAttribute('r', 34);
+    var p = document.createElementNS(ns, 'path'); p.setAttribute('d', 'M26 20 L46 32 L26 44 Z');
+    s.appendChild(c); s.appendChild(p); return s;
+  }
+
+  var root = document.getElementById('letters');
+  LETTERS.forEach(function (L) {
+    var media = el('div', { class: 'media ' + (L.embedUrl ? 'media--embed' : 'media--placeholder') });
+    if (L.embedUrl) {
+      var btn = el('button', { type: 'button', class: 'play', 'aria-label': 'Lire : ' + L.title }, [
+        L.poster ? el('img', { src: L.poster, alt: L.alt, loading: 'lazy', decoding: 'async' }) : null,
+        playIcon()
+      ]);
+      btn.addEventListener('click', function () {
+        var f = el('iframe', { src: L.embedUrl, title: 'Formation : ' + L.title, allow: 'fullscreen', allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin' });
+        media.replaceChildren(f); f.focus();
+      });
+      media.appendChild(btn);
+    } else {
+      media.setAttribute('role', 'img'); media.setAttribute('aria-label', 'Formation à ajouter');
+      media.appendChild(el('p', { class: 'media-ph', text: '[FORMATION À AJOUTER]' }));
+    }
+    root.appendChild(el('article', { class: 'letter' }, [
+      el('h2', { text: L.title }),
+      el('p', { class: 'hint', text: L.embedUrl ? 'Cliquez pour feuilleter la formation (47 pages).' : 'À venir.' }),
+      media,
+      L.openUrl ? el('a', { class: 'open', href: L.openUrl, target: '_blank', rel: 'noopener noreferrer', text: 'Ouvrir la formation en plein écran ↗' }) : null
+    ]));
+  });
+})();
+</script>
+<noscript><p style="padding:1.5rem;text-align:center">Cette page nécessite JavaScript. <a href="https://www.canva.com/design/DAHbc2mpnkg/t-UjsAqt_soe24CuG4r07g/view">Ouvrir la formation</a></p></noscript>
+</body>
+</html>

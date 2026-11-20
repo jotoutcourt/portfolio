@@ -259,12 +259,16 @@ window.CH_DREUX = {
     },
     {
       section: 'internal',
-      title: 'Formation à la vigilance web',
+      title: 'Formation à la vigilance web et à la cybersécurité',
+      page: '/ch-dreux/formation-cybersecurite/',
       tag: "Laboratoire Labrha",
-      context: "Formation de sensibilisation des équipes aux risques courants sur internet : courriels frauduleux, mots de passe, usages prudents.",
-      role: "Conception et animation de la formation auprès des équipes.",
-      result: "Des équipes sensibilisées aux bons réflexes face à l'hameçonnage et aux mots de passe faibles.",
-      media: { type: 'placeholder', label: '[SUPPORT DE LA FORMATION À AJOUTER]' }
+      context: "Formation obligatoire destinée aux équipes : origines des cybermenaces, reconnaissance des courriels frauduleux, mots de passe et bons réflexes du quotidien.",
+      role: "Conception et réalisation de A à Z : contexte, exemples concrets, exercices de détection de faux courriels et quiz d'évaluation final.",
+      result: "Un parcours complet de 47 pages, du contexte jusqu'à l'évaluation, pour sensibiliser l'ensemble des équipes.",
+      media: {
+        type: 'image', src: '/ch-dreux/posters/formation-cyber.jpg', fit: 'cover',
+        alt: "Première page de la formation « Vigilance sur le web et cybersécurité (2025) », sur fond bleu nuit, avec un ordinateur portable, un bouclier et des courriels."
+      }
     },
     {
       section: 'internal',
