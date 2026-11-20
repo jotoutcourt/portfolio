@@ -12,6 +12,7 @@
  *     'vimeo'        { vimeoId, poster, ratio }
  *     'video'        { src, poster, ratio }      (fichier hébergé, mp4)
  *     'placeholder'  { label }                   (aucun visuel pour l'instant)
+ * - page (optionnel) : chemin de la page dédiée au projet (copie sans menus dans /ch-dreux/...). Sans `page`, la carte n'est pas cliquable.
  * - Chaque image DOIT avoir un alt (texte alternatif) : décris ce que l'on voit.
  * - Les images/vidéos pointent vers les fichiers existants de /assets/ (aucune copie).
  */
@@ -37,6 +38,7 @@ window.CH_DREUX = {
     {
       section: 'print',
       title: 'Pandora — gamme de dispositifs médicaux',
+      page: '/ch-dreux/pandora/',
       tag: 'Laboratoire Labrha',
       context: "Gamme de dispositifs médicaux de viscosupplémentation (traitement de l'arthrose), soumise à la réglementation européenne sur les dispositifs médicaux (MDR 2017/745).",
       role: "Création de la charte graphique et de l'univers de marque (packagings, notices, cartes d'implants), puis préparation du lancement : communication auprès des prescripteurs, outils pour les commerciaux, landing pages.",
@@ -49,6 +51,7 @@ window.CH_DREUX = {
     {
       section: 'print',
       title: 'Gamme compléments alimentaires — refonte de la charte',
+      page: '/ch-dreux/gamme-complements/',
       tag: 'Laboratoire Labrha',
       context: "Compléments alimentaires articulaires (Tenofort, Cuivramine) : des supports destinés à la fois aux professionnels de santé et aux patients.",
       role: "Refonte de la charte graphique de la gamme et conception des supports (livrets, affiches) ; mise à jour et digitalisation des supports commerciaux de terrain destinés aux professionnels de santé.",
@@ -61,6 +64,7 @@ window.CH_DREUX = {
     {
       section: 'print',
       title: "Visit Metz — campagne « Lumières d'Europe »",
+      page: '/ch-dreux/metz/',
       tag: 'Eurométropole de Metz',
       context: "Série d'affiches pour la promotion touristique de Metz autour des festivals de lumière.",
       role: '[MON RÔLE]',
@@ -75,6 +79,7 @@ window.CH_DREUX = {
     {
       section: 'video',
       title: "« La 3D c'est pas sorcier » — série vidéo",
+      page: '/ch-dreux/f3df/',
       tag: "Entreprise d'impression 3D",
       context: "Série de 5 vidéos pédagogiques reprenant les codes de l'émission « C'est pas sorcier », appliqués à l'impression 3D.",
       role: '[MON RÔLE]',
@@ -89,6 +94,7 @@ window.CH_DREUX = {
     {
       section: 'video',
       title: 'Graille — spot produit « Cacahuète 3 chocolats »',
+      page: '/ch-dreux/graille/#s-videos',
       tag: 'Start-up food, Lyon',
       context: "Distributeurs de plats faits maison, cuisinés frais chaque matin, destinés aux étudiants des écoles lyonnaises : spot vidéo de présentation d'un produit.",
       role: '[MON RÔLE]',
@@ -109,6 +115,7 @@ window.CH_DREUX = {
     {
       section: 'digital',
       title: 'Refonte du site internet de Labrha',
+      page: '/ch-dreux/labrha-site/',
       tag: 'Laboratoire Labrha',
       context: "Site vitrine et boutique en ligne d'un laboratoire spécialisé en rhumatologie : modernisation de l'image, hiérarchisation des informations et navigation simplifiée.",
       role: "Pilotage et réalisation de la refonte complète du site (WordPress), ainsi que gestion de la boutique en ligne.",
@@ -122,6 +129,7 @@ window.CH_DREUX = {
     {
       section: 'digital',
       title: 'Réseaux sociaux du laboratoire Labrha',
+      page: '/ch-dreux/labrha-reseaux/',
       tag: 'Laboratoire Labrha',
       context: "Compte Instagram du laboratoire : posts éducatifs, présentations de produits et communication institutionnelle.",
       role: "Conception et réalisation des visuels, définition du plan éditorial et du calendrier de publication, suivi des performances.",
@@ -134,6 +142,7 @@ window.CH_DREUX = {
     {
       section: 'digital',
       title: 'Vasculyon — identité visuelle et site web',
+      page: '/ch-dreux/vasculyon/',
       tag: 'Cabinet de chirurgie vasculaire · mission freelance',
       context: "Cabinet de chirurgie vasculaire et endovasculaire (Lyon, Vienne, Vénissieux) : une identité visuelle et un site destinés aux patients, aux médecins adresseurs et aux futurs praticiens.",
       role: '[MON RÔLE]',
@@ -166,11 +175,12 @@ window.CH_DREUX = {
     {
       section: 'events',
       title: "Graille — spot d'inauguration",
+      page: '/ch-dreux/graille/#s-videos',
       tag: 'Start-up food, Lyon',
       context: "Spot vidéo pour l'inauguration d'un distributeur de plats frais dans un établissement d'enseignement supérieur lyonnais (UCLY).",
       role: '[MON RÔLE]',
       result: '[RÉSULTAT]',
-      media: { type: 'video', src: '/assets/vid%C3%A9opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg', ratio: '1/1' }
+      media: { type: 'video', src: '/assets/vide%CC%81opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg', ratio: '1/1' }
     }
   ],
 

@@ -116,14 +116,22 @@
 
   function buildCard(p, id) {
     var titleId = id + '-t';
+    var heading = fill(h('h3', { id: titleId }), p.title);
+    if (p.page) {
+      /* Lien étiré : toute la carte est cliquable, mais un seul lien est annoncé aux lecteurs d'écran. */
+      var label = heading.textContent;
+      heading.textContent = '';
+      heading.appendChild(h('a', { class: 'card-title-link', href: p.page }, [label]));
+    }
     var body = h('div', { class: 'card-body' }, [
       p.tag ? fill(h('p', { class: 'tag' }), p.tag) : null,
-      fill(h('h3', { id: titleId }), p.title),
+      heading,
       h('dl', { class: 'facts' }, [
         fact('Contexte', p.context),
         fact('Mon rôle', p.role),
         fact('Résultat', p.result)
-      ])
+      ]),
+      p.page ? h('span', { class: 'card-more', 'aria-hidden': 'true', text: 'Voir le projet →' }) : null
     ]);
     if (p.link) {
       body.appendChild(h('a', { class: 'card-link', href: p.link.href, target: '_blank', rel: 'noopener noreferrer' }, [
@@ -182,6 +190,12 @@
     dl.appendChild(h('button', { class: 'btn btn--ghost', type: 'button', disabled: true, text: 'Télécharger le portfolio (PDF) — bientôt disponible' }));
   } else {
     dl.appendChild(h('a', { class: 'btn btn--ghost', href: D.downloads.portfolio, download: true, text: 'Télécharger le portfolio (PDF)' }));
+  }
+
+  /* Les sections sont créées par le script : on rejoue le saut vers l'ancre (ex. retour depuis une page projet). */
+  if (location.hash.length > 1) {
+    var target = doc.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) target.scrollIntoView();
   }
 
   /* Bandeau brouillon : uniquement en local ou avec ?brouillon (jamais visible par défaut en ligne) */
