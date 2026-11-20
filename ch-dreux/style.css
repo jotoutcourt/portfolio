@@ -138,3 +138,8 @@ a:hover { color: var(--accent); }
 .card-link { position: relative; z-index: 2; }
 .card-more { margin-top: auto; font-size: 0.9rem; font-weight: 500; color: var(--accent); }
 .card-more + .card-link { margin-top: 0; }
+
+/* Lien « Retrouvez tous mes projets de la catégorie… » sous chaque ligne */
+.section-all { margin: 1.1rem 0 0; }
+.section-all a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; color: var(--accent, #9b3a48); text-decoration: underline; text-underline-offset: 3px; }
+.section-all a:hover { text-decoration-thickness: 2px; }

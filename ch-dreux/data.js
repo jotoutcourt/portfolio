@@ -26,10 +26,11 @@ window.CH_DREUX = {
   introLink: { label: 'jordan-join.fr/projets', href: 'https://jordan-join.fr/projets.html' },
 
   sections: [
-    { id: 'print',    title: 'Print et identité visuelle', lead: "Identité visuelle, packagings, livrets et supports d'information." },
-    { id: 'video',    title: 'Vidéo',                      lead: "Production de vidéos pour informer et valoriser." },
-    { id: 'web',      title: 'Sites web',                  lead: "Conception et refonte de sites internet." },
-    { id: 'social',   title: 'Réseaux sociaux',            lead: "Stratégie éditoriale et création de contenus." },
+    // all (optionnel) : ligne « Retrouvez tous mes projets… » sous la section, vers l'ancre de jordan-join.fr/projets
+    { id: 'print',    title: 'Print et identité visuelle', lead: "Identité visuelle, packagings, livrets et supports d'information.", all: { anchor: 'cat-print', label: 'print' } },
+    { id: 'video',    title: 'Vidéo',                      lead: "Production de vidéos pour informer et valoriser.", all: { anchor: 'cat-video', label: 'vidéo' } },
+    { id: 'web',      title: 'Sites web',                  lead: "Conception et refonte de sites internet.", all: { anchor: 'cat-web', label: 'sites web' } },
+    { id: 'social',   title: 'Réseaux sociaux',            lead: "Stratégie éditoriale et création de contenus.", all: { anchor: 'cat-social', label: 'réseaux sociaux' } },
     { id: 'events',   title: 'Événementiel',               lead: "Organisation d'événements et de présences institutionnelles." },
     { id: 'internal', title: 'Communication interne',      lead: "Formations et lettres à destination des équipes." }
   ],

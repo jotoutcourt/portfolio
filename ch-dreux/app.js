@@ -216,7 +216,13 @@
         ]),
         arrows
       ]),
-      track
+      track,
+      s.all ? h('p', { class: 'section-all' }, [
+        h('a', {
+          href: 'https://jordan-join.fr/projets.html#' + s.all.anchor, target: '_blank', rel: 'noopener noreferrer',
+          text: 'Retrouvez tous mes projets de la catégorie ' + s.all.label + ' →'
+        })
+      ]) : null
     ]));
     wireTrack(track, arrows);
     toc.appendChild(h('li', null, [h('a', { href: '#' + s.id, text: s.title })]));
