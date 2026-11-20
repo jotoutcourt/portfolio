@@ -1,0 +1,9 @@
+/* Pages projet de la candidature (copies sans menu) : sur téléphone, plus de grand vide en haut.
+   Les pages d'origine réservaient la place d'un menu fixe et visaient 58 à 78 % de la hauteur de l'écran. */
+@media (max-width: 900px) {
+  .proj-hero, .lb-hero, .mz-hero, .gr-hero, .f3-hero, .hero-bloc { min-height: 0 !important; padding-top: 1.6rem !important; padding-bottom: 1.8rem !important; }
+  .proj-back { margin-bottom: 0.9rem; }
+}
+
+/* Évite le défilement horizontal causé par des décors qui dépassent (ex. taches de la page livrets) */
+@media (max-width: 900px) { html, body { overflow-x: clip; max-width: 100%; } }
