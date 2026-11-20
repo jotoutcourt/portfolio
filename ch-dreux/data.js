@@ -47,7 +47,7 @@ window.CH_DREUX = {
     { id: 'video',    title: 'Vidéo',                      lead: "Production de vidéos pour informer et valoriser.", all: { anchor: 'cat-video', label: 'vidéo' } },
     { id: 'web',      title: 'Sites web',                  lead: "Conception et refonte de sites internet.", all: { anchor: 'cat-web', label: 'sites web' } },
     { id: 'social',   title: 'Réseaux sociaux',            lead: "Stratégie éditoriale et création de contenus.", all: { anchor: 'cat-social', label: 'réseaux sociaux' } },
-    { id: 'events',   title: 'Événementiel',               lead: "Organisation d'événements et de présences institutionnelles." },
+    { id: 'events',   title: 'Événementiel',               lead: "Organisation d'événements et de présences institutionnelles.", all: { anchor: 'cat-event', label: 'événementiel' } },
     { id: 'internal', title: 'Communication interne',      lead: "Formations et lettres à destination des équipes." }
   ],
 
@@ -237,6 +237,7 @@ window.CH_DREUX = {
       id: 'salons-labrha',
       section: 'events',
       title: 'Salons Labrha — dont Medica',
+      page: '/ch-dreux/salons-labrha/',
       tag: 'Laboratoire Labrha',
       context: "Présence du laboratoire sur des salons et congrès, dont Medica.",
       role: "Préparation et animation de la présence du laboratoire : supports, coordination du stand et accueil des professionnels de santé.",
