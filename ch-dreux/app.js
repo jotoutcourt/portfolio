@@ -56,6 +56,7 @@
   }
 
   function embedUrl(m) {
+    if (m.type === 'embed') return m.embedUrl;   /* page publique intégrable (ex. Canva ?embed) */
     if (m.type === 'youtube') {
       return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(m.youtubeId) +
         '?autoplay=1&rel=0' + (m.list ? '&list=' + encodeURIComponent(m.list) : '');
@@ -72,15 +73,16 @@
       box.setAttribute('data-fit', m.fit || 'cover');
       box.appendChild(h('img', { src: m.src, alt: m.alt || '', loading: 'lazy', decoding: 'async' }));
 
-    } else if (m.type === 'youtube' || m.type === 'vimeo') {
-      var btn = h('button', { type: 'button', class: 'play', 'aria-label': 'Lire la vidéo : ' + p.title }, [
+    } else if (m.type === 'youtube' || m.type === 'vimeo' || m.type === 'embed') {
+      var what = m.type === 'embed' ? (m.noun || 'Lettre') : 'Vidéo';
+      var btn = h('button', { type: 'button', class: 'play', 'aria-label': (m.type === 'embed' ? 'Lire : ' : 'Lire la vidéo : ') + p.title }, [
         m.poster ? h('img', { src: m.poster, alt: '', loading: 'lazy', decoding: 'async' }) : null,
         playIcon()
       ]);
       btn.addEventListener('click', function () {
         var frame = h('iframe', {
           src: embedUrl(m),
-          title: 'Vidéo : ' + p.title,
+          title: what + ' : ' + p.title,
           allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen',
           allowfullscreen: true,
           referrerpolicy: 'strict-origin-when-cross-origin'
