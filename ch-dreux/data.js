@@ -308,9 +308,20 @@ window.CH_DREUX = {
 
   press: {
     title: 'Relations presse',
-    text: "Concernant les relations presse, je préfère être transparent : mes expériences m’ont surtout amené à travailler la création de contenus, le digital et la communication de marque, et je n’ai pas encore piloté de relations presse avec des retombées à vous présenter. J’ai en revanche conçu et réalisé des contenus vidéo pédagogiques et des interviews, notamment autour d’un dispositif médical, que vous trouverez dans mon portfolio. Je serai heureux de vous présenter lors de l’entretien la manière dont j’envisage les relations presse pour le Centre Hospitalier.",
-    // Exemples à ajouter, un bloc par élément : { title: '...', note: '...', href: '/chemin/vers/fichier.pdf' }
-    items: []
+    text: "Concernant les relations presse, mon parcours m’a surtout conduit vers la création de contenus, le marketing digital (campagnes publicitaires, réseaux sociaux, SEO) et la communication de marque. Je n’ai donc pas encore de retombées presse à vous présenter. J’ai en revanche une solide pratique de la production de contenus éditoriaux : rédaction d’articles de blog, notamment pour le laboratoire Labrha, ainsi que conception, tournage et montage de vidéos pédagogiques et d’interviews autour d’un dispositif médical, que vous retrouverez dans mon portfolio. Ces compétences (vulgariser un sujet de santé, préparer un interlocuteur, produire des contenus prêts à diffuser et savoir les faire rayonner auprès des bons publics) sont directement mobilisables dans une démarche de relations presse.",
+    items: [
+      // Articles rédigés pour F3DF (2021)
+      { title: "Nouveau flux de travail dans Revit avec l'iPhone 12 Pro et la technologie Lidar", note: 'F3DF, 2021', href: 'https://www.f3df.com/nouveau-flux-de-travail-dans-revit-grace-a-liphone-12-pro-et-la-technologie-lidar/' },
+      { title: "L'impression 3D révolutionne l'accès au monde de la santé : le premier stéthoscope connecté présenté par WeMed", note: 'F3DF, 2021', href: 'https://www.f3df.com/impression-3d-revolutionne-acces-monde-sante/' },
+      { title: 'Orthèses et prothèses 3D : au service des patients', note: 'F3DF, 2021', href: 'https://www.f3df.com/impression-3d-service-bien-etre-patients/' },
+      { title: 'Femmes & impression 3D : témoignage de Mathilde Berchon', note: 'F3DF, 2021', href: 'https://www.f3df.com/femmes-et-impression-3d-temoignage-de-mathilde-berchon/' },
+      { title: 'Comment la 3D vient-elle au service du marketing ?', note: 'F3DF, 2021', href: 'https://www.f3df.com/3d-service-marketing-trottinette/' },
+      // Articles de blog rédigés pour le laboratoire Labrha
+      { title: 'Lady Gaga : quand la pop vient mettre en lumière la fibromyalgie', note: 'Laboratoire Labrha', href: 'https://www.laboratoire-labrha.fr/blog/lady-gaga-vient-mettre-en-lumiere-la-fibromyalgie/' },
+      { title: 'Femmes et rhumatologie : spécificités et inégalités', note: 'Laboratoire Labrha', href: 'https://www.laboratoire-labrha.fr/blog/rhumatologie-specificites-hormonales-et-inegalites-de-diagnostic/' },
+      { title: 'La capsaïcine : son histoire et ses bienfaits', note: 'Laboratoire Labrha', href: 'https://www.laboratoire-labrha.fr/blog/la-capsaicine-son-histoire/' }
+    ]
+
   },
 
   contact: {
@@ -330,6 +341,6 @@ window.CH_DREUX = {
     letterPage: '/ch-dreux/lettre-de-motivation/',
     // Dépose le PDF du portfolio dans /assets/ puis renseigne son chemin ici (ex : '/assets/portfolio-jordan-join.pdf').
     // Tant que ce champ est vide, le bouton s'affiche désactivé.
-    portfolio: ''
+    portfolio: '/assets/portfolio-jordan-join.pdf'
   }
 };

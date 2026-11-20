@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Portfolio — Jordan Join</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Source du PDF « Portfolio » : page conçue pour l'impression (A4 paysage), générée avec Edge en ligne de commande.
+     Contenu = data.js de /ch-dreux (mêmes projets, mêmes textes). Voir snippets/portfolio-pdf.md pour régénérer. */
+  @page { size: 297mm 210mm; margin: 0; }
+  :root { --navy:#1a1a2e; --accent:#d66a77; --muted:#5d5d70; --line:#e3e3ec; --f-display:'Bebas Neue',sans-serif; --f-body:'DM Sans',system-ui,sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#888; }
+  body { font-family:var(--f-body); color:var(--navy); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  a { color:inherit; text-decoration:none; }
+  .pg { position:relative; width:297mm; height:210mm; overflow:hidden; background:#fff; page-break-after:always; break-after:page; margin:0 auto; }
+  @media screen { .pg { margin:10mm auto; box-shadow:0 4px 24px rgba(0,0,0,.35); } }
+
+  /* ── Couverture ── */
+  .cover { background:var(--navy); color:#fff; display:grid; grid-template-columns:1fr 100mm; }
+  .cover-main { padding:22mm 18mm 18mm 22mm; display:flex; flex-direction:column; }
+  .eyebrow { font-size:3.2mm; letter-spacing:.34em; text-transform:uppercase; color:var(--accent); font-weight:500; }
+  .cover h1 { margin:6mm 0 0; font-family:var(--f-display); font-weight:400; font-size:34mm; line-height:.88; letter-spacing:.01em; }
+  .cover .role { margin:8mm 0 0; max-width:130mm; font-size:4.6mm; line-height:1.5; color:#d8d8e8; }
+  .cover-foot { margin-top:auto; display:flex; align-items:flex-end; gap:8mm; }
+  .qrcard { background:#fff; color:var(--navy); border-radius:3mm; padding:3.2mm; display:flex; align-items:center; gap:3.5mm; }
+  .qrcard svg { width:27mm; height:27mm; flex:none; display:block; }
+  .qrcard b { display:block; font-size:3.7mm; line-height:1.25; }
+  .qrcard span { display:block; margin-top:1mm; font-size:3mm; color:var(--muted); }
+  .contact { font-size:3.5mm; line-height:1.7; color:#cfcfe2; }
+  .contact b { color:#fff; font-weight:500; }
+  .cover-photo { position:relative; background:#2a2a44; }
+  .cover-photo img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 20%; }
+
+  /* ── Page projet ── */
+  .proj { padding:13mm 15mm 12mm 15mm; display:grid; grid-template-columns:165mm 1fr; grid-template-rows:auto 1fr; column-gap:12mm; }
+  .proj .top { grid-column:1 / -1; display:flex; justify-content:space-between; align-items:center; margin-bottom:6mm; font-size:3.1mm; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); font-weight:500; }
+  .proj .top b { color:var(--accent); font-weight:700; }
+  .left { display:flex; flex-direction:column; min-height:0; }
+  .shot { width:165mm; height:123.75mm; border-radius:2.5mm; overflow:hidden; background:#eee; box-shadow:0 1.5mm 6mm rgba(26,26,46,.18); display:block; }
+  .shot img { width:100%; height:100%; object-fit:cover; display:block; }
+  .qrs { margin-top:6mm; display:flex; gap:8mm; align-items:flex-start; }
+  .qr { display:flex; gap:3.2mm; align-items:center; width:78mm; }
+  .qr svg { width:23mm; height:23mm; flex:none; display:block; border:.4mm solid var(--line); padding:1.2mm; border-radius:1.5mm; background:#fff; }
+  .qr b { display:block; font-size:3.3mm; line-height:1.25; }
+  .qr span { display:block; margin-top:.8mm; font-size:2.7mm; color:var(--muted); word-break:break-all; line-height:1.25; }
+  .qr--video svg { border-color:var(--accent); border-width:.6mm; }
+  .right { min-width:0; display:flex; flex-direction:column; }
+  .tag { margin:0; font-size:3mm; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); font-weight:700; }
+  .proj h2 { margin:3mm 0 6mm; font-family:var(--f-display); font-weight:400; font-size:12.5mm; line-height:.98; letter-spacing:.01em; }
+  .fact { margin:0 0 4.6mm; }
+  .fact dt { font-size:2.8mm; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .fact dd { margin:1mm 0 0; font-size:3.55mm; line-height:1.5; }
+  .proj .foot { margin-top:auto; padding-top:4mm; border-top:.3mm solid var(--line); font-size:2.9mm; color:var(--muted); display:flex; justify-content:space-between; }
+
+  /* ── Dernière page ── */
+  .end { background:var(--navy); color:#fff; padding:20mm 22mm; display:grid; grid-template-columns:1fr 1fr; column-gap:16mm; }
+  .end h2 { margin:5mm 0 0; font-family:var(--f-display); font-weight:400; font-size:26mm; line-height:.9; }
+  .end p { margin:6mm 0 0; font-size:4.2mm; line-height:1.55; color:#d8d8e8; max-width:105mm; }
+  .bigqr { margin-top:9mm; background:#fff; color:var(--navy); border-radius:3mm; padding:4mm; display:inline-flex; gap:5mm; align-items:center; }
+  .bigqr svg { width:46mm; height:46mm; display:block; }
+  .bigqr b { display:block; font-size:4.4mm; line-height:1.25; max-width:48mm; }
+  .bigqr span { display:block; margin-top:1.5mm; font-size:3.2mm; color:var(--muted); }
+  .cats { align-self:center; display:grid; grid-template-columns:1fr 1fr; gap:6mm; }
+  .cat { background:#fff; color:var(--navy); border-radius:3mm; padding:4mm; display:flex; gap:3.5mm; align-items:center; }
+  .cat svg { width:24mm; height:24mm; flex:none; display:block; }
+  .cat b { font-size:3.6mm; line-height:1.25; display:block; }
+  .cat span { display:block; margin-top:1mm; font-size:2.8mm; color:var(--muted); }
+  .end .contact { grid-column:1 / -1; align-self:end; }
+</style>
+</head>
+<body>
+<div id="doc"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="/ch-dreux/data.js"></script>
+<script>
+(function () {
+  'use strict';
+  var D = window.CH_DREUX, SITE = 'https://jordan-join.fr';
+  var doc = document.getElementById('doc');
+
+  /* Pour chaque projet : visuel, adresse publique du projet, et (si c'est une vidéo) l'adresse à lire. */
+  var X = {
+    'tenofort':        { pub: '/projet-tenofort.html' },
+    'livrets':         { pub: '/projet-labrha-da.html' },
+    'pandora':         { pub: '/projet-pandora.html' },
+    'vasculyon-id':    { pub: '/projet-vasculyon-id.html' },
+    'vogalib':         { pub: '/projet-vogalib.html' },
+    'metz-affiches':   { pub: '/projet-metz.html' },
+    'f3df-3d':         { video: 'https://www.youtube.com/playlist?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO', vlabel: 'Regarder la série vidéo' },
+    'metz-film':       { video: 'https://youtu.be/GDNlsrFAnxE', vlabel: 'Regarder le film' },
+    'labrha-site':     { pub: 'https://www.laboratoire-labrha.fr/', plabel: 'Découvrir le site' },
+    'vasculyon-site':  { pub: 'https://vasculyon.fr', plabel: 'Découvrir le site' },
+    'labrha-reseaux':  { pub: '/projet-labrha-social.html' },
+    'f3df-reseaux':    { pub: '/projet-f3df.html' },
+    'salons-labrha':   {},
+    'graille':         { video: SITE + '/projet-graille.html#s-videos', vlabel: 'Regarder le spot' },
+    'lettre-hebdo':    { pub: '/ch-dreux/lettre-hebdo/', plabel: 'Feuilleter les lettres' },
+    'formation-cyber': { pub: '/ch-dreux/formation-cybersecurite/', plabel: 'Feuilleter la formation' },
+    'formation-photo': { pub: '/ch-dreux/formation-photo/', plabel: 'Feuilleter la formation' }
+  };
+  function abs(u) { return /^https?:/.test(u) ? u : SITE + u; }
+  function shortUrl(u) { return u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''); }
+
+  function h(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
+  function txt(tag, cls, t) { var n = h(tag, cls); n.textContent = t; return n; }
+
+  /* QR en SVG net (vectoriel), généré avec la bibliothèque qrcode-generator */
+  function qrSvg(url) {
+    var qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+    var n = qr.getModuleCount(), q = 2, size = n + q * 2, d = '';
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) d += 'M' + (c + q) + ' ' + (r + q) + 'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + size + ' ' + size + '" shape-rendering="crispEdges" role="img" aria-label="QR code vers ' + shortUrl(url) + '"><rect width="' + size + '" height="' + size + '" fill="#fff"/><path d="' + d + '" fill="#1a1a2e"/></svg>';
+  }
+  function qrBlock(url, title, cls) {
+    var a = h('a', 'qr' + (cls ? ' ' + cls : '')); a.href = url;
+    a.innerHTML = qrSvg(url);
+    var t = h('div'); t.appendChild(txt('b', '', title)); t.appendChild(txt('span', '', shortUrl(url)));
+    a.appendChild(t); return a;
+  }
+
+  var allUrl = SITE + '/projets.html';
+  var total = 0;
+  var pages = [];
+
+  /* Couverture */
+  var cover = h('section', 'pg cover');
+  var main = h('div', 'cover-main');
+  main.appendChild(txt('div', 'eyebrow', 'Portfolio'));
+  main.appendChild(h('h1', '', 'Jordan<br>Join'));
+  main.appendChild(txt('p', 'role', 'Création publicitaire · Direction artistique · Marketing · Communication'));
+  var foot = h('div', 'cover-foot');
+  var card = h('a', 'qrcard'); card.href = allUrl; card.innerHTML = qrSvg(allUrl);
+  var ct = h('div'); ct.appendChild(txt('b', '', 'Découvrir tous mes projets')); ct.appendChild(txt('span', '', shortUrl(allUrl)));
+  card.appendChild(ct); foot.appendChild(card);
+  var contact = h('div', 'contact', '<b>Jordan Join</b><br>' + D.contact.phone + '<br>' + D.contact.email + '<br>Lyon');
+  foot.appendChild(contact);
+  main.appendChild(foot);
+  var ph = h('div', 'cover-photo'); var im = document.createElement('img'); im.src = D.profile.photo; im.alt = D.profile.alt; ph.appendChild(im);
+  cover.appendChild(main); cover.appendChild(ph);
+  pages.push(cover);
+
+  /* Pages projet, dans l'ordre des catégories */
+  var list = [];
+  D.sections.forEach(function (s) { D.projects.filter(function (p) { return p.section === s.id; }).forEach(function (p) { list.push({ s: s, p: p }); }); });
+  total = list.length + 2;
+  list.forEach(function (it, i) {
+    var p = it.p, s = it.s, x = X[p.id] || {}, pg = h('section', 'pg proj');
+    var top = h('div', 'top'); top.appendChild(h('span', '', '<b>' + s.title + '</b>')); top.appendChild(txt('span', '', (i + 1) + ' / ' + list.length)); pg.appendChild(top);
+
+    var left = h('div', 'left');
+    var shot = h('div', 'shot'); var img = document.createElement('img'); img.src = '/portfolio-pdf/img/' + p.id + '.jpg'; img.alt = (p.media && p.media.alt) || p.title; shot.appendChild(img);
+    left.appendChild(shot);
+    var qrs = h('div', 'qrs');
+    if (x.video) qrs.appendChild(qrBlock(x.video, x.vlabel || 'Regarder la vidéo', 'qr--video'));
+    if (x.pub) qrs.appendChild(qrBlock(abs(x.pub), x.plabel || 'Voir le projet en ligne'));
+    var catUrl = s.all ? SITE + '/projets.html#' + s.all.anchor : allUrl;
+    qrs.appendChild(qrBlock(catUrl, s.all ? 'Tous mes projets : ' + s.title.toLowerCase() : 'Découvrir tous mes projets'));
+    /* 3 QR codes maximum : on garde la vidéo, le projet et la catégorie ; sinon on les répartit */
+    left.appendChild(qrs);
+    pg.appendChild(left);
+
+    var right = h('div', 'right');
+    if (p.tag) right.appendChild(txt('p', 'tag', p.tag));
+    right.appendChild(txt('h2', '', p.title));
+    var dl = h('dl');
+    [['Contexte', p.context], ['Mon rôle', p.role], ['Résultat', p.result]].forEach(function (f) {
+      if (!f[1]) return; var d = h('div', 'fact'); d.appendChild(txt('dt', '', f[0])); d.appendChild(txt('dd', '', f[1])); dl.appendChild(d);
+    });
+    right.appendChild(dl);
+    right.appendChild(h('div', 'foot', '<span>Jordan Join · Portfolio</span><span>' + (i + 2) + ' / ' + total + '</span>'));
+    pg.appendChild(right);
+    pages.push(pg);
+  });
+
+  /* Dernière page : tout découvrir */
+  var end = h('section', 'pg end');
+  var l = h('div');
+  l.appendChild(txt('div', 'eyebrow', 'Pour aller plus loin'));
+  l.appendChild(h('h2', '', 'Tous mes<br>projets'));
+  l.appendChild(txt('p', '', 'Scannez le code pour découvrir l’ensemble de mes réalisations en ligne : visuels en grand, vidéos, sites et campagnes.'));
+  var big = h('a', 'bigqr'); big.href = allUrl; big.innerHTML = qrSvg(allUrl);
+  var bt = h('div'); bt.appendChild(txt('b', '', 'jordan-join.fr/projets')); bt.appendChild(txt('span', '', 'Tous les projets, par catégorie')); big.appendChild(bt);
+  l.appendChild(big); end.appendChild(l);
+  var cats = h('div', 'cats');
+  D.sections.forEach(function (s) {
+    if (!s.all) return;
+    var u = SITE + '/projets.html#' + s.all.anchor, a = h('a', 'cat'); a.href = u; a.innerHTML = qrSvg(u);
+    var t = h('div'); t.appendChild(txt('b', '', s.title)); t.appendChild(txt('span', '', 'Voir la catégorie')); a.appendChild(t); cats.appendChild(a);
+  });
+  end.appendChild(cats);
+  end.appendChild(h('div', 'contact', '<b>Jordan Join</b> · ' + D.contact.phone + ' · ' + D.contact.email));
+  pages.push(end);
+
+  var only = /[?&]p=(\d+)/.exec(location.search);   /* ?p=N : n'affiche que la page N (contrôle visuel) */
+  pages.forEach(function (pg, i) { if (only && Number(only[1]) !== i + 1) return; doc.appendChild(pg); });
+  if (only) { var st = document.createElement('style'); st.textContent = '.pg{margin:0!important;box-shadow:none!important}html,body{background:#fff!important}'; document.head.appendChild(st); }
+  document.documentElement.setAttribute('data-ready', '1');
+})();
+</script>
+</body>
+</html>

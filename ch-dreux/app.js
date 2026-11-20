@@ -36,7 +36,7 @@
       D.sections = ordered;
     }
     showPress = !!CFG.press;
-    if (CFG.press && CFG.press.text) D.press = { title: D.press.title, text: CFG.press.text, items: [] };
+    if (CFG.press && CFG.press.text) D.press = { title: D.press.title, text: CFG.press.text, items: D.press.items };
     showLetter = !!CFG.letter;
   }
 
