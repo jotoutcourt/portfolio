@@ -19,11 +19,11 @@
 window.CH_DREUX = {
 
   intro:
-    "Responsable Marketing & Communication dans un laboratoire spécialisé en rhumatologie, " +
-    "je conçois et produis seul l'ensemble de la chaîne : stratégie, rédaction, création graphique, " +
-    "photo, vidéo, digital et événementiel. Ce dossier présente des réalisations choisies pour leur " +
-    "proximité avec les missions du poste, avec un souci constant de clarté, de rigueur et de service " +
-    "aux équipes comme aux usagers.",
+    "Ce dossier présente des réalisations choisies pour leur proximité avec les missions du poste " +
+    "que vous proposez. Vous pouvez retrouver l'ensemble de mes projets sur mon site jordan-join.fr/projets",
+
+  // Le libellé ci-dessus (identique, mot pour mot) devient un lien cliquable vers href.
+  introLink: { label: 'jordan-join.fr/projets', href: 'https://jordan-join.fr/projets.html' },
 
   sections: [
     { id: 'print',   title: 'Print et identité visuelle',  lead: "Identité visuelle, affiches et supports d'information." },

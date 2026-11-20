@@ -142,7 +142,18 @@
   }
 
   /* ───────── rendu ───────── */
-  fill(doc.getElementById('intro'), D.intro);
+  var introEl = doc.getElementById('intro');
+  var il = D.introLink;
+  var at = il ? D.intro.indexOf(il.label) : -1;
+  if (at > -1) {
+    fill(introEl, D.intro.slice(0, at));
+    introEl.appendChild(h('a', { href: il.href, target: '_blank', rel: 'noopener noreferrer' }, [
+      il.label, h('span', { class: 'sr-only', text: ' (nouvel onglet)' })
+    ]));
+    fill(introEl, D.intro.slice(at + il.label.length));
+  } else {
+    fill(introEl, D.intro);
+  }
 
   var sectionsRoot = doc.getElementById('sections');
   var toc = h('ul');
