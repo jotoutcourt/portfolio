@@ -205,9 +205,9 @@
     ] },
 
     'salons-labrha': { pages: [
-      { t: 'intro', pull: 'Salons et congrès — dont Medica.',
-        kv: [['Client', 'Laboratoire Labrha'], ['Format', 'Présence du laboratoire sur des salons et congrès, dont Medica'],
-             ['Mon rôle', 'Préparation et animation de la présence du laboratoire : supports, coordination du stand et accueil des professionnels de santé.']],
+      { t: 'intro', pull: 'Salons et congrès — stands et PLV.',
+        kv: [['Client', 'Laboratoire Labrha'], ['Format', 'Conception et réalisation de la PLV et des supports du laboratoire pour ses salons et congrès : habillage de stand, visuels, écrans lumineux, brochures et présentoirs.'],
+             ['Mon rôle', 'Création et réalisation de la PLV et des supports (habillage et visuels de stand, brochures, goodies), puis coordination du stand et accueil des professionnels de santé.']],
         hero: { src: '/portfolio-pdf/img/salons-labrha.jpg', cap: 'Stand du laboratoire' } }
     ] },
 

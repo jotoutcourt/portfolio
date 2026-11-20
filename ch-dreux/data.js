@@ -236,11 +236,11 @@ window.CH_DREUX = {
     {
       id: 'salons-labrha',
       section: 'events',
-      title: 'Salons Labrha — dont Medica',
+      title: 'Salons Labrha — stands et PLV',
       page: '/ch-dreux/salons-labrha/',
       tag: 'Laboratoire Labrha',
-      context: "Présence du laboratoire sur des salons et congrès, dont Medica.",
-      role: "Préparation et animation de la présence du laboratoire : supports, coordination du stand et accueil des professionnels de santé.",
+      context: "Conception et réalisation de la PLV et des supports du laboratoire pour ses salons et congrès : habillage de stand, visuels, écrans lumineux, brochures et présentoirs.",
+      role: "Création et réalisation de la PLV et des supports (habillage et visuels de stand, brochures, goodies), puis coordination du stand et accueil des professionnels de santé.",
       result: "Une présence du laboratoire renforcée auprès des professionnels de santé.",
       media: {
         type: 'loop', src: '/ch-dreux/tuiles/salons-labrha.mp4', poster: '/ch-dreux/tuiles/salons-labrha.jpg',
