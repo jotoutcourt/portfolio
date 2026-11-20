@@ -281,7 +281,7 @@ window.CH_DREUX = {
 
   press: {
     title: 'Relations presse',
-    text: "Au laboratoire Labrha, j'assure la relation avec les partenaires médias : magazines santé, reportages et publicités TV. Je prépare les contenus, coordonne les échanges avec les rédactions et veille à la cohérence du message.",
+    text: "Concernant les relations presse, je préfère être transparent : mes expériences m’ont surtout amené à travailler la création de contenus, le digital et la communication de marque, et je n’ai pas encore piloté de relations presse avec des retombées à vous présenter. J’ai en revanche conçu et réalisé des contenus vidéo pédagogiques et des interviews, notamment autour d’un dispositif médical, que vous trouverez dans mon portfolio. Je serai heureux de vous présenter lors de l’entretien la manière dont j’envisage les relations presse pour le Centre Hospitalier.",
     // Exemples à ajouter, un bloc par élément : { title: '...', note: '...', href: '/chemin/vers/fichier.pdf' }
     items: []
   },
