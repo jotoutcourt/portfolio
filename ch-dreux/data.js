@@ -249,7 +249,7 @@ window.CH_DREUX = {
       title: 'Lettre hebdomadaire',
       page: '/ch-dreux/lettre-hebdo/',
       tag: 'Laboratoire Labrha',
-      context: "Lettres d'information hebdomadaires à destination des équipes, sous forme de présentation animée consultable en ligne.",
+      context: "Lettres d'information hebdomadaires à destination des équipes, sous forme de présentation animée consultable en ligne. Les informations privées ont été effacées.",
       role: "Rédaction, mise en page et diffusion de la lettre chaque semaine.",
       result: "Un rendez-vous régulier qui tient les équipes informées de la vie du laboratoire.",
       media: {
