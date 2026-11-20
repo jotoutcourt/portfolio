@@ -29,7 +29,8 @@ window.CH_DREUX = {
     { id: 'print',   title: 'Print et identité visuelle',  lead: "Identité visuelle, affiches et supports d'information." },
     { id: 'video',   title: 'Photo et vidéo',              lead: "Production d'images et de vidéos pour informer et valoriser." },
     { id: 'digital', title: 'Digital et réseaux sociaux',  lead: "Site internet et réseaux sociaux." },
-    { id: 'events',  title: 'Événementiel',                lead: "Organisation d'événements et de présences institutionnelles." }
+    { id: 'events',  title: 'Événementiel',                lead: "Organisation d'événements et de présences institutionnelles." },
+    { id: 'internal', title: 'Communication interne',      lead: "Guides et lettres à destination des équipes." }
   ],
 
   projects: [
@@ -181,6 +182,26 @@ window.CH_DREUX = {
       role: '[MON RÔLE]',
       result: '[RÉSULTAT]',
       media: { type: 'video', src: '/assets/vide%CC%81opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg', ratio: '1/1' }
+    },
+
+    /* ───────────── COMMUNICATION INTERNE ───────────── */
+    {
+      section: 'internal',
+      title: 'Guide de photographie pour les équipes',
+      tag: 'Brasserie 1755 · Bourgoin',
+      context: "Guide de photographie destiné aux équipes de la brasserie 1755, à Bourgoin.",
+      role: '[MON RÔLE]',
+      result: '[RÉSULTAT]',
+      media: { type: 'placeholder', label: '[APERÇU DU GUIDE À AJOUTER]' }
+    },
+    {
+      section: 'internal',
+      title: 'Lettre hebdomadaire',
+      tag: 'Laboratoire Labrha',
+      context: "Lettres hebdomadaires de communication interne du laboratoire.",
+      role: '[MON RÔLE]',
+      result: '[RÉSULTAT]',
+      media: { type: 'placeholder', label: "[APERÇU D'UNE LETTRE À AJOUTER]" }
     }
   ],
 
