@@ -143,9 +143,8 @@ window.CH_DREUX = {
       role: "Écriture, tournage et montage des épisodes, sur le modèle de l'émission « C'est pas sorcier ».",
       result: "5 épisodes publiés sur la chaîne YouTube de l'entreprise.",
       media: {
-        type: 'youtube', youtubeId: 'gmpNNYtjunM', list: 'PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO',
-        poster: '/assets/f3df.png',
-        alt: "Plan rapproché d'une tête d'impression 3D, éclairée en rouge et turquoise."
+        type: 'loop', src: '/ch-dreux/tuiles/f3df-3d.mp4', poster: '/ch-dreux/tuiles/f3df-3d.jpg',
+        alt: "Animation : un ingénieur en fabrication additive en blouse blanche s'exprime face caméra dans un atelier d'impression 3D."
       },
       link: { label: 'Voir la série complète sur YouTube', href: 'https://www.youtube.com/playlist?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO' }
     },
@@ -158,9 +157,8 @@ window.CH_DREUX = {
       role: "Réalisation et montage du film de la campagne.",
       result: "Un film diffusé en ligne en complément de l'affichage urbain.",
       media: {
-        type: 'youtube', youtubeId: 'GDNlsrFAnxE',
-        poster: '/assets/metz.png',
-        alt: "Visuel de la campagne Play With Metz."
+        type: 'loop', src: '/ch-dreux/tuiles/play-with-metz-film.mp4', poster: '/ch-dreux/tuiles/play-with-metz-film.jpg',
+        alt: "Animation : extrait du film de campagne Play With Metz, vue aérienne de danseurs sur un pavage et lettres blanches au sol."
       }
     },
 
@@ -174,8 +172,8 @@ window.CH_DREUX = {
       role: "Pilotage et réalisation de la refonte complète du site (WordPress), ainsi que gestion de la boutique en ligne.",
       result: "Un site modernisé à la navigation simplifiée, et une boutique en ligne gérée au quotidien.",
       media: {
-        type: 'image', src: '/assets/labrhars1.png', fit: 'contain',
-        alt: "Visuel promotionnel « Rendez-nous visite » montrant, sur un ordinateur portable, la boutique en ligne du laboratoire Labrha."
+        type: 'loop', src: '/ch-dreux/tuiles/labrha-site.mp4', poster: '/ch-dreux/tuiles/labrha-site.jpg',
+        alt: "Animation : micro-algues vues au microscope, visuel du site internet du laboratoire Labrha."
       },
       link: { label: 'Visiter le site', href: 'https://www.laboratoire-labrha.fr/' }
     },
@@ -188,8 +186,8 @@ window.CH_DREUX = {
       role: "Conception UX/UI et développement du site : structure, design et intégration, avec une prise de rendez-vous facilitée.",
       result: "Site en ligne (vasculyon.fr) présentant les trois praticiens et les trois lieux de consultation.",
       media: {
-        type: 'image', src: '/assets/vasculyonweb.jpg', fit: 'cover',
-        alt: "Page d'accueil du site Vasculyon : équipe chirurgicale au bloc opératoire, titre « Chirurgie vasculaire et endovasculaire » et trois praticiens avec un bouton de prise de rendez-vous."
+        type: 'loop', src: '/ch-dreux/tuiles/vasculyon-site.mp4', poster: '/ch-dreux/tuiles/vasculyon-site.jpg',
+        alt: "Animation : page d'accueil du site Vasculyon, équipe chirurgicale au bloc et titre « Chirurgie vasculaire et endovasculaire »."
       },
       link: { label: 'Visiter le site', href: 'https://vasculyon.fr' }
     },
@@ -204,8 +202,8 @@ window.CH_DREUX = {
       role: "Conception et réalisation des visuels, définition du plan éditorial et du calendrier de publication, suivi des performances.",
       result: "Une ligne éditoriale cohérente avec l'identité du laboratoire, ajustée grâce à l'analyse des performances.",
       media: {
-        type: 'image', src: '/assets/labrhars3.png', fit: 'contain',
-        alt: "Publication Instagram : « Et si votre assiette pouvait soulager vos articulations ? », autour d'une assiette de poulet grillé et de légumes."
+        type: 'loop', src: '/ch-dreux/tuiles/labrha-reseaux.mp4', poster: '/ch-dreux/tuiles/labrha-reseaux.jpg',
+        alt: "Animation : publication vidéo pour les réseaux sociaux du laboratoire Labrha, autour d'un complément pour les articulations."
       }
     },
     {
@@ -217,8 +215,8 @@ window.CH_DREUX = {
       role: "Community management : animation du compte Instagram, définition de la ligne éditoriale et création des visuels produits.",
       result: "Un compte Instagram (@f3dfr) animé avec une identité visuelle homogène.",
       media: {
-        type: 'image', src: '/assets/f3dfrs1.png', fit: 'contain',
-        alt: "Publication Instagram de l'entreprise F3DF, spécialisée dans l'impression 3D."
+        type: 'loop', src: '/ch-dreux/tuiles/f3df-reseaux.mp4', poster: '/ch-dreux/tuiles/f3df-reseaux.jpg',
+        alt: "Animation : publication « Introduction à la fabrication additive, 7 jours gratuits » avec une pièce orange imprimée en 3D."
       }
     },
 
@@ -230,7 +228,10 @@ window.CH_DREUX = {
       context: "Présence du laboratoire sur des salons et congrès, dont Medica.",
       role: "Préparation et animation de la présence du laboratoire : supports, coordination du stand et accueil des professionnels de santé.",
       result: "Une présence du laboratoire renforcée auprès des professionnels de santé.",
-      media: { type: 'placeholder', label: '[PHOTOS DE SALONS LABRHA À AJOUTER]' }
+      media: {
+        type: 'loop', src: '/ch-dreux/tuiles/salons-labrha.mp4', poster: '/ch-dreux/tuiles/salons-labrha.jpg',
+        alt: "Animation : le stand du laboratoire Labrha dans un hall de salon, des visiteurs passent devant."
+      }
     },
     {
       section: 'events',
@@ -240,7 +241,10 @@ window.CH_DREUX = {
       context: "Spot vidéo pour l'inauguration d'un distributeur de plats frais dans un établissement d'enseignement supérieur lyonnais (UCLY).",
       role: "Réalisation du spot vidéo : tournage, montage et couverture de l'inauguration.",
       result: "Un spot diffusé à l'occasion de l'inauguration du distributeur.",
-      media: { type: 'video', src: '/assets/vide%CC%81opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg' }
+      media: {
+        type: 'loop', src: '/ch-dreux/tuiles/graille.mp4', poster: '/ch-dreux/tuiles/graille.jpg',
+        alt: "Animation : illustration d'une mascotte de plat au volant d'une voiture orange, pour le spot Graille."
+      }
     },
 
     /* ───────────── COMMUNICATION INTERNE ───────────── */
@@ -253,8 +257,8 @@ window.CH_DREUX = {
       role: "Rédaction, mise en page et diffusion de la lettre chaque semaine.",
       result: "Un rendez-vous régulier qui tient les équipes informées de la vie du laboratoire.",
       media: {
-        type: 'image', src: '/ch-dreux/posters/lettre-labrha-1.jpg', fit: 'cover',
-        alt: "Couverture de la lettre d'information du laboratoire, semaine 48 : titre « Lettre d'information » sur fond bleu, avec un avion en papier."
+        type: 'loop', src: '/ch-dreux/tuiles/lettre-hebdo.mp4', poster: '/ch-dreux/tuiles/lettre-hebdo.jpg',
+        alt: "Animation : un avion en papier vert traverse l'écran, visuel de la lettre d'information hebdomadaire."
       }
     },
     {
@@ -266,8 +270,8 @@ window.CH_DREUX = {
       role: "Conception et réalisation de A à Z : contexte, exemples concrets, exercices de détection de faux courriels et quiz d'évaluation final.",
       result: "Un parcours complet de 47 pages, du contexte jusqu'à l'évaluation, pour sensibiliser l'ensemble des équipes.",
       media: {
-        type: 'image', src: '/ch-dreux/posters/formation-cyber.jpg', fit: 'cover',
-        alt: "Première page de la formation « Vigilance sur le web et cybersécurité (2025) », sur fond bleu nuit, avec un ordinateur portable, un bouclier et des courriels."
+        type: 'loop', src: '/ch-dreux/tuiles/formation-cybersecurite.mp4', poster: '/ch-dreux/tuiles/formation-cybersecurite.jpg',
+        alt: "Animation : un cambrioleur masqué emporte un sac marqué d'un arobase devant la pyramide du Louvre, visuel de la formation cybersécurité."
       }
     },
     {
@@ -279,8 +283,8 @@ window.CH_DREUX = {
       role: "Conception du plan de communication et du guide de prise de vue (lumière, angles, plans, profondeur), puis animation de la formation auprès des équipes.",
       result: "Des équipes autonomes pour produire le contenu hebdomadaire des réseaux sociaux de la brasserie.",
       media: {
-        type: 'image', src: '/ch-dreux/posters/formation-photo-1755.jpg', fit: 'cover',
-        alt: "Première page du plan de communication de la brasserie 1755 : une cuisine professionnelle avec des suspensions en cuivre, et le titre « Plan de communication »."
+        type: 'loop', src: '/ch-dreux/tuiles/formation-photo.mp4', poster: '/ch-dreux/tuiles/formation-photo.jpg',
+        alt: "Animation : une personne photographie un plat avec son téléphone dans une cuisine de restaurant."
       }
     }
   ],
