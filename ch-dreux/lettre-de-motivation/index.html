@@ -9,10 +9,10 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #1a1a2e; --ink: #1f2a44; --blue: #5b87c9; --rose: #d66a77; --paper: #fdfcf9; --muted: #5c6378;
+    --navy: #1a1a2e; --ink: #0f1629; --blue: #3f6fbf; --rose: #d66a77; --rose-dark: #b8475a; --paper: #fdfcf9; --muted: #3d4560;
     --font: 'Montserrat', 'DM Sans', system-ui, sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; }
@@ -25,48 +25,51 @@
   .bar { width: min(860px, 100% - 2rem); margin: 0 auto; padding: 1.4rem 0 1.1rem; display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; justify-content: space-between; }
   .btn { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 46px; padding: 0.6rem 1.3rem; border-radius: 999px; border: 2px solid #fff; background: transparent; color: #fff; font: 500 0.9rem/1 var(--font); text-decoration: none; cursor: pointer; }
   .btn:hover { background: #fff; color: var(--navy); }
-  .btn--solid { background: var(--rose); border-color: var(--rose); }
+  .btn--solid { background: var(--rose-dark); border-color: var(--rose-dark); }
   .btn--solid:hover { background: #fff; border-color: #fff; color: var(--navy); }
   .bar-right { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
   /* la feuille */
   .stage { width: min(860px, 100% - 2rem); margin: 0 auto; padding: 0.6rem 0 5rem; perspective: 1400px; }
-  .sheet { position: relative; background: var(--paper); border-radius: 4px; padding: clamp(1.6rem, 5vw, 3.6rem) clamp(1.3rem, 5.5vw, 4rem) clamp(2rem, 5vw, 3.4rem); box-shadow: 0 2px 4px rgba(0,0,0,.25), 0 30px 70px rgba(0,0,0,.45); }
-  .sheet::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(0,0,0,.03)); }
+  .sheet { position: relative; isolation: isolate; background: var(--paper); border-radius: 4px; padding: clamp(1.6rem, 5vw, 3.6rem) clamp(1.3rem, 5.5vw, 4rem) clamp(2rem, 5vw, 3.4rem); box-shadow: 0 2px 4px rgba(0,0,0,.25), 0 30px 70px rgba(0,0,0,.45); }
+  /* léger grain de lumière, placé SOUS le texte */
+  .sheet::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: linear-gradient(135deg, rgba(255,255,255,.6), rgba(0,0,0,.02)); }
 
   .head { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem 3rem; align-items: start; }
-  .name { margin: 0; font-weight: 300; font-size: clamp(2.6rem, 8vw, 4.4rem); line-height: 0.98; color: var(--blue); letter-spacing: 0.01em; }
-  .role { margin: 0.9rem 0 0; font-size: clamp(0.62rem, 1.8vw, 0.78rem); font-weight: 400; letter-spacing: 0.32em; color: var(--rose); text-transform: uppercase; }
-  .coords { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; font-size: 0.82rem; font-weight: 400; }
-  .coords h2 { margin: 0 0 0.7rem; font-size: 0.78rem; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink); }
+  .name { margin: 0; font-weight: 400; font-size: clamp(2.6rem, 8vw, 4.4rem); line-height: 0.98; color: var(--blue); letter-spacing: 0.01em; }
+  .role { margin: 0.9rem 0 0; font-size: clamp(0.62rem, 1.8vw, 0.78rem); font-weight: 500; letter-spacing: 0.32em; color: var(--rose-dark); text-transform: uppercase; }
+  .coords { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; font-size: 0.84rem; font-weight: 500; color: var(--ink); }
+  .coords h2 { margin: 0 0 0.7rem; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink); }
   .coords li { display: flex; align-items: center; gap: 0.7rem; }
-  .coords svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--ink); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; opacity: .8; }
+  .coords svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--ink); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
   .coords a { text-decoration: none; }
   .coords a:hover { text-decoration: underline; }
 
-  .date { margin: 2rem 0 0; text-align: right; font-size: 0.82rem; color: var(--muted); }
-  .subject { margin: 1.4rem 0 0; font-size: 0.82rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; }
+  .date { margin: 2rem 0 0; text-align: right; font-size: 0.84rem; font-weight: 500; color: var(--muted); }
+  .subject { margin: 1.4rem 0 0; font-size: 0.84rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
   .post { display: inline-block; position: relative; margin: 0.8rem 0 1.3rem; padding: 0.35rem 0.8rem; font-size: clamp(1.05rem, 3vw, 1.35rem); font-weight: 600; color: #fff; isolation: isolate; }
-  .post::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--rose); border-radius: 3px; transform-origin: left center; }
-  .hello { margin: 0 0 0.9rem; font-size: 0.98rem; font-weight: 400; }
-  .body p { margin: 0 0 1rem; font-size: 0.86rem; line-height: 1.7; font-weight: 500; text-align: left; hyphens: auto; }
-  .body a { color: var(--blue); }
+  .post::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--rose-dark); border-radius: 3px; transform-origin: left center; }
+  .hello { margin: 0 0 0.9rem; font-size: 1rem; font-weight: 500; }
+  .body p { margin: 0 0 1rem; font-size: 0.88rem; line-height: 1.7; font-weight: 500; color: var(--ink); text-align: left; hyphens: auto; }
+  .body a { color: var(--blue); font-weight: 600; }
   .closing { margin-top: 1.4rem; }
-  .signed { margin: 1.6rem 0 0; font-size: 0.86rem; font-weight: 600; }
+  .signed { margin: 1.6rem 0 0; font-size: 0.88rem; font-weight: 700; }
   .signature { display: block; width: clamp(170px, 34vw, 270px); height: auto; margin-top: 0.3rem; }
+
+  /* curseur de la machine à écrire */
+  .caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 1px; vertical-align: -0.15em; background: var(--rose-dark); animation: blink 0.8s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
 
   /* —— Animations (uniquement si JavaScript actif et mouvement autorisé) —— */
   @media (prefers-reduced-motion: no-preference) {
-    html.js .sheet { opacity: 0; transform: translateY(70px) rotateX(10deg) scale(.97); transform-origin: 50% 100%; transition: opacity .9s ease, transform 1.1s cubic-bezier(.2,.8,.2,1); }
+    html.js .sheet { opacity: 0; transform: translateY(50px) scale(.98); transition: opacity .5s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
     html.js.go .sheet { opacity: 1; transform: none; }
-    html.js [data-r] { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0s); }
-    html.js [data-r].in { opacity: 1; transform: none; }
-    html.js .post::before { transform: scaleX(0); transition: transform .8s cubic-bezier(.65,0,.25,1) .25s; }
+    html.js .coords-wrap { opacity: 0; transition: opacity .6s ease .2s; }
+    html.js.go .coords-wrap { opacity: 1; }
+    html.js .post::before { transform: scaleX(0); transition: transform .45s cubic-bezier(.65,0,.25,1); }
     html.js .post.in::before { transform: scaleX(1); }
-    html.js .post span { opacity: 0; transition: opacity .4s ease .6s; }
-    html.js .post.in span { opacity: 1; }
     html.js .signature { clip-path: inset(0 100% 0 0); }
-    html.js .signature.sign { animation: sign 2.8s cubic-bezier(.5,.1,.25,1) forwards; }
+    html.js .signature.sign { animation: sign 2.2s cubic-bezier(.5,.1,.25,1) forwards; }
     @keyframes sign { 0% { clip-path: inset(0 100% 0 0); } 100% { clip-path: inset(0 0 0 0); } }
   }
 </style>
@@ -83,11 +86,11 @@
 <main class="stage">
   <article class="sheet" id="sheet" aria-label="Lettre de motivation de Jordan Join">
     <header class="head">
-      <div data-r>
-        <h1 class="name">JOIN<br>JORDAN</h1>
-        <p class="role">Marketing &middot; Communication &middot; DA</p>
+      <div>
+        <h1 class="name" data-t>JOIN<br>JORDAN</h1>
+        <p class="role" data-t>Marketing &middot; Communication &middot; DA</p>
       </div>
-      <div data-r style="--d:.15s">
+      <div class="coords-wrap">
         <ul class="coords" aria-label="Coordonnées">
           <li><h2>Coordonn&eacute;es</h2></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="1.5"/><path d="M11 18.5h2"/></svg><a href="tel:+33619842799">06 19 84 27 99</a></li>
@@ -98,25 +101,25 @@
       </div>
     </header>
 
-    <p class="date" data-r>Lyon, le 12 novembre 2026</p>
-    <p class="subject" data-r>Lettre de candidature au poste de :</p>
-    <p class="post" id="post"><span>Chargé(e) de communication</span></p>
+    <p class="date" data-t>Lyon, le 12 novembre 2026</p>
+    <p class="subject" data-t>Lettre de candidature au poste de :</p>
+    <p class="post" id="post"><span data-t>Chargé(e) de communication</span></p>
 
-    <p class="hello" data-r>Madame, Monsieur</p>
+    <p class="hello" data-t>Madame, Monsieur</p>
 
     <div class="body">
-      <p data-r>Communicant polyvalent et directeur artistique de formation, je vous propose ma candidature pour le poste de chargé(e) de communication du Centre Hospitalier Victor Jousselin. Après plusieurs années dans le secteur de la santé, j’ai envie de mettre mes compétences au service d’un établissement public, au plus près des patients, des équipes et du territoire.</p>
-      <p data-r>M’installant prochainement à Chartres, le projet de reconstruction de l’offre MCO à l’horizon 2030 représente un enjeu de communication passionnant, que je serais heureux d’accompagner.</p>
-      <p data-r>Titulaire d’un Master en direction artistique de Sup de Pub et d’un Bachelor en marketing de l’INSEEC, je suis actuellement Responsable Marketing &amp; Communication au sein du Laboratoire Labrha. J’y pilote une communication à 360° : refonte complète du site web, création et refonte de chartes graphiques, conception de supports print et digitaux, campagnes emailing, organisation de congrès internationaux. J’y ai également structuré le service Marketing en créant et en recrutant plusieurs postes que j’ai ensuite piloté.</p>
-      <p data-r>Cette expérience m’a appris à communiquer auprès des professionnels de santé avec rigueur, en respectant des circuits de validation exigeants et un cadre réglementaire strict.</p>
-      <p data-r>Mes expériences en agence et en création de contenu me permettent d’être autonome sur toute la chaîne de production : conception graphique avec la suite Adobe et Canva, prise de vue photo et vidéo, retouche d’images, montage, administration de sites web et animation des réseaux sociaux.</p>
-      <p data-r>Vous trouverez plusieurs exemples de mes réalisations dans mon book en ligne : <a href="https://jordan-join.fr" target="_blank" rel="noopener noreferrer">https://jordan-join.fr</a>.</p>
-      <p data-r>Je sais hiérarchiser les demandes, coordonner plusieurs interlocuteurs et tenir les délais.</p>
-      <p data-r>Je serais ravi de contribuer à valoriser vos équipes, vos métiers et votre rôle de référence sur le bassin drouais. Je me tiens à votre disposition pour un échange.</p>
-      <p class="closing" data-r>Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.</p>
+      <p data-t>Communicant polyvalent et directeur artistique de formation, je vous propose ma candidature pour le poste de chargé(e) de communication du Centre Hospitalier Victor Jousselin. Après plusieurs années dans le secteur de la santé, j’ai envie de mettre mes compétences au service d’un établissement public, au plus près des patients, des équipes et du territoire.</p>
+      <p data-t>M’installant prochainement à Chartres, le projet de reconstruction de l’offre MCO à l’horizon 2030 représente un enjeu de communication passionnant, que je serais heureux d’accompagner.</p>
+      <p data-t>Titulaire d’un Master en direction artistique de Sup de Pub et d’un Bachelor en marketing de l’INSEEC, je suis actuellement Responsable Marketing &amp; Communication au sein du Laboratoire Labrha. J’y pilote une communication à 360° : refonte complète du site web, création et refonte de chartes graphiques, conception de supports print et digitaux, campagnes emailing, organisation de congrès internationaux. J’y ai également structuré le service Marketing en créant et en recrutant plusieurs postes que j’ai ensuite piloté.</p>
+      <p data-t>Cette expérience m’a appris à communiquer auprès des professionnels de santé avec rigueur, en respectant des circuits de validation exigeants et un cadre réglementaire strict.</p>
+      <p data-t>Mes expériences en agence et en création de contenu me permettent d’être autonome sur toute la chaîne de production : conception graphique avec la suite Adobe et Canva, prise de vue photo et vidéo, retouche d’images, montage, administration de sites web et animation des réseaux sociaux.</p>
+      <p data-t>Vous trouverez plusieurs exemples de mes réalisations dans mon book en ligne : <a href="https://jordan-join.fr" target="_blank" rel="noopener noreferrer">https://jordan-join.fr</a>.</p>
+      <p data-t>Je sais hiérarchiser les demandes, coordonner plusieurs interlocuteurs et tenir les délais.</p>
+      <p data-t>Je serais ravi de contribuer à valoriser vos équipes, vos métiers et votre rôle de référence sur le bassin drouais. Je me tiens à votre disposition pour un échange.</p>
+      <p class="closing" data-t>Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.</p>
     </div>
 
-    <p class="signed" data-r>Jordan Join</p>
+    <p class="signed" data-t>Jordan Join</p>
     <div id="sigwrap"><img class="signature" id="signature" src="/ch-dreux/lettre-de-motivation/signature.png" width="580" height="200" alt="Signature manuscrite de Jordan Join"></div>
   </article>
 </main>
@@ -125,42 +128,104 @@
 (function () {
   var root = document.documentElement;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce || !('IntersectionObserver' in window)) return;     /* tout reste visible, sans animation */
+  if (reduce) return;                                  /* tout reste visible, sans animation */
   root.classList.add('js');
 
-  var items = Array.prototype.slice.call(document.querySelectorAll('[data-r]'));
+  var CPS = 420;            /* caractères par seconde : l'ensemble de la lettre s'écrit en ~5 s */
+  var PAUSE = 70;           /* ms entre deux blocs */
+
+  var els = Array.prototype.slice.call(document.querySelectorAll('[data-t]'));
   var post = document.getElementById('post');
   var sig = document.getElementById('signature');
   var sigwrap = document.getElementById('sigwrap');
   var replay = document.getElementById('replay');
-  var io;
+  var caret = document.createElement('span'); caret.className = 'caret'; caret.setAttribute('aria-hidden', 'true');
+  var token = 0, typedDone = false, sigVisible = false, io;
 
-  function watch() {
-    io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target; io.unobserve(el);
-        if (el === sigwrap) { sig.classList.add('sign'); return; }
-        el.classList.add('in');
-      });
-    }, { threshold: 0.35, rootMargin: '0px 0px -6% 0px' });
-    items.forEach(function (el) { io.observe(el); });
-    io.observe(post); io.observe(sigwrap);
+  /* nœuds texte de chaque bloc (les liens et <br> restent en place) */
+  function textNodes(el) {
+    var out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    while (w.nextNode()) out.push(w.currentNode);
+    return out;
+  }
+  els.forEach(function (el) {
+    el._nodes = textNodes(el);
+    el._full = el._nodes.map(function (n) { return n.data; });
+    el._total = el._full.reduce(function (s, t) { return s + t.length; }, 0);
+  });
+
+  function setProgress(el, n) {
+    var left = n, last = null;
+    el._nodes.forEach(function (node, i) {
+      var t = el._full[i], k = Math.max(0, Math.min(t.length, left));
+      node.data = t.slice(0, k); left -= t.length;
+      if (k > 0 || last === null) last = node;
+    });
+    if (last && last.parentNode) last.after(caret);
   }
 
-  function start() {
-    items.forEach(function (el) { el.classList.remove('in'); });
-    post.classList.remove('in'); sig.classList.remove('sign');
+  function typeEl(el, myToken) {
+    return new Promise(function (resolve) {
+      var t0 = performance.now();
+      (function tick() {
+        if (myToken !== token) return resolve();
+        var n = Math.min(el._total, Math.floor((performance.now() - t0) / 1000 * CPS));
+        setProgress(el, n);
+        if (n >= el._total) return resolve();
+        setTimeout(tick, 16);
+      })();
+    });
+  }
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function trySign() { if (typedDone && sigVisible) sig.classList.add('sign'); }
+
+  function reset() {
+    token++;
+    typedDone = false;
+    sig.classList.remove('sign');
+    post.classList.remove('in');
+    if (caret.parentNode) caret.remove();
+    els.forEach(function (el) { el.style.minHeight = ''; });
+    els.forEach(function (el) { setProgress(el, el._total); });     /* texte complet pour mesurer */
+    if (caret.parentNode) caret.remove();
+    els.forEach(function (el) { el.style.minHeight = el.offsetHeight + 'px'; });  /* hauteur réservée : la mise en page ne bouge pas */
+    els.forEach(function (el) { setProgress(el, 0); });
+    if (caret.parentNode) caret.remove();
+  }
+
+  async function run() {
+    reset();
+    var my = token;
     root.classList.remove('go');
-    void root.offsetWidth;                                       /* relance propre des transitions */
-    if (io) io.disconnect();
     window.scrollTo(0, 0);
-    setTimeout(function () { root.classList.add('go'); watch(); }, 40);
+    await wait(60);
+    root.classList.add('go');
+    await wait(450);
+    for (var i = 0; i < els.length; i++) {
+      if (my !== token) return;
+      var el = els[i];
+      if (el.parentNode === post) post.classList.add('in');
+      await typeEl(el, my);
+      el.style.minHeight = '';
+      if (el.parentNode === post) await wait(120);
+      await wait(PAUSE);
+    }
+    if (my !== token) return;
+    if (caret.parentNode) caret.remove();
+    typedDone = true; trySign();
   }
+
+  io = new IntersectionObserver(function (es) {
+    sigVisible = es[0].isIntersecting;
+    if (sigVisible) trySign();
+  }, { threshold: 0.5 });
+  io.observe(sigwrap);
 
   replay.hidden = false;
-  replay.addEventListener('click', start);
-  start();
+  replay.addEventListener('click', run);
+  run();
 })();
 </script>
 </body>
