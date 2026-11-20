@@ -247,17 +247,15 @@ window.CH_DREUX = {
     {
       section: 'internal',
       title: 'Lettre hebdomadaire',
+      page: '/ch-dreux/lettre-hebdo/',
       tag: 'Laboratoire Labrha',
-      context: "Lettres d'information hebdomadaires à destination des équipes, sous forme de présentation animée consultable en ligne (exemple : semaine 48).",
+      context: "Lettres d'information hebdomadaires à destination des équipes, sous forme de présentation animée consultable en ligne.",
       role: "Rédaction, mise en page et diffusion de la lettre chaque semaine.",
       result: "Un rendez-vous régulier qui tient les équipes informées de la vie du laboratoire.",
       media: {
-        type: 'embed', noun: 'Lettre',
-        embedUrl: 'https://www.canva.com/design/DAHbcvMZG24/NCbmWyQ5Wfc1lEddtBtoRw/view?embed',
-        poster: '/ch-dreux/posters/lettre-labrha-1.jpg',
+        type: 'image', src: '/ch-dreux/posters/lettre-labrha-1.jpg', fit: 'cover',
         alt: "Couverture de la lettre d'information du laboratoire, semaine 48 : titre « Lettre d'information » sur fond bleu, avec un avion en papier."
-      },
-      link: { label: 'Ouvrir la lettre en plein écran', href: 'https://www.canva.com/design/DAHbcvMZG24/NCbmWyQ5Wfc1lEddtBtoRw/view' }
+      }
     },
     {
       section: 'internal',
