@@ -341,6 +341,6 @@ window.CH_DREUX = {
     letterPage: '/ch-dreux/lettre-de-motivation/',
     // Dépose le PDF du portfolio dans /assets/ puis renseigne son chemin ici (ex : '/assets/portfolio-jordan-join.pdf').
     // Tant que ce champ est vide, le bouton s'affiche désactivé.
-    portfolio: '/assets/portfolio-jordan-join.pdf'
+    portfolio: ''
   }
 };
