@@ -64,6 +64,36 @@
     return 'https://player.vimeo.com/video/' + encodeURIComponent(m.vimeoId) + '?autoplay=1&dnt=1';
   }
 
+  /* ───────── tuiles animées : lecture à l'écran + pause globale ───────── */
+  var LOOPS = [];
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var loopsPaused = reduceMotion;          /* mouvement réduit : tout reste fixe tant que le visiteur ne relance pas */
+  var loopIO = null;
+
+  function playLoop(v) { if (!loopsPaused && v._visible) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } }
+  function wireLoops() {
+    if (!LOOPS.length) return;
+    if ('IntersectionObserver' in window) {
+      loopIO = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          e.target._visible = e.isIntersecting;
+          if (e.isIntersecting) playLoop(e.target); else e.target.pause();
+        });
+      }, { threshold: 0.4 });
+      LOOPS.forEach(function (v) { loopIO.observe(v); });
+    }
+    var btn = h('button', { type: 'button', class: 'motion-toggle', 'aria-pressed': String(loopsPaused) });
+    function label() { btn.textContent = loopsPaused ? '▶ Lancer les animations' : '⏸ Mettre en pause les animations'; btn.setAttribute('aria-pressed', String(loopsPaused)); }
+    btn.addEventListener('click', function () {
+      loopsPaused = !loopsPaused;
+      LOOPS.forEach(function (v) { if (loopsPaused) v.pause(); else playLoop(v); });
+      label();
+    });
+    label();
+    var ht = doc.querySelector('.hero-text');
+    if (ht) ht.appendChild(btn);
+  }
+
   function buildMedia(p) {
     var m = p.media || { type: 'placeholder' };
     var box = h('div', { class: 'media media--' + m.type });
@@ -91,6 +121,16 @@
         frame.focus();
       });
       box.appendChild(btn);
+
+    } else if (m.type === 'loop') {
+      /* Tuile animée : courte boucle vidéo muette, jouée seulement quand elle est à l'écran */
+      var lv = h('video', {
+        class: 'loop', loop: true, playsinline: true, preload: 'metadata', poster: m.poster,
+        role: 'img', 'aria-label': m.alt || p.title, tabindex: '-1'
+      }, [h('source', { src: m.src, type: 'video/mp4' })]);
+      lv.muted = true; lv.setAttribute('muted', '');
+      LOOPS.push(lv);
+      box.appendChild(lv);
 
     } else if (m.type === 'video') {
       var v = h('video', { controls: true, preload: 'none', playsinline: true, poster: m.poster, 'aria-label': 'Vidéo : ' + p.title }, [
@@ -315,6 +355,7 @@
     wireTrack(track, arrows);
     toc.appendChild(h('li', null, [h('a', { href: '#' + s.id, text: s.title })]));
   });
+  wireLoops();
   toc.appendChild(h('li', null, [h('a', { href: '#presse', text: D.press.title })]));
   toc.appendChild(h('li', null, [h('a', { href: '#contact', text: 'Contact' })]));
   doc.getElementById('toc').appendChild(toc);

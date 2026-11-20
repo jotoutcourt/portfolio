@@ -63,8 +63,8 @@ window.CH_DREUX = {
       role: "Direction artistique de la campagne : concept « La force derrière chaque geste », affiches et déclinaisons print et digitales.",
       result: "Concept validé par le laboratoire en 2024.",
       media: {
-        type: 'image', src: '/assets/tenofort.png', fit: 'cover',
-        alt: "Visuel du projet Tenofort, complément alimentaire pour les sportifs, présentant le packaging du produit."
+        type: 'loop', src: '/ch-dreux/tuiles/tenofort.mp4', poster: '/ch-dreux/tuiles/tenofort.jpg',
+        alt: "Animation Tenofort : une affiche de la campagne, un coureur de trail dans la brume."
       }
     },
     {
@@ -76,8 +76,8 @@ window.CH_DREUX = {
       role: "Refonte de la charte graphique de la gamme et conception des supports (livrets, affiches) ; mise à jour et digitalisation des supports commerciaux de terrain destinés aux professionnels de santé.",
       result: "Une gamme homogène, dont les livrets sont utilisés auprès des professionnels de santé comme des patients.",
       media: {
-        type: 'image', src: '/assets/cuivramock.png', fit: 'contain',
-        alt: "Livret Cuivramine, couverture et double page intérieure : titre « Un concentré d'efficacité », visuel du produit et encarts pédagogiques sur fond bleu."
+        type: 'loop', src: '/ch-dreux/tuiles/livrets.mp4', poster: '/ch-dreux/tuiles/livrets.jpg',
+        alt: "Animation des livrets : le livret Tenofort, vert, présenté en perspective."
       }
     },
     {
@@ -89,8 +89,8 @@ window.CH_DREUX = {
       role: "Création de la charte graphique et de l'univers de marque (packagings, notices, cartes d'implants), puis préparation du lancement : communication auprès des prescripteurs, outils pour les commerciaux, landing pages.",
       result: "Un univers de marque cohérent, décliné sur l'ensemble des supports de la gamme, de l'emballage aux outils commerciaux.",
       media: {
-        type: 'image', src: '/assets/pandoviolet.png', fit: 'contain',
-        alt: "Boîte de la gamme Pandora 1, violette, portant la mention « Viscosupplément linéaire », « 1 x 4,8 mL » et « Made in France », avec le logo du laboratoire Labrha."
+        type: 'loop', src: '/ch-dreux/tuiles/pandora.mp4', poster: '/ch-dreux/tuiles/pandora.jpg',
+        alt: "Animation Pandora : la boîte violette du viscosupplément et une goutte de gel."
       }
     },
     {
@@ -102,8 +102,8 @@ window.CH_DREUX = {
       role: "Conception de l'identité visuelle complète : logo à double lecture (réseau vasculaire et fleuves lyonnais), charte graphique et supports.",
       result: "Une identité qui inspire confiance aux patients comme aux médecins, reprise sur le site et les supports du cabinet.",
       media: {
-        type: 'image', src: '/assets/vasculyonbloc.png', fit: 'cover',
-        alt: "Identité visuelle du cabinet Vasculyon : logo et déclinaisons sur supports institutionnels."
+        type: 'loop', src: '/ch-dreux/tuiles/vasculyon-identite.mp4', poster: '/ch-dreux/tuiles/vasculyon-identite.jpg',
+        alt: "Animation Vasculyon : des praticiens en tenue de bloc opératoire."
       }
     },
     {
@@ -115,8 +115,8 @@ window.CH_DREUX = {
       role: "Conception de la campagne estivale « Good Vagues Only » : concept, direction artistique, affiche et déclinaisons.",
       result: "Concept validé par le client en 2024.",
       media: {
-        type: 'image', src: '/assets/vogalib.png', fit: 'cover',
-        alt: "Visuel du projet Vogalib : supports de communication print pour un médicament."
+        type: 'loop', src: '/ch-dreux/tuiles/vogalib.mp4', poster: '/ch-dreux/tuiles/vogalib.jpg',
+        alt: "Animation Vogalib : un estomac stylisé sur lequel surfe un petit personnage."
       }
     },
     {
@@ -128,8 +128,8 @@ window.CH_DREUX = {
       role: "Direction artistique de la campagne estivale : identité visuelle, affiches et dispositifs d'affichage urbain.",
       result: "Campagne validée pour l'été 2024.",
       media: {
-        type: 'image', src: '/assets/metz-lumieres-1.webp', fit: 'contain',
-        alt: "Affiche Visit Metz : « À Metz, même la lumière nous joue des tours », projection lumineuse colorée sur la façade de la cathédrale de Metz, de nuit."
+        type: 'loop', src: '/ch-dreux/tuiles/play-with-metz.mp4', poster: '/ch-dreux/tuiles/play-with-metz.jpg',
+        alt: "Animation Play With Metz : la façade de la cathédrale de Metz illuminée de nuit."
       }
     },
 

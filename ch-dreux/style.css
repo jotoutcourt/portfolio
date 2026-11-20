@@ -192,3 +192,9 @@ a:hover { color: var(--accent); }
 .pbtn--view:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
 .pbtn[disabled] { opacity: 0.55; cursor: not-allowed; background: transparent; color: var(--muted); border-color: var(--line); border-style: dashed; }
 .pbtn[disabled]:hover { background: transparent; color: var(--muted); border-color: var(--line); }
+
+/* Tuiles animées (courtes boucles vidéo) : le lien de la carte reste cliquable par-dessus */
+.media--loop { background: #0d0d14; }
+.media .loop { object-fit: cover; pointer-events: none; }
+.motion-toggle { align-self: flex-start; margin-top: 1rem; padding: 0.5rem 0.9rem; min-height: 40px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); font: 500 0.82rem/1 var(--font-body); cursor: pointer; }
+.motion-toggle:hover { border-color: var(--navy); color: var(--navy); }

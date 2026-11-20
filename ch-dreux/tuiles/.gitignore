@@ -1,0 +1,2 @@
+# Les GIF sources (plusieurs Mo) restent en local : le site utilise les .mp4 et .jpg
+*.gif
