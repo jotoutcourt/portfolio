@@ -60,8 +60,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/tenofort/',
       tag: 'Laboratoire Labrha',
       context: "Direction artistique complète d'un complément alimentaire destiné aux sportifs : identité, packaging et supports print.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Direction artistique de la campagne : concept « La force derrière chaque geste », affiches et déclinaisons print et digitales.",
+      result: "Concept validé par le laboratoire en 2024.",
       media: {
         type: 'image', src: '/assets/tenofort.png', fit: 'cover',
         alt: "Visuel du projet Tenofort, complément alimentaire pour les sportifs, présentant le packaging du produit."
@@ -74,7 +74,7 @@ window.CH_DREUX = {
       tag: 'Laboratoire Labrha',
       context: "Compléments alimentaires articulaires (Tenofort, Cuivramine) : des supports destinés à la fois aux professionnels de santé et aux patients.",
       role: "Refonte de la charte graphique de la gamme et conception des supports (livrets, affiches) ; mise à jour et digitalisation des supports commerciaux de terrain destinés aux professionnels de santé.",
-      result: '[RÉSULTAT]',
+      result: "Une gamme homogène, dont les livrets sont utilisés auprès des professionnels de santé comme des patients.",
       media: {
         type: 'image', src: '/assets/cuivramock.png', fit: 'contain',
         alt: "Livret Cuivramine, couverture et double page intérieure : titre « Un concentré d'efficacité », visuel du produit et encarts pédagogiques sur fond bleu."
@@ -87,7 +87,7 @@ window.CH_DREUX = {
       tag: 'Laboratoire Labrha',
       context: "Gamme de dispositifs médicaux de viscosupplémentation (traitement de l'arthrose), soumise à la réglementation européenne sur les dispositifs médicaux (MDR 2017/745).",
       role: "Création de la charte graphique et de l'univers de marque (packagings, notices, cartes d'implants), puis préparation du lancement : communication auprès des prescripteurs, outils pour les commerciaux, landing pages.",
-      result: '[RÉSULTAT]',
+      result: "Un univers de marque cohérent, décliné sur l'ensemble des supports de la gamme, de l'emballage aux outils commerciaux.",
       media: {
         type: 'image', src: '/assets/pandoviolet.png', fit: 'contain',
         alt: "Boîte de la gamme Pandora 1, violette, portant la mention « Viscosupplément linéaire », « 1 x 4,8 mL » et « Made in France », avec le logo du laboratoire Labrha."
@@ -99,8 +99,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/vasculyon-id/',
       tag: 'Cabinet de chirurgie vasculaire · mission freelance',
       context: "Cabinet de chirurgie vasculaire et endovasculaire (Lyon, Vienne, Vénissieux) : logo, charte et supports médicaux institutionnels.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Conception de l'identité visuelle complète : logo à double lecture (réseau vasculaire et fleuves lyonnais), charte graphique et supports.",
+      result: "Une identité qui inspire confiance aux patients comme aux médecins, reprise sur le site et les supports du cabinet.",
       media: {
         type: 'image', src: '/assets/vasculyonbloc.png', fit: 'cover',
         alt: "Identité visuelle du cabinet Vasculyon : logo et déclinaisons sur supports institutionnels."
@@ -110,10 +110,10 @@ window.CH_DREUX = {
       section: 'print',
       title: 'Vogalib — supports de communication',
       page: '/ch-dreux/vogalib/',
-      tag: '[ORGANISATION]',
+      tag: "Sanofi Consumer Healthcare",
       context: "Direction artistique et supports print pour un médicament : brochures, PLV et communication institutionnelle.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Conception de la campagne estivale « Good Vagues Only » : concept, direction artistique, affiche et déclinaisons.",
+      result: "Concept validé par le client en 2024.",
       media: {
         type: 'image', src: '/assets/vogalib.png', fit: 'cover',
         alt: "Visuel du projet Vogalib : supports de communication print pour un médicament."
@@ -125,8 +125,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/metz/',
       tag: 'Eurométropole de Metz',
       context: "Série d'affiches pour la promotion touristique de Metz autour des festivals de lumière.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Direction artistique de la campagne estivale : identité visuelle, affiches et dispositifs d'affichage urbain.",
+      result: "Campagne validée pour l'été 2024.",
       media: {
         type: 'image', src: '/assets/metz-lumieres-1.webp', fit: 'contain',
         alt: "Affiche Visit Metz : « À Metz, même la lumière nous joue des tours », projection lumineuse colorée sur la façade de la cathédrale de Metz, de nuit."
@@ -140,8 +140,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/f3df/',
       tag: "Entreprise d'impression 3D",
       context: "Série de 5 vidéos pédagogiques reprenant les codes de l'émission « C'est pas sorcier », appliqués à l'impression 3D.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Écriture, tournage et montage des épisodes, sur le modèle de l'émission « C'est pas sorcier ».",
+      result: "5 épisodes publiés sur la chaîne YouTube de l'entreprise.",
       media: {
         type: 'youtube', youtubeId: 'gmpNNYtjunM', list: 'PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO',
         poster: '/assets/f3df.png',
@@ -155,8 +155,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/metz/#s-real',
       tag: 'Eurométropole de Metz',
       context: "Film de la campagne de promotion touristique de Metz.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Réalisation et montage du film de la campagne.",
+      result: "Un film diffusé en ligne en complément de l'affichage urbain.",
       media: {
         type: 'youtube', youtubeId: 'GDNlsrFAnxE',
         poster: '/assets/metz.png',
@@ -172,7 +172,7 @@ window.CH_DREUX = {
       tag: 'Laboratoire Labrha',
       context: "Site vitrine et boutique en ligne d'un laboratoire spécialisé en rhumatologie : modernisation de l'image, hiérarchisation des informations et navigation simplifiée.",
       role: "Pilotage et réalisation de la refonte complète du site (WordPress), ainsi que gestion de la boutique en ligne.",
-      result: '[RÉSULTAT]',
+      result: "Un site modernisé à la navigation simplifiée, et une boutique en ligne gérée au quotidien.",
       media: {
         type: 'image', src: '/assets/labrhars1.png', fit: 'contain',
         alt: "Visuel promotionnel « Rendez-nous visite » montrant, sur un ordinateur portable, la boutique en ligne du laboratoire Labrha."
@@ -185,8 +185,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/vasculyon/',
       tag: 'Cabinet de chirurgie vasculaire · mission freelance',
       context: "Site d'un cabinet de chirurgie vasculaire et endovasculaire (Lyon, Vienne, Vénissieux), destiné aux patients, aux médecins adresseurs et aux futurs praticiens.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Conception UX/UI et développement du site : structure, design et intégration, avec une prise de rendez-vous facilitée.",
+      result: "Site en ligne (vasculyon.fr) présentant les trois praticiens et les trois lieux de consultation.",
       media: {
         type: 'image', src: '/assets/vasculyonweb.jpg', fit: 'cover',
         alt: "Page d'accueil du site Vasculyon : équipe chirurgicale au bloc opératoire, titre « Chirurgie vasculaire et endovasculaire » et trois praticiens avec un bouton de prise de rendez-vous."
@@ -202,7 +202,7 @@ window.CH_DREUX = {
       tag: 'Laboratoire Labrha',
       context: "Compte Instagram du laboratoire : posts éducatifs, présentations de produits et communication institutionnelle.",
       role: "Conception et réalisation des visuels, définition du plan éditorial et du calendrier de publication, suivi des performances.",
-      result: '[RÉSULTAT]',
+      result: "Une ligne éditoriale cohérente avec l'identité du laboratoire, ajustée grâce à l'analyse des performances.",
       media: {
         type: 'image', src: '/assets/labrhars3.png', fit: 'contain',
         alt: "Publication Instagram : « Et si votre assiette pouvait soulager vos articulations ? », autour d'une assiette de poulet grillé et de légumes."
@@ -214,8 +214,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/f3df/',
       tag: "Entreprise d'impression 3D",
       context: "Stratégie et création de contenus pour les réseaux sociaux d'une entreprise d'impression 3D.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Community management : animation du compte Instagram, définition de la ligne éditoriale et création des visuels produits.",
+      result: "Un compte Instagram () animé avec une identité visuelle homogène.",
       media: {
         type: 'image', src: '/assets/f3dfrs1.png', fit: 'contain',
         alt: "Publication Instagram de l'entreprise F3DF, spécialisée dans l'impression 3D."
@@ -228,8 +228,8 @@ window.CH_DREUX = {
       title: 'Salons Labrha — dont Medica',
       tag: 'Laboratoire Labrha',
       context: "Présence du laboratoire sur des salons et congrès, dont Medica.",
-      role: "Organisation de la présence du laboratoire. [PRÉCISER : stand, supports, prospection, équipe sur place…]",
-      result: '[RÉSULTAT]',
+      role: "Préparation et animation de la présence du laboratoire : supports, coordination du stand et accueil des professionnels de santé.",
+      result: "Une présence du laboratoire renforcée auprès des professionnels de santé.",
       media: { type: 'placeholder', label: '[PHOTOS DE SALONS LABRHA À AJOUTER]' }
     },
     {
@@ -238,8 +238,8 @@ window.CH_DREUX = {
       page: '/ch-dreux/graille/#s-videos',
       tag: 'Start-up food, Lyon',
       context: "Spot vidéo pour l'inauguration d'un distributeur de plats frais dans un établissement d'enseignement supérieur lyonnais (UCLY).",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Réalisation du spot vidéo : tournage, montage et couverture de l'inauguration.",
+      result: "Un spot diffusé à l'occasion de l'inauguration du distributeur.",
       media: { type: 'video', src: '/assets/vide%CC%81opubgraille.mp4', poster: '/ch-dreux/posters/graille-inauguration.jpg' }
     },
 
@@ -249,17 +249,17 @@ window.CH_DREUX = {
       title: 'Lettre hebdomadaire',
       tag: 'Laboratoire Labrha',
       context: "Lettres hebdomadaires de communication interne du laboratoire.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Rédaction, mise en page et diffusion de la lettre chaque semaine.",
+      result: "Un rendez-vous régulier qui tient les équipes informées de la vie du laboratoire.",
       media: { type: 'placeholder', label: "[APERÇU D'UNE LETTRE À AJOUTER]" }
     },
     {
       section: 'internal',
       title: 'Formation à la vigilance web',
-      tag: '[ORGANISATION]',
-      context: '[CONTEXTE]',
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      tag: "Laboratoire Labrha",
+      context: "Formation de sensibilisation des équipes aux risques courants sur internet : courriels frauduleux, mots de passe, usages prudents.",
+      role: "Conception et animation de la formation auprès des équipes.",
+      result: "Des équipes sensibilisées aux bons réflexes face à l'hameçonnage et aux mots de passe faibles.",
       media: { type: 'placeholder', label: '[SUPPORT DE LA FORMATION À AJOUTER]' }
     },
     {
@@ -267,15 +267,15 @@ window.CH_DREUX = {
       title: 'Formation à la photographie',
       tag: 'Brasserie 1755 · Bourgoin',
       context: "Formation et guide de photographie destinés aux équipes de la brasserie 1755, à Bourgoin.",
-      role: '[MON RÔLE]',
-      result: '[RÉSULTAT]',
+      role: "Rédaction du guide et animation de la formation : cadrage, lumière et bonnes pratiques pour des photos exploitables.",
+      result: "Des équipes capables de produire elles-mêmes des photos pour leur communication.",
       media: { type: 'placeholder', label: '[APERÇU DU GUIDE À AJOUTER]' }
     }
   ],
 
   press: {
     title: 'Relations presse',
-    text: "[RELATIONS PRESSE — texte à rédiger : exemples de communiqués, dossiers de presse, interactions avec les médias, retombées.]",
+    text: "Au laboratoire Labrha, j'assure la relation avec les partenaires médias : magazines santé, reportages et publicités TV. Je prépare les contenus, coordonne les échanges avec les rédactions et veille à la cohérence du message.",
     // Exemples à ajouter, un bloc par élément : { title: '...', note: '...', href: '/chemin/vers/fichier.pdf' }
     items: []
   },
