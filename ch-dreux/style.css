@@ -136,7 +136,8 @@ a:hover { color: var(--accent); }
 .card-title-link:focus-visible { outline: none; }
 .media--youtube, .media--video, .media--embed { z-index: 2; }       /* la lecture reste possible sans quitter la page */
 .card-link { position: relative; z-index: 2; }
-.card-more { margin-top: auto; font-size: 0.9rem; font-weight: 500; color: var(--accent); }
+.card-more { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto; min-height: 48px; padding: 0.7rem 1.2rem; border-radius: 8px; background: var(--navy); color: #fff; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.02em; box-shadow: 0 4px 14px rgba(26,26,46,0.18); transition: background 0.2s, transform 0.2s, box-shadow 0.2s; }
+.card:hover .card-more { background: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(155,58,72,0.28); }
 .card-more + .card-link { margin-top: 0; }
 
 /* Lien « Retrouvez tous mes projets de la catégorie… » sous chaque ligne */
