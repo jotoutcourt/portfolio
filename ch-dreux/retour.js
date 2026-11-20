@@ -3,7 +3,14 @@
    si le navigateur refuse de le fermer (page ouverte directement), il garde son comportement normal. */
 (function () {
   var links = document.querySelectorAll('a[href="/ch-dreux/"], a[href^="/ch-dreux/#"]');
+  /* Candidature personnalisée (?c=…) : « Retour » garde le même réglage, sinon on retomberait sur la version par défaut. */
+  var carried = '';
+  try { var mm = /[?&]c=([^&#]+)/.exec(location.search); carried = mm ? decodeURIComponent(mm[1]) : (localStorage.getItem('chCfgLast') || ''); } catch (e) {}
   Array.prototype.forEach.call(links, function (a) {
+    if (carried) {
+      var hr0 = a.getAttribute('href'), ix = hr0.indexOf('#');
+      a.setAttribute('href', '/ch-dreux/?c=' + encodeURIComponent(carried) + (ix > -1 ? hr0.slice(ix) : ''));
+    }
     a.addEventListener('click', function (e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       if (history.length > 1) return;

@@ -55,6 +55,7 @@ window.CH_DREUX = {
 
     /* ───────────── PRINT ET IDENTITÉ VISUELLE ───────────── */
     {
+      id: 'tenofort',
       section: 'print',
       title: 'Tenofort — complément alimentaire',
       page: '/ch-dreux/tenofort/',
@@ -68,6 +69,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'livrets',
       section: 'print',
       title: 'Livrets de la gamme compléments alimentaires',
       page: '/ch-dreux/gamme-complements/',
@@ -81,6 +83,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'pandora',
       section: 'print',
       title: 'Pandora — gamme de dispositifs médicaux',
       page: '/ch-dreux/pandora/',
@@ -94,6 +97,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'vasculyon-id',
       section: 'print',
       title: 'Vasculyon — identité visuelle',
       page: '/ch-dreux/vasculyon-id/',
@@ -107,6 +111,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'vogalib',
       section: 'print',
       title: 'Vogalib — supports de communication',
       page: '/ch-dreux/vogalib/',
@@ -120,6 +125,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'metz-affiches',
       section: 'print',
       title: "Play With Metz — campagne « Lumières d'Europe »",
       page: '/ch-dreux/metz/',
@@ -135,6 +141,7 @@ window.CH_DREUX = {
 
     /* ───────────── VIDÉO ───────────── */
     {
+      id: 'f3df-3d',
       section: 'video',
       title: "« La 3D c'est pas sorcier » — série vidéo",
       page: '/ch-dreux/f3df/',
@@ -149,6 +156,7 @@ window.CH_DREUX = {
       link: { label: 'Voir la série complète sur YouTube', href: 'https://www.youtube.com/playlist?list=PL2CHMYGVYwZPm5mbNN0n8H8RynHfGQmTO' }
     },
     {
+      id: 'metz-film',
       section: 'video',
       title: 'Play With Metz — film de campagne',
       page: '/ch-dreux/metz/#s-video',
@@ -164,6 +172,7 @@ window.CH_DREUX = {
 
     /* ───────────── SITES WEB ───────────── */
     {
+      id: 'labrha-site',
       section: 'web',
       title: 'Refonte du site internet de Labrha',
       page: '/ch-dreux/labrha-site/',
@@ -178,6 +187,7 @@ window.CH_DREUX = {
       link: { label: 'Visiter le site', href: 'https://www.laboratoire-labrha.fr/' }
     },
     {
+      id: 'vasculyon-site',
       section: 'web',
       title: 'Vasculyon — site web',
       page: '/ch-dreux/vasculyon/',
@@ -194,6 +204,7 @@ window.CH_DREUX = {
 
     /* ───────────── RÉSEAUX SOCIAUX ───────────── */
     {
+      id: 'labrha-reseaux',
       section: 'social',
       title: 'Réseaux sociaux du laboratoire Labrha',
       page: '/ch-dreux/labrha-reseaux/',
@@ -207,6 +218,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'f3df-reseaux',
       section: 'social',
       title: 'F3DF — réseaux sociaux',
       page: '/ch-dreux/f3df/',
@@ -222,6 +234,7 @@ window.CH_DREUX = {
 
     /* ───────────── ÉVÉNEMENTIEL ───────────── */
     {
+      id: 'salons-labrha',
       section: 'events',
       title: 'Salons Labrha — dont Medica',
       tag: 'Laboratoire Labrha',
@@ -234,6 +247,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'graille',
       section: 'events',
       title: "Graille — spot d'inauguration",
       page: '/ch-dreux/graille/#s-videos',
@@ -249,6 +263,7 @@ window.CH_DREUX = {
 
     /* ───────────── COMMUNICATION INTERNE ───────────── */
     {
+      id: 'lettre-hebdo',
       section: 'internal',
       title: 'Lettre hebdomadaire',
       page: '/ch-dreux/lettre-hebdo/',
@@ -262,6 +277,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'formation-cyber',
       section: 'internal',
       title: 'Formation à la vigilance web et à la cybersécurité',
       page: '/ch-dreux/formation-cybersecurite/',
@@ -275,6 +291,7 @@ window.CH_DREUX = {
       }
     },
     {
+      id: 'formation-photo',
       section: 'internal',
       title: 'Formation à la photographie',
       page: '/ch-dreux/formation-photo/',

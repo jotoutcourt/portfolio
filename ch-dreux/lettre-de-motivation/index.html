@@ -129,6 +129,29 @@
   </article>
 </main>
 
+<script src="/ch-dreux/cfg.js"></script>
+<script>
+/* Lettre propre à une candidature (?c=…) : on remplace le texte avant que l'animation de frappe ne démarre. */
+(function () {
+  var C = window.CH_CFG, L = C && C.cfg && C.cfg.letter;
+  if (!L) return;
+  function $(s) { return document.querySelector(s); }
+  function para(txt) { var p = document.createElement('p'); p.setAttribute('data-t', ''); p.textContent = txt; return p; }
+  if (L.date) $('.date').textContent = L.date;
+  if (L.post) $('#post span').textContent = L.post;
+  if (L.hello) $('.hello').textContent = L.hello;
+  if (L.paras && L.paras.length) {
+    var body = $('.body'), closing = $('.closing');
+    Array.prototype.slice.call(body.querySelectorAll('p:not(.closing)')).forEach(function (p) { p.remove(); });
+    L.paras.forEach(function (t) { if (String(t).trim()) body.insertBefore(para(String(t).trim()), closing); });
+  }
+  if (L.closing) $('.closing').textContent = L.closing;
+  var pdf = document.querySelector('a[download]');       /* le PDF fixe ne correspond pas à cette lettre */
+  if (pdf) pdf.remove();
+  document.title = 'Lettre de motivation — Jordan Join';
+})();
+</script>
+
 <script>
 (function () {
   var root = document.documentElement;

@@ -9,6 +9,37 @@
   var isDraft = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /[?&]brouillon\b/.test(location.search);
   if (isDraft) doc.documentElement.classList.add('is-draft');
 
+  /* ───────── réglage de la candidature (adresse ?c=…, produit par /candidature-admin/) ───────── */
+  var CC = window.CH_CFG || null;
+  var CFG = CC && CC.cfg;
+  if (CC) CC.store.set(CFG ? CC.raw : '');   /* mémorisé pour que « Retour » depuis une page projet garde le bon réglage */
+  var showPress = true, showLetter = true;
+  if (CFG) {
+    var jobLine = (CFG.job || 'Chargé de communication') + (CFG.org ? ', ' : '');
+    var h1 = doc.querySelector('.hero h1');
+    if (h1) {
+      h1.textContent = 'Candidature – ' + jobLine;
+      if (CFG.org) h1.appendChild((function () { var s = doc.createElement('span'); s.textContent = CFG.org; return s; })());
+    }
+    doc.title = 'Candidature – ' + (CFG.job || 'Chargé de communication') + (CFG.org ? ', ' + CFG.org : '') + ' — Jordan Join';
+    if (CFG.intro) { D.intro = CFG.intro; D.introLink = null; }
+    if (CFG.p) {
+      var byId = {};
+      D.projects.forEach(function (p) { if (p.id) byId[p.id] = p; });
+      D.projects = CFG.p.map(function (id) { return byId[id]; }).filter(Boolean);
+    }
+    if (CFG.s) {
+      var secById = {};
+      D.sections.forEach(function (s) { secById[s.id] = s; });
+      var ordered = CFG.s.map(function (id) { return secById[id]; }).filter(Boolean);
+      D.sections.forEach(function (s) { if (ordered.indexOf(s) < 0) ordered.push(s); });
+      D.sections = ordered;
+    }
+    showPress = !!CFG.press;
+    if (CFG.press && CFG.press.text) D.press = { title: D.press.title, text: CFG.press.text, items: [] };
+    showLetter = !!CFG.letter;
+  }
+
   /* ───────── utilitaires DOM ───────── */
   function h(tag, props, kids) {
     var n = doc.createElement(tag);
@@ -310,9 +341,14 @@
       ];
     }
     var box = h("div", { class: "hero-docs" });
-    pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV', D.downloads.cvPage).concat(
-      pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation', D.downloads.letterPage)
-    ).forEach(function (b) { box.appendChild(b); });
+    var btns = pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV', D.downloads.cvPage);
+    if (CFG && CFG.letter) {
+      /* Lettre propre à cette candidature : seule la page animée existe (le PDF fixe ne correspond pas) */
+      btns.push(h('a', { class: 'pbtn pbtn--view', href: D.downloads.letterPage + '?c=' + encodeURIComponent(CC.raw), target: '_blank', rel: 'noopener noreferrer', text: 'Voir ma lettre de motivation' }));
+    } else if (showLetter) {
+      btns = btns.concat(pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation', D.downloads.letterPage));
+    }
+    btns.forEach(function (b) { box.appendChild(b); });
     return box;
   }
 
@@ -374,21 +410,24 @@
     toc.appendChild(h('li', null, [h('a', { href: '#' + s.id, text: s.title })]));
   });
   wireLoops();
-  toc.appendChild(h('li', null, [h('a', { href: '#presse', text: D.press.title })]));
+  if (showPress) toc.appendChild(h('li', null, [h('a', { href: '#presse', text: D.press.title })]));
+  else { var pressSec = doc.getElementById('presse'); if (pressSec) pressSec.remove(); }
   toc.appendChild(h('li', null, [h('a', { href: '#contact', text: 'Contact' })]));
   doc.getElementById('toc').appendChild(toc);
 
   /* Relations presse */
-  doc.getElementById('presse-title').textContent = D.press.title;
-  fill(doc.getElementById('press-text'), D.press.text);
-  var pl = doc.getElementById('press-list');
-  (D.press.items || []).forEach(function (it) {
-    var inner = it.href
-      ? h('a', { href: it.href, target: '_blank', rel: 'noopener noreferrer', text: it.title })
-      : fill(h('span'), it.title);
-    pl.appendChild(h('li', null, [inner, it.note ? h('span', { class: 'note', text: ' — ' + it.note }) : null]));
-  });
-  if (!pl.children.length) pl.remove();
+  if (showPress) {
+    doc.getElementById('presse-title').textContent = D.press.title;
+    fill(doc.getElementById('press-text'), D.press.text);
+    var pl = doc.getElementById('press-list');
+    (D.press.items || []).forEach(function (it) {
+      var inner = it.href
+        ? h('a', { href: it.href, target: '_blank', rel: 'noopener noreferrer', text: it.title })
+        : fill(h('span'), it.title);
+      pl.appendChild(h('li', null, [inner, it.note ? h('span', { class: 'note', text: ' — ' + it.note }) : null]));
+    });
+    if (!pl.children.length) pl.remove();
+  }
 
   /* Contact + téléchargements */
   var c = D.contact;

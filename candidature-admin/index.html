@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1a1a2e">
+<title>Préparer une candidature — Jordan Join</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f6f6fa; --card:#fff; --text:#1a1a2e; --muted:#666676; --line:#e3e3ec; --navy:#1a1a2e; --accent:#d66a77; --ok:#2f8f5b; --font-display:'Bebas Neue',sans-serif; --font-body:'DM Sans',system-ui,sans-serif; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12121c; --card:#1b1b2a; --text:#ececf4; --muted:#a2a2b6; --line:#2c2c40; --navy:#ececf4; } }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); line-height:1.5; }
+  .wrap { width:min(1280px, 100% - 2.5rem); margin-inline:auto; }
+  header.top { padding:2rem 0 1.2rem; }
+  header.top h1 { margin:0; font-family:var(--font-display); font-weight:400; font-size:clamp(2.2rem,5vw,3.4rem); line-height:1; }
+  header.top p { margin:.4rem 0 0; color:var(--muted); max-width:62ch; }
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:1.6rem; align-items:start; padding-bottom:6rem; }
+  @media (max-width: 1000px) { .layout { grid-template-columns:1fr; } }
+
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.3rem 1.4rem 1.4rem; margin-bottom:1.1rem; }
+  .card h2 { margin:0 0 .15rem; font-family:var(--font-display); font-weight:400; font-size:1.7rem; letter-spacing:.02em; display:flex; align-items:center; gap:.6rem; }
+  .card h2 .n { display:inline-grid; place-items:center; width:1.9rem; height:1.9rem; border-radius:50%; background:var(--navy); color:var(--bg); font-family:var(--font-body); font-size:.9rem; font-weight:700; }
+  .card .sub { margin:0 0 1rem; color:var(--muted); font-size:.92rem; }
+  label.f { display:block; margin:.7rem 0 0; font-size:.82rem; font-weight:700; letter-spacing:.02em; }
+  input[type=text], textarea { width:100%; margin-top:.3rem; padding:.7rem .85rem; border:1.5px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); font:inherit; font-size:1rem; font-weight:400; }
+  textarea { min-height:7rem; resize:vertical; line-height:1.55; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; } @media (max-width:640px){ .row2 { grid-template-columns:1fr; } }
+
+  .btn { display:inline-flex; align-items:center; gap:.4rem; min-height:44px; padding:.55rem 1.1rem; border:2px solid var(--navy); border-radius:999px; background:transparent; color:var(--text); font:inherit; font-weight:700; font-size:.92rem; cursor:pointer; text-decoration:none; }
+  .btn:hover { background:var(--navy); color:var(--bg); }
+  .btn--solid { background:var(--navy); color:var(--bg); } .btn--solid:hover { opacity:.88; }
+  .btn--small { min-height:36px; padding:.3rem .8rem; font-size:.82rem; }
+  .btn[disabled] { opacity:.4; cursor:default; }
+
+  /* Projets */
+  .tools { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.9rem; }
+  .cat { border:1px solid var(--line); border-radius:12px; margin-bottom:.8rem; overflow:hidden; }
+  .cat-head { display:flex; align-items:center; gap:.7rem; padding:.7rem .9rem; background:var(--bg); }
+  .cat-head strong { font-size:1rem; flex:1; }
+  .cat-head .count { color:var(--muted); font-size:.82rem; font-weight:500; }
+  .item { display:flex; align-items:center; gap:.7rem; padding:.6rem .9rem; border-top:1px solid var(--line); }
+  .item.off { opacity:.5; }
+  .item label { display:flex; align-items:center; gap:.7rem; flex:1; cursor:pointer; min-width:0; }
+  .item .t { min-width:0; } .item .t b { display:block; font-weight:500; line-height:1.25; } .item .t small { color:var(--muted); font-size:.78rem; }
+  input[type=checkbox] { width:22px; height:22px; accent-color:var(--navy); flex:none; cursor:pointer; }
+  .mv { display:inline-flex; gap:.25rem; flex:none; }
+  .mv button { width:34px; height:34px; border:1.5px solid var(--line); border-radius:8px; background:var(--card); color:var(--text); cursor:pointer; font-size:1rem; line-height:1; }
+  .mv button:hover:not([disabled]) { border-color:var(--navy); } .mv button[disabled] { opacity:.3; cursor:default; }
+
+  .switch { display:flex; align-items:center; gap:.7rem; font-weight:700; cursor:pointer; margin:.2rem 0 .4rem; }
+  .fold { display:none; margin-top:.4rem; } .fold.open { display:block; }
+
+  /* Panneau lien */
+  .panel { position:sticky; top:1rem; }
+  .linkbox { width:100%; padding:.7rem .85rem; border:1.5px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); font:.78rem/1.4 ui-monospace,Consolas,monospace; word-break:break-all; max-height:6.2rem; overflow:auto; }
+  .actions { display:flex; gap:.5rem; flex-wrap:wrap; margin:.8rem 0; }
+  .meta { color:var(--muted); font-size:.8rem; } .meta.warn { color:#b3541e; font-weight:700; }
+  .pv { position:relative; width:100%; aspect-ratio:16/11; overflow:hidden; border:1px solid var(--line); border-radius:10px; background:#fff; margin-top:.9rem; }
+  .pv iframe { position:absolute; left:0; top:0; width:1280px; height:880px; border:0; transform-origin:0 0; pointer-events:none; }
+  .saved { display:flex; flex-wrap:wrap; gap:.5rem; margin:.4rem 0 .9rem; }
+  .chip { display:inline-flex; align-items:center; border:1.5px solid var(--line); border-radius:999px; background:var(--bg); overflow:hidden; }
+  .chip button { border:0; background:none; color:var(--text); font:inherit; font-size:.88rem; padding:.4rem .8rem; cursor:pointer; min-height:36px; }
+  .chip button:hover { background:var(--navy); color:var(--bg); } .chip .x { padding:.4rem .6rem; color:var(--muted); border-left:1px solid var(--line); }
+  .toast { position:fixed; left:50%; bottom:1.4rem; transform:translate(-50%,20px); background:var(--navy); color:var(--bg); padding:.7rem 1.2rem; border-radius:999px; font-weight:700; opacity:0; pointer-events:none; transition:.25s; z-index:50; }
+  .toast.on { opacity:1; transform:translate(-50%,0); }
+  .mbar { display:none; }
+  @media (max-width:1000px) {
+    .panel { position:static; }
+    .mbar { display:flex; position:fixed; left:0; right:0; bottom:0; padding:.7rem 1rem; gap:.6rem; background:var(--card); border-top:1px solid var(--line); z-index:40; }
+    .mbar .btn { flex:1; justify-content:center; }
+  }
+  .pill { display:inline-block; padding:.1rem .6rem; border-radius:999px; background:var(--ok); color:#fff; font-size:.72rem; font-weight:700; vertical-align:middle; }
+  @media (prefers-reduced-motion: reduce) { .toast { transition:none; } html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>Préparer une candidature</h1>
+  <p>Remplis le poste, coche les projets à montrer, ajoute (si tu veux) ta lettre : tu obtiens un lien prêt à envoyer. Rien n'est enregistré sur un serveur, le lien contient tout.</p>
+</div></header>
+
+<main class="wrap layout">
+  <div>
+    <section class="card" aria-labelledby="h-saved">
+      <h2 id="h-saved">Mes candidatures</h2>
+      <p class="sub">Retrouve une candidature déjà préparée (elles restent sur cet appareil), ou colle un ancien lien pour le reprendre.</p>
+      <div class="saved" id="saved" aria-live="polite"></div>
+      <div class="row2">
+        <label class="f">Nom pour la retrouver
+          <input type="text" id="name" placeholder="ex. CHU de Lyon — chargé de com">
+        </label>
+        <label class="f">Reprendre à partir d'un lien
+          <input type="text" id="import" placeholder="Colle ici un lien déjà généré" autocomplete="off">
+        </label>
+      </div>
+      <div class="actions"><button class="btn btn--small" type="button" id="save">Enregistrer cette candidature</button><button class="btn btn--small" type="button" id="reset">Repartir de zéro</button></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-offre">
+      <h2 id="h-offre"><span class="n">1</span> L'offre</h2>
+      <p class="sub">Ce qui s'affiche dans le titre de la page.</p>
+      <div class="row2">
+        <label class="f">Intitulé du poste <input type="text" id="job" placeholder="Chargé de communication"></label>
+        <label class="f">Organisme <input type="text" id="org" placeholder="Centre Hospitalier Victor Jousselin"></label>
+      </div>
+      <label class="f">Texte d'introduction <textarea id="intro" rows="3"></textarea></label>
+    </section>
+
+    <section class="card" aria-labelledby="h-proj">
+      <h2 id="h-proj"><span class="n">2</span> Les projets à montrer</h2>
+      <p class="sub">Coche ce qui sert cette offre. Les flèches changent l'ordre (projets et catégories). Une catégorie sans projet coché disparaît.</p>
+      <div class="tools">
+        <button class="btn btn--small" type="button" id="all-on">Tout cocher</button>
+        <button class="btn btn--small" type="button" id="all-off">Tout décocher</button>
+      </div>
+      <div id="projects"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-lettre">
+      <h2 id="h-lettre"><span class="n">3</span> Lettre de motivation</h2>
+      <p class="sub">Une page animée où la lettre s'écrit à la machine, avec ta signature. Sans lettre, les boutons « lettre » disparaissent de la candidature.</p>
+      <label class="switch"><input type="checkbox" id="letterOn"> Joindre une lettre de motivation</label>
+      <div class="fold" id="letterFold">
+        <div class="tools"><button class="btn btn--small" type="button" id="letterFrom">Reprendre le texte de ma lettre actuelle</button></div>
+        <div class="row2">
+          <label class="f">Ville et date <input type="text" id="lDate"></label>
+          <label class="f">Poste affiché sur la lettre <input type="text" id="lPost" placeholder="Identique à l'intitulé du poste"></label>
+        </div>
+        <label class="f">Formule d'appel <input type="text" id="lHello"></label>
+        <label class="f">Corps de la lettre <span class="meta">(sépare les paragraphes par une ligne vide)</span><textarea id="lBody" rows="14"></textarea></label>
+        <label class="f">Formule de politesse <textarea id="lClosing" rows="2"></textarea></label>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-presse">
+      <h2 id="h-presse"><span class="n">4</span> Relations presse</h2>
+      <p class="sub">Le texte par défaut parle du Centre Hospitalier : relis-le avant de l'afficher ailleurs.</p>
+      <label class="switch"><input type="checkbox" id="pressOn"> Afficher le bloc « Relations presse »</label>
+      <div class="fold" id="pressFold"><label class="f">Texte <textarea id="pressText" rows="6"></textarea></label></div>
+    </section>
+  </div>
+
+  <aside class="panel" aria-labelledby="h-link">
+    <section class="card">
+      <h2 id="h-link"><span class="n">5</span> Ton lien</h2>
+      <p class="sub">Prêt à envoyer. Il se met à jour tout seul.</p>
+      <div class="linkbox" id="link" tabindex="0" aria-live="polite"></div>
+      <div class="actions">
+        <button class="btn btn--solid" type="button" id="copy">Copier le lien</button>
+        <a class="btn" id="open" href="#" target="_blank" rel="noopener">Ouvrir ↗</a>
+      </div>
+      <p class="meta" id="meta"></p>
+      <div class="pv" id="pv" aria-hidden="true"><iframe id="frame" title="Aperçu" tabindex="-1"></iframe></div>
+    </section>
+  </aside>
+</main>
+
+<div class="mbar"><button class="btn btn--solid" type="button" id="copy2">Copier le lien</button><a class="btn" id="open2" href="#" target="_blank" rel="noopener">Ouvrir ↗</a></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="/ch-dreux/cfg.js"></script>
+<script src="/ch-dreux/data.js"></script>
+<script>
+(function () {
+  'use strict';
+  var D = window.CH_DREUX, CC = window.CH_CFG, BASE = '/ch-dreux/';
+  var $ = function (id) { return document.getElementById(id); };
+  var DEFAULT_CLOSING = 'Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.';
+  var S;
+
+  function today() { return 'Lyon, le ' + new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  function bySection(sid) { return D.projects.filter(function (p) { return p.section === sid; }).map(function (p) { return p.id; }); }
+  function proj(id) { return D.projects.filter(function (p) { return p.id === id; })[0]; }
+
+  function fresh() {
+    var items = {}; D.sections.forEach(function (s) { items[s.id] = bySection(s.id); });
+    return { name: '', job: '', org: '', intro: D.intro, secOrder: D.sections.map(function (s) { return s.id; }), items: items,
+             sel: D.projects.map(function (p) { return p.id; }),
+             pressOn: false, pressText: D.press.text,
+             letterOn: false, date: today(), post: '', hello: 'Madame, Monsieur', body: '', closing: DEFAULT_CLOSING };
+  }
+
+  /* ───────── état ⇄ réglage (celui que lit la page candidature) ───────── */
+  function toCfg() {
+    var c = { v: 1 };
+    if (S.job.trim()) c.job = S.job.trim();
+    if (S.org.trim()) c.org = S.org.trim();
+    if (S.intro.trim() && S.intro.trim() !== D.intro) c.intro = S.intro.trim();
+    c.s = S.secOrder.slice();
+    c.p = [];
+    S.secOrder.forEach(function (sid) { S.items[sid].forEach(function (id) { if (S.sel.indexOf(id) > -1) c.p.push(id); }); });
+    if (S.pressOn) c.press = { text: S.pressText.trim() };
+    if (S.letterOn) {
+      c.letter = { date: S.date.trim(), post: (S.post.trim() || S.job.trim()), hello: S.hello.trim(),
+                   paras: S.body.split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean), closing: S.closing.trim() };
+    }
+    return c;
+  }
+  function fromCfg(c, name) {
+    var s = fresh();
+    s.name = name || '';
+    s.job = c.job || ''; s.org = c.org || ''; if (c.intro) s.intro = c.intro;
+    if (c.s) { var rest = s.secOrder.filter(function (x) { return c.s.indexOf(x) < 0; }); s.secOrder = c.s.filter(function (x) { return s.items[x]; }).concat(rest); }
+    if (c.p) {
+      s.sel = c.p.filter(proj);
+      D.sections.forEach(function (sec) {
+        var chosen = c.p.filter(function (id) { return s.items[sec.id].indexOf(id) > -1; });
+        s.items[sec.id] = chosen.concat(s.items[sec.id].filter(function (id) { return chosen.indexOf(id) < 0; }));
+      });
+    }
+    if (c.press) { s.pressOn = true; if (c.press.text) s.pressText = c.press.text; }
+    if (c.letter) {
+      var L = c.letter; s.letterOn = true;
+      s.date = L.date || s.date; s.post = L.post && L.post !== s.job ? L.post : ''; s.hello = L.hello || s.hello;
+      s.body = (L.paras || []).join('\n\n'); s.closing = L.closing || s.closing;
+    }
+    return s;
+  }
+
+  /* ───────── rendu ───────── */
+  function esc(t) { var d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; }
+
+  function renderProjects() {
+    var root = $('projects'); root.innerHTML = '';
+    S.secOrder.forEach(function (sid, si) {
+      var sec = D.sections.filter(function (x) { return x.id === sid; })[0], ids = S.items[sid];
+      var on = ids.filter(function (id) { return S.sel.indexOf(id) > -1; }).length;
+      var box = document.createElement('div'); box.className = 'cat';
+      var head = document.createElement('div'); head.className = 'cat-head';
+      head.innerHTML = '<input type="checkbox" aria-label="Tout cocher : ' + esc(sec.title) + '" data-cat="' + sid + '">' +
+        '<strong>' + esc(sec.title) + '</strong><span class="count">' + on + '/' + ids.length + '</span>' +
+        '<span class="mv"><button type="button" data-secmv="-1" data-sid="' + sid + '" aria-label="Monter la catégorie ' + esc(sec.title) + '"' + (si === 0 ? ' disabled' : '') + '>↑</button>' +
+        '<button type="button" data-secmv="1" data-sid="' + sid + '" aria-label="Descendre la catégorie ' + esc(sec.title) + '"' + (si === S.secOrder.length - 1 ? ' disabled' : '') + '>↓</button></span>';
+      var cb = head.querySelector('input'); cb.checked = on === ids.length && ids.length > 0; cb.indeterminate = on > 0 && on < ids.length;
+      box.appendChild(head);
+      ids.forEach(function (id, i) {
+        var p = proj(id), row = document.createElement('div'); row.className = 'item' + (S.sel.indexOf(id) > -1 ? '' : ' off');
+        row.innerHTML = '<label><input type="checkbox" data-id="' + id + '"' + (S.sel.indexOf(id) > -1 ? ' checked' : '') + '><span class="t"><b>' + esc(p.title) + '</b><small>' + esc(p.tag || '') + '</small></span></label>' +
+          '<span class="mv"><button type="button" data-mv="-1" data-sid="' + sid + '" data-id="' + id + '" aria-label="Monter ' + esc(p.title) + '"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+          '<button type="button" data-mv="1" data-sid="' + sid + '" data-id="' + id + '" aria-label="Descendre ' + esc(p.title) + '"' + (i === ids.length - 1 ? ' disabled' : '') + '>↓</button></span>';
+        box.appendChild(row);
+      });
+      root.appendChild(box);
+    });
+  }
+
+  function renderFields() {
+    $('name').value = S.name; $('job').value = S.job; $('org').value = S.org; $('intro').value = S.intro;
+    $('letterOn').checked = S.letterOn; $('letterFold').classList.toggle('open', S.letterOn);
+    $('lDate').value = S.date; $('lPost').value = S.post; $('lHello').value = S.hello; $('lBody').value = S.body; $('lClosing').value = S.closing;
+    $('pressOn').checked = S.pressOn; $('pressFold').classList.toggle('open', S.pressOn); $('pressText').value = S.pressText;
+    renderProjects(); update();
+  }
+
+  /* ───────── lien, aperçu ───────── */
+  var pvTimer;
+  function link() { return location.origin + BASE + '?c=' + CC.encode(toCfg()); }
+  function update() {
+    var url = link(), n = toCfg().p.length;
+    $('link').textContent = url; $('open').href = url; $('open2').href = url;
+    var long = url.length > 6000;
+    $('meta').className = 'meta' + (long ? ' warn' : '');
+    $('meta').textContent = n + ' projet' + (n > 1 ? 's' : '') + ' · lien de ' + url.length.toLocaleString('fr-FR') + ' caractères' + (long ? ' — un peu long, raccourcis la lettre ou utilise un raccourcisseur de lien' : '');
+    clearTimeout(pvTimer);
+    pvTimer = setTimeout(function () { var f = $('frame'); if (f.getAttribute('src') !== url) f.setAttribute('src', url); }, 700);
+  }
+  function fitPreview() { var w = $('pv').clientWidth; $('frame').style.transform = 'scale(' + (w / 1280) + ')'; }
+  window.addEventListener('resize', fitPreview);
+
+  var toastT;
+  function toast(t) { var e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { e.classList.remove('on'); }, 2200); }
+  function copy() {
+    var url = link();
+    function ok() { toast('Lien copié ✔'); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(ok, function () { fallback(url, ok); }); else fallback(url, ok);
+  }
+  function fallback(url, ok) { var t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); ok(); } catch (e) { toast('Copie impossible : sélectionne le lien à la main'); } t.remove(); }
+
+  /* ───────── candidatures enregistrées (sur cet appareil) ───────── */
+  function getSaved() { try { return JSON.parse(localStorage.getItem('chAdminSaved') || '{}'); } catch (e) { return {}; } }
+  function putSaved(o) { try { localStorage.setItem('chAdminSaved', JSON.stringify(o)); } catch (e) { toast('Enregistrement impossible sur cet appareil'); } }
+  function renderSaved() {
+    var box = $('saved'), all = getSaved(), names = Object.keys(all); box.innerHTML = '';
+    if (!names.length) { box.innerHTML = '<span class="meta">Aucune candidature enregistrée pour l’instant.</span>'; return; }
+    names.forEach(function (n) {
+      var chip = document.createElement('span'); chip.className = 'chip';
+      chip.innerHTML = '<button type="button" data-load="' + esc(n) + '">' + esc(n) + '</button><button type="button" class="x" data-del="' + esc(n) + '" aria-label="Supprimer ' + esc(n) + '">✕</button>';
+      box.appendChild(chip);
+    });
+  }
+
+  /* ───────── évènements ───────── */
+  function bind(id, key) { $(id).addEventListener('input', function () { S[key] = this.value; update(); }); }
+  bind('job', 'job'); bind('org', 'org'); bind('intro', 'intro'); bind('lDate', 'date'); bind('lPost', 'post');
+  bind('lHello', 'hello'); bind('lBody', 'body'); bind('lClosing', 'closing'); bind('pressText', 'pressText'); bind('name', 'name');
+  $('letterOn').addEventListener('change', function () { S.letterOn = this.checked; $('letterFold').classList.toggle('open', S.letterOn); update(); });
+  $('pressOn').addEventListener('change', function () { S.pressOn = this.checked; $('pressFold').classList.toggle('open', S.pressOn); update(); });
+  $('all-on').addEventListener('click', function () { S.sel = D.projects.map(function (p) { return p.id; }); renderProjects(); update(); });
+  $('all-off').addEventListener('click', function () { S.sel = []; renderProjects(); update(); });
+  $('copy').addEventListener('click', copy); $('copy2').addEventListener('click', copy);
+
+  $('projects').addEventListener('change', function (e) {
+    var t = e.target, id = t.getAttribute('data-id'), cat = t.getAttribute('data-cat');
+    if (id) { var i = S.sel.indexOf(id); if (t.checked && i < 0) S.sel.push(id); if (!t.checked && i > -1) S.sel.splice(i, 1); }
+    if (cat) {
+      S.items[cat].forEach(function (pid) { var i = S.sel.indexOf(pid); if (t.checked && i < 0) S.sel.push(pid); if (!t.checked && i > -1) S.sel.splice(i, 1); });
+    }
+    renderProjects(); update();
+  });
+  $('projects').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.disabled) return;
+    var d = Number(b.getAttribute('data-mv') || b.getAttribute('data-secmv')), sid = b.getAttribute('data-sid');
+    if (b.hasAttribute('data-mv')) {
+      var arr = S.items[sid], i = arr.indexOf(b.getAttribute('data-id')), j = i + d;
+      if (j >= 0 && j < arr.length) { var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    } else {
+      var o = S.secOrder, a = o.indexOf(sid), z = a + d;
+      if (z >= 0 && z < o.length) { var u = o[a]; o[a] = o[z]; o[z] = u; }
+    }
+    renderProjects(); update();
+    var again = document.querySelector('#projects button[data-id="' + b.getAttribute('data-id') + '"][data-mv="' + d + '"]') || document.querySelector('#projects button[data-sid="' + sid + '"][data-secmv="' + d + '"]');
+    if (again) again.focus();
+  });
+
+  $('letterFrom').addEventListener('click', function () {
+    fetch(BASE + 'lettre-de-motivation/').then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var paras = Array.prototype.map.call(doc.querySelectorAll('.body p:not(.closing)'), function (p) { return p.textContent.trim(); });
+      var cl = doc.querySelector('.closing');
+      S.body = paras.join('\n\n'); if (cl) S.closing = cl.textContent.trim();
+      var post = doc.querySelector('#post'); if (post && !S.post) S.post = '';
+      renderFields(); toast('Texte repris : adapte-le à cette offre');
+    }, function () { toast('Impossible de charger la lettre actuelle'); });
+  });
+
+  $('save').addEventListener('click', function () {
+    var n = S.name.trim(); if (!n) { $('name').focus(); toast('Donne d’abord un nom à cette candidature'); return; }
+    var all = getSaved(); all[n] = CC.encode(toCfg()); putSaved(all); renderSaved(); toast('Enregistrée ✔');
+  });
+  $('reset').addEventListener('click', function () { S = fresh(); renderFields(); });
+  $('saved').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var all = getSaved();
+    if (b.hasAttribute('data-load')) { var n = b.getAttribute('data-load'), c = CC.decode(all[n]); if (c) { S = fromCfg(c, n); renderFields(); toast('« ' + n + ' » chargée'); } }
+    if (b.hasAttribute('data-del')) { var d = b.getAttribute('data-del'); if (confirm('Supprimer « ' + d + ' » de cet appareil ?')) { delete all[d]; putSaved(all); renderSaved(); } }
+  });
+  $('import').addEventListener('input', function () {
+    var m = /[?&]c=([^&#\s]+)/.exec(this.value), c = m && CC.decode(decodeURIComponent(m[1]));
+    if (c) { S = fromCfg(c, S.name); renderFields(); this.value = ''; toast('Lien repris ✔'); }
+  });
+
+  /* ───────── démarrage : si l'adresse contient déjà un réglage (?c=), on le reprend ───────── */
+  S = CC.cfg ? fromCfg(CC.cfg) : fresh();
+  renderFields(); renderSaved(); fitPreview();
+})();
+</script>
+</body>
+</html>
