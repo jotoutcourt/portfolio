@@ -158,7 +158,12 @@
   function buildArrows(track, title) {
     var prev = h('button', { type: 'button', class: 'arrow', 'data-dir': '-1', 'aria-controls': track.id, 'aria-label': 'Projets précédents : ' + title }, [chevron('prev')]);
     var next = h('button', { type: 'button', class: 'arrow', 'data-dir': '1', 'aria-controls': track.id, 'aria-label': 'Projets suivants : ' + title }, [chevron('next')]);
-    return h('div', { class: 'arrows' }, [prev, next]);
+    return h('div', { class: 'arrows' }, [
+      h('span', { class: 'swipe-hint', 'aria-hidden': 'true' }, [
+        h('span', { class: 'swipe-count' }), ' Faites défiler ', h('span', { class: 'swipe-arrow', text: '→' })
+      ]),
+      prev, next
+    ]);
   }
 
   function wireTrack(track, arrows) {
@@ -170,6 +175,14 @@
       arrows.hidden = max <= 2;                       /* tout tient à l'écran : pas de flèches */
       buttons[0].disabled = track.scrollLeft <= 2;
       buttons[1].disabled = track.scrollLeft >= max - 2;
+      track.classList.toggle('has-more', max > 2 && track.scrollLeft < max - 2);
+      var cards = track.querySelectorAll('.card'), tl = track.getBoundingClientRect(), first = -1, last = -1;
+      Array.prototype.forEach.call(cards, function (c, i) {
+        var r = c.getBoundingClientRect();
+        if (r.left >= tl.left - 4 && r.right <= tl.right + 4) { if (first < 0) first = i; last = i; }
+      });
+      var cnt = arrows.querySelector('.swipe-count');
+      if (cnt && first >= 0) cnt.textContent = (first === last ? (first + 1) : (first + 1) + '–' + (last + 1)) + ' sur ' + cards.length + ' ·';
     }
 
     Array.prototype.forEach.call(buttons, function (b) {
@@ -181,6 +194,30 @@
       });
     });
 
+    /* Invite : à la première apparition, le carrousel avance un peu puis revient (désactivé si mouvement réduit). */
+    if (!reduce && 'IntersectionObserver' in window) {
+      var cancelled = false, nudged = false;
+      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+        track.addEventListener(ev, function () { cancelled = true; }, { passive: true });
+      });
+      var io = new IntersectionObserver(function (es) {
+        if (nudged || !es[0].isIntersecting) return;
+        nudged = true; io.disconnect();
+        setTimeout(function () {
+          if (cancelled || track.scrollWidth - track.clientWidth <= 2 || track.scrollLeft > 2) return;
+          var dist = Math.min(72, track.scrollWidth - track.clientWidth), t0 = null, dur = 1100;
+          track.style.scrollSnapType = 'none';
+          (function step(ts) {
+            if (t0 === null) t0 = ts;
+            var k = Math.min(1, (ts - t0) / dur);
+            if (cancelled) { track.style.scrollSnapType = ''; return; }
+            track.scrollLeft = dist * Math.sin(Math.PI * k);
+            if (k < 1) requestAnimationFrame(step); else { track.scrollLeft = 0; track.style.scrollSnapType = ''; }
+          })(performance.now());
+        }, 500);
+      }, { threshold: 0.6 });
+      io.observe(track);
+    }
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     if ('ResizeObserver' in window) new ResizeObserver(update).observe(track);
@@ -239,11 +276,14 @@
     ]));
     var heroText = doc.querySelector(".hero-text");
     if (heroText) {
-      heroText.appendChild(docButtons());
-      heroText.appendChild(h("a", { class: "scroll-cue", href: "#realisations" }, [
+      /* Bouton d'invite juste sous l'intro, avant le sommaire */
+      var cue = h("a", { class: "scroll-cue", href: "#realisations" }, [
         "Découvrir mes réalisations ",
         h("span", { "aria-hidden": "true", text: "↓" })
-      ]));
+      ]);
+      var tocEl = heroText.querySelector("#toc");
+      heroText.insertBefore(cue, tocEl);
+      heroText.appendChild(docButtons());
     }
   } else if (profileEl) { profileEl.remove(); }
 

@@ -55,6 +55,18 @@ a:hover { color: var(--accent); }
 .track { display: flex; gap: 1.6rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 6px; padding: 6px 6px 16px; margin-inline: -6px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 .track:focus-visible { outline: 3px solid var(--navy); outline-offset: 0; border-radius: var(--radius); }
 .track > .card { flex: 0 0 min(350px, 82%); scroll-snap-align: start; }
+/* On laisse « dépasser » une partie de la carte suivante : signal visuel qu'il y a une suite */
+@media (min-width: 901px) { .track > .card { flex-basis: calc((100% - 3 * 1.6rem) / 3.3); } }
+@media (min-width: 641px) and (max-width: 900px) { .track > .card { flex-basis: calc((100% - 2 * 1.6rem) / 2.3); } }
+/* Fondu sur le bord droit tant qu'il reste des projets à découvrir */
+.track.has-more { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 70px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 70px), transparent); }
+.arrows { align-items: center; }
+.swipe-hint { margin-right: 0.5rem; font-size: 0.85rem; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.swipe-count { color: var(--navy); font-weight: 700; }
+.swipe-arrow { display: inline-block; color: var(--accent); animation: swipe-nudge 1.6s ease-in-out infinite; }
+@keyframes swipe-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+@media (max-width: 640px) { .swipe-hint { display: none; } }
+@media (prefers-reduced-motion: reduce) { .swipe-arrow { animation: none; } }
 .card { display: flex; flex-direction: column; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 
 /* ── Médias ── */
@@ -159,7 +171,6 @@ a:hover { color: var(--accent); }
 .profile-list a:hover { border-bottom-color: var(--accent); }
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .scroll-cue { display: none; } /* en une colonne la fiche suit directement */
   .profile { max-width: 420px; }
   .profile-photo { aspect-ratio: 16 / 11; object-position: center 20%; }
 }
@@ -170,9 +181,9 @@ a:hover { color: var(--accent); }
 
 /* Appel à descendre, calé en bas de la colonne de gauche */
 .hero-text { display: flex; flex-direction: column; }
-.scroll-cue { align-self: flex-start; margin-top: auto; padding-top: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; font-weight: 500; color: var(--accent); text-decoration: none; }
-.scroll-cue span { display: inline-block; font-size: 1.3em; animation: cue-bounce 1.8s ease-in-out infinite; }
-.scroll-cue:hover { text-decoration: underline; text-underline-offset: 4px; }
+.scroll-cue { align-self: flex-start; display: inline-flex; align-items: center; gap: 0.7rem; min-height: 56px; margin: 0 0 1.6rem; padding: 0.9rem 1.7rem; border-radius: 10px; background: var(--accent); color: #fff; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.02em; text-decoration: none; box-shadow: 0 8px 22px rgba(155, 58, 72, 0.32); transition: background 0.2s, transform 0.2s, box-shadow 0.2s; }
+.scroll-cue span { display: inline-block; font-size: 1.35em; line-height: 1; animation: cue-bounce 1.8s ease-in-out infinite; }
+.scroll-cue:hover { background: var(--navy); color: #fff; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(26, 26, 46, 0.35); }
 @keyframes cue-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 @media (prefers-reduced-motion: reduce) { .scroll-cue span { animation: none; } }
 .pbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0.55rem 0.7rem; border-radius: 8px; border: 2px solid var(--navy); background: var(--navy); color: #fff; font: 500 0.85rem/1.25 var(--font-body); text-align: center; text-decoration: none; cursor: pointer; }
