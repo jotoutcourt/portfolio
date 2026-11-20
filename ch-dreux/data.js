@@ -151,7 +151,7 @@ window.CH_DREUX = {
     {
       section: 'video',
       title: 'Play With Metz — film de campagne',
-      page: '/ch-dreux/metz/#s-real',
+      page: '/ch-dreux/metz/#s-video',
       tag: 'Eurométropole de Metz',
       context: "Film de la campagne de promotion touristique de Metz.",
       role: "Écriture des textes, choix des lieux de tournage, brief du motion design et coordination.",
