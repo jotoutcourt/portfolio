@@ -20,10 +20,10 @@ window.CH_DREUX = {
 
   intro:
     "Ce dossier présente des réalisations choisies pour leur proximité avec les missions du poste " +
-    "que vous proposez. Vous pouvez retrouver l'ensemble de mes projets sur mon site jordan-join.fr/projets",
+    "que vous proposez.",
 
-  // Le libellé ci-dessus (identique, mot pour mot) devient un lien cliquable vers href.
-  introLink: { label: 'jordan-join.fr/projets', href: 'https://jordan-join.fr/projets.html' },
+  // Optionnel : si introLink.label apparaît tel quel dans le texte ci-dessus, il devient un lien cliquable vers href.
+  // introLink: { label: '...', href: '...' },
 
   // Fiche d'identité affichée à droite du titre (infos du CV). Lignes : { label, value } ; value peut être un lien via href.
   profile: {
