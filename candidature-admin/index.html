@@ -249,13 +249,21 @@
     if (S.job.trim()) c.job = S.job.trim();
     if (S.org.trim()) c.org = S.org.trim();
     if (S.intro.trim() && S.intro.trim() !== D.intro) c.intro = S.intro.trim();
-    c.s = S.secOrder.slice();
-    c.p = [];
-    S.secOrder.forEach(function (sid) { S.items[sid].forEach(function (id) { if (S.sel.indexOf(id) > -1) c.p.push(id); }); });
-    if (S.pressOn) c.press = { text: S.pressText.trim() };
+    var p = [];
+    S.secOrder.forEach(function (sid) { S.items[sid].forEach(function (id) { if (S.sel.indexOf(id) > -1) p.push(id); }); });
+    var dflt = []; D.sections.forEach(function (s) { bySection(s.id).forEach(function (id) { dflt.push(id); }); });
+    var defaultSecs = S.secOrder.join() === D.sections.map(function (s) { return s.id; }).join();
+    /* Liste de projets et ordre : seulement s'ils diffèrent de l'ordre d'origine (lien plus court) */
+    if (!(defaultSecs && p.join() === dflt.join())) { c.s = S.secOrder.slice(); c.p = p; }
+    c.n = p.length;                              /* nombre de projets (affichage seulement, retiré avant encodage) */
+    if (S.pressOn) c.press = S.pressText.trim() && S.pressText.trim() !== D.press.text ? { text: S.pressText.trim() } : {};
     if (S.letterOn) {
-      c.letter = { date: S.date.trim(), post: (S.post.trim() || S.job.trim()), hello: S.hello.trim(),
-                   paras: S.body.split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean), closing: S.closing.trim() };
+      var L = { paras: S.body.split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean) };
+      if (S.date.trim()) L.date = S.date.trim();
+      var post = S.post.trim() || S.job.trim(); if (post) L.post = post;
+      if (S.hello.trim() && S.hello.trim() !== 'Madame, Monsieur') L.hello = S.hello.trim();
+      if (S.closing.trim() && S.closing.trim() !== DEFAULT_CLOSING) L.closing = S.closing.trim();
+      c.letter = L;
     }
     return c;
   }
@@ -317,15 +325,21 @@
 
   /* ───────── lien, aperçu ───────── */
   var pvTimer;
-  function link() { return location.origin + BASE + '?c=' + CC.encode(toCfg()); }
+  var lastUrl = location.origin + BASE, seq = 0;
+  function cfgForLink() { var c = toCfg(); delete c.n; return c; }
+  function link() { return lastUrl; }
   function update() {
-    var url = link(), n = toCfg().p.length;
-    $('link').textContent = url; $('open').href = url; $('open2').href = url;
-    var long = url.length > 6000;
-    $('meta').className = 'meta' + (long ? ' warn' : '');
-    $('meta').textContent = n + ' projet' + (n > 1 ? 's' : '') + ' · lien de ' + url.length.toLocaleString('fr-FR') + ' caractères' + (long ? ' — un peu long, raccourcis la lettre ou utilise un raccourcisseur de lien' : '');
-    clearTimeout(pvTimer);
-    pvTimer = setTimeout(function () { var f = $('frame'); if (f.getAttribute('src') !== url) f.setAttribute('src', url); }, 700);
+    var my = ++seq, n = toCfg().n;
+    CC.encodeAsync(cfgForLink()).then(function (raw) {
+      if (my !== seq) return;                                   /* une saisie plus récente a pris le relais */
+      var url = location.origin + BASE + '?c=' + raw; lastUrl = url;
+      $('link').textContent = url; $('open').href = url; $('open2').href = url;
+      var long = url.length > 2500;
+      $('meta').className = 'meta' + (long ? ' warn' : '');
+      $('meta').textContent = n + ' projet' + (n > 1 ? 's' : '') + ' · lien de ' + url.length.toLocaleString('fr-FR') + ' caractères' + (long ? ' — assez long : le texte de la lettre pèse le plus, raccourcis-la si besoin' : '');
+      clearTimeout(pvTimer);
+      pvTimer = setTimeout(function () { var f = $('frame'); if (f.getAttribute('src') !== url) f.setAttribute('src', url); }, 700);
+    });
   }
   function fitPreview() { var w = $('pv').clientWidth; $('frame').style.transform = 'scale(' + (w / 1280) + ')'; }
   window.addEventListener('resize', fitPreview);
@@ -398,7 +412,7 @@
 
   $('save').addEventListener('click', function () {
     var n = S.name.trim(); if (!n) { $('name').focus(); toast('Donne d’abord un nom à cette candidature'); return; }
-    var all = getSaved(); all[n] = CC.encode(toCfg()); putSaved(all); renderSaved(); toast('Enregistrée ✔');
+    CC.encodeAsync(cfgForLink()).then(function (raw) { var all = getSaved(); all[n] = raw; putSaved(all); renderSaved(); toast('Enregistrée ✔'); });
   });
   $('reset').addEventListener('click', function () { S = fresh(); renderFields(); });
   $('saved').addEventListener('click', function (e) {
