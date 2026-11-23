@@ -137,7 +137,8 @@
     } catch (e) { return null; }
   }
 
-  var m = /[?&]c=([^&#]+)/.exec(location.search), raw = m ? decodeURIComponent(m[1]) : '';
+  /* Lien court : une page /c/<nom>/ peut porter son réglage dans window.CH_PRESET (voir snippets/candidature-lien-court.md) */
+  var m = /[?&]c=([^&#]+)/.exec(location.search), raw = m ? decodeURIComponent(m[1]) : (window.CH_PRESET || '');
   var store = { get: function () { try { return localStorage.getItem('chCfgLast') || ''; } catch (e) { return ''; } },
                 set: function (v) { try { v ? localStorage.setItem('chCfgLast', v) : localStorage.removeItem('chCfgLast'); } catch (e) {} } };
 
