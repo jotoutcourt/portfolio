@@ -1,6 +1,8 @@
 {
   "rewrites": [
-    { "source": "/candidature", "destination": "/ch-dreux/" },
-    { "source": "/candidature/:path*", "destination": "/ch-dreux/:path*" }
+    { "source": "/candidature", "destination": "/ch-dreux/index.html" },
+    { "source": "/candidature/", "destination": "/ch-dreux/index.html" },
+    { "source": "/candidature/:dir", "destination": "/ch-dreux/:dir/index.html" },
+    { "source": "/candidature/:dir/", "destination": "/ch-dreux/:dir/index.html" }
   ]
 }
