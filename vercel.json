@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/candidature", "destination": "/ch-dreux/" },
+    { "source": "/candidature/:path*", "destination": "/ch-dreux/:path*" }
+  ]
+}

@@ -142,7 +142,12 @@
   var store = { get: function () { try { return localStorage.getItem('chCfgLast') || ''; } catch (e) { return ''; } },
                 set: function (v) { try { v ? localStorage.setItem('chCfgLast', v) : localStorage.removeItem('chCfgLast'); } catch (e) {} } };
 
+  /* Adresse publique des pages : /candidature/… (neutre) ou /ch-dreux/… ; les fichiers sont toujours dans /ch-dreux/ (réécriture Vercel). */
+  var base = location.pathname.indexOf('/candidature') === 0 ? '/candidature/' : (window.CH_BASE || '/ch-dreux/');
+  function path(p) { return base === '/ch-dreux/' ? p : String(p).replace('/ch-dreux/', base); }
+
   window.CH_CFG = {
+    base: base, path: path,
     raw: raw,                          /* réglage brut de l'adresse (vide = candidature par défaut) */
     cfg: raw ? decode(raw) : null,     /* réglage décodé, ou null */
     encode: toLegacy,                  /* synchrone, ancien format (non compressé) */

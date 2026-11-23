@@ -227,6 +227,8 @@
 (function () {
   'use strict';
   var D = window.CH_DREUX, CC = window.CH_CFG, BASE = '/ch-dreux/';
+  /* Adresse des liens produits : neutre en ligne (/candidature/), /ch-dreux/ en local où la réécriture n'existe pas */
+  var PUBLIC_BASE = /^(localhost|127.0.0.1)$/.test(location.hostname) ? '/ch-dreux/' : '/candidature/';
   var $ = function (id) { return document.getElementById(id); };
   var DEFAULT_CLOSING = 'Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.';
   var S;
@@ -325,14 +327,14 @@
 
   /* ───────── lien, aperçu ───────── */
   var pvTimer;
-  var lastUrl = location.origin + BASE, seq = 0;
+  var lastUrl = location.origin + PUBLIC_BASE, seq = 0;
   function cfgForLink() { var c = toCfg(); delete c.n; return c; }
   function link() { return lastUrl; }
   function update() {
     var my = ++seq, n = toCfg().n;
     CC.encodeAsync(cfgForLink()).then(function (raw) {
       if (my !== seq) return;                                   /* une saisie plus récente a pris le relais */
-      var url = location.origin + BASE + '?c=' + raw; lastUrl = url;
+      var url = location.origin + PUBLIC_BASE + '?c=' + raw; lastUrl = url;
       $('link').textContent = url; $('open').href = url; $('open2').href = url;
       var long = url.length > 2500;
       $('meta').className = 'meta' + (long ? ' warn' : '');

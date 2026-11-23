@@ -11,6 +11,7 @@
 
   /* ───────── réglage de la candidature (adresse ?c=…, produit par /candidature-admin/) ───────── */
   var CC = window.CH_CFG || null;
+  function P(u) { return CC && CC.path ? CC.path(u) : u; }    /* adresse publique : /candidature/… ou /ch-dreux/… */
   var CFG = CC && CC.cfg;
   if (CC) CC.store.set(CFG ? CC.raw : '');   /* mémorisé pour que « Retour » depuis une page projet garde le bon réglage */
   var showPress = true, showLetter = true;
@@ -193,7 +194,7 @@
       /* Lien étiré : toute la carte est cliquable, mais un seul lien est annoncé aux lecteurs d'écran. */
       var label = heading.textContent;
       heading.textContent = '';
-      heading.appendChild(h('a', { class: 'card-title-link', href: p.page, target: '_blank', rel: 'noopener' }, [
+      heading.appendChild(h('a', { class: 'card-title-link', href: P(p.page), target: '_blank', rel: 'noopener' }, [
         label, h('span', { class: 'sr-only', text: ' (nouvel onglet)' })
       ]));
     }
@@ -344,9 +345,9 @@
     var btns = pair(D.downloads.cv, 'Voir mon CV', 'Télécharger mon CV', D.downloads.cvPage);
     if (CFG && CFG.letter) {
       /* Lettre propre à cette candidature : seule la page animée existe (le PDF fixe ne correspond pas) */
-      btns.push(h('a', { class: 'pbtn pbtn--view', href: D.downloads.letterPage + '?c=' + encodeURIComponent(CC.raw), target: '_blank', rel: 'noopener noreferrer', text: 'Voir ma lettre de motivation' }));
+      btns.push(h('a', { class: 'pbtn pbtn--view', href: P(D.downloads.letterPage) + '?c=' + encodeURIComponent(CC.raw), target: '_blank', rel: 'noopener noreferrer', text: 'Voir ma lettre de motivation' }));
     } else if (showLetter) {
-      btns = btns.concat(pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation', D.downloads.letterPage));
+      btns = btns.concat(pair(D.downloads.letter, 'Voir ma lettre de motivation', 'Télécharger ma lettre de motivation', P(D.downloads.letterPage)));
     }
     btns.forEach(function (b) { box.appendChild(b); });
     return box;
